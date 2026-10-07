@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>希尔伯特变换 · 从零开始的十堂课</title>
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['$','$'],['\\(','\\)']], displayMath: [['$$','$$'],['\\[','\\]']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<style>
+:root{--paper:#fbfaf6;--ink:#20242c;--muted:#5d6472;--line:#e3dfd3;--accent:#1f6f8b;--accent2:#b4531f;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:Georgia,"Songti SC","Noto Serif SC","Source Han Serif SC","SimSun",serif;line-height:1.85;font-size:17px;-webkit-text-size-adjust:100%}
+.wrap{max-width:880px;margin:0 auto;padding:0 22px 90px}
+header.ch{border-bottom:3px double var(--line);padding:52px 0 24px;margin-bottom:34px}
+.kicker{font-family:ui-sans-serif,system-ui,sans-serif;letter-spacing:.2em;font-size:11.5px;color:var(--accent);text-transform:uppercase}
+h1{font-size:31px;margin:12px 0 8px;line-height:1.3}
+.sub{color:var(--muted);font-size:15.5px;margin:0}
+h2{font-size:22px;margin:46px 0 14px;padding-left:12px;border-left:5px solid var(--accent)}
+h3{font-size:18px;margin:30px 0 10px;color:var(--accent2)}
+p{margin:14px 0}
+.box{background:#fff;border:1px solid var(--line);border-radius:8px;padding:14px 18px;margin:22px 0}
+.tag{font-family:ui-sans-serif,system-ui,sans-serif;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;display:block;margin-bottom:6px}
+.def{border-left:5px solid #1f6f8b}.def .tag{color:#1f6f8b}
+.tip{border-left:5px solid #d99b16;background:#fffdf5}.tip .tag{color:#a8760a}
+a{color:var(--accent);text-decoration-thickness:1px;text-underline-offset:3px}
+.cards{display:grid;grid-template-columns:1fr;gap:14px;margin:26px 0}
+@media(min-width:700px){.cards{grid-template-columns:1fr 1fr}}
+.card{display:block;background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px 18px;text-decoration:none;color:inherit;transition:.15s}
+.card:hover{border-color:var(--accent);transform:translateY(-2px)}
+.card .no{font-family:ui-sans-serif,system-ui,sans-serif;font-size:11.5px;letter-spacing:.16em;color:var(--accent);font-weight:700}
+.card .ti{font-size:18.5px;margin:4px 0 6px;font-weight:700}
+.card .de{font-size:14px;color:var(--muted);line-height:1.65;margin:0}
+table{width:100%;border-collapse:collapse;margin:20px 0;font-size:15px;background:#fff}
+th,td{border:1px solid var(--line);padding:8px 11px;text-align:left}
+th{background:#f2efe6;font-family:ui-sans-serif,system-ui,sans-serif;font-size:13.5px}
+ol,ul{padding-left:1.5em}
+li{margin:7px 0}
+.road{background:#fff;border:1px solid var(--line);border-radius:10px;padding:18px;margin:24px 0}
+footer{margin-top:60px;border-top:1px solid var(--line);padding-top:18px;font-family:ui-sans-serif,system-ui,sans-serif;font-size:13.5px;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="ch">
+  <div class="kicker">信号与系统 · 入门读本</div>
+  <h1>希尔伯特变换：从零开始的十堂课</h1>
+  <p class="sub">写给大一新生 —— 只需要高等数学（微积分）和一点复数知识，我们从一个收音机的问题出发，一步一步走到工程前沿。</p>
+</header>
+
+<h2>这门课要回答什么问题</h2>
+
+<p>先看一个问题。你把一个 $\cos(\omega_0 t)$ 送进某个黑盒子，出来的是 $\sin(\omega_0 t)$。换一个频率 $\cos(2\omega_0 t)$ 送进去，出来的是 $\sin(2\omega_0 t)$。不管你送什么频率的余弦进去，出来的都是同频率的正弦 —— 也就是说，这个盒子把<strong>任何</strong>频率成分的相位都<strong>恰好推迟了 90°</strong>，而一点也不改变它的幅度。</p>
+
+<p>这个盒子存在吗？它的数学表达式是什么？它有什么用？</p>
+
+<p>答案就是<strong>希尔伯特变换</strong>（Hilbert transform）。它的表达式短得惊人：</p>
+
+<p>$$\hat{x}(t)=\frac{1}{\pi}\,\mathrm{P}\!\!\int_{-\infty}^{+\infty}\frac{x(\tau)}{t-\tau}\,\mathrm{d}\tau$$</p>
+
+<p>一个积分号，一个 $\pi$，一个 $\frac{1}{t-\tau}$。就这么简单的式子，撑起了调幅广播的解调、手机的 I/Q 正交调制、风力发电机轴承的故障诊断、地震勘探的瞬时属性、脑电信号的相位同步分析，以及光学中联系材料折射率与吸收率的 Kramers–Kronig 关系。</p>
+
+<div class="box tip">
+  <span class="tag">怎么用这套读本</span>
+  <p style="margin:6px 0 0">十章按顺序排列，<strong>不要跳读前四章</strong>，它们是骨架。每章末尾有练习，第九章是完整习题册（带折叠答案）。章内配了可拖动的交互图（纯 JavaScript 实时计算，不是截图），动手拖一拖比看十遍公式有用。第十章是考前速查表。</p>
+</div>
+
+<h2>目录</h2>
+
+<div class="cards">
+  <a class="card" href="01-motivation.html">
+    <div class="no">第 1 章</div>
+    <div class="ti">为什么需要希尔伯特变换</div>
+    <p class="de">从收音机如何"听出"音乐讲起。实信号丢掉了什么信息？旋转矢量与它的影子。余弦和正弦为什么是"一对"。</p>
+  </a>
+  <a class="card" href="02-prep.html">
+    <div class="no">第 2 章</div>
+    <div class="ti">数学预备：五件工具</div>
+    <p class="de">欧拉公式与相量、柯西主值积分（重点）、卷积的直观含义、傅里叶变换速成、$\mathrm{sgn}$ 与 $\delta$ 函数。</p>
+  </a>
+  <a class="card" href="03-definition.html">
+    <div class="no">第 3 章</div>
+    <div class="ti">定义：时域的样子</div>
+    <p class="de">正式定义、为什么必须取主值、核函数 $\frac{1}{\pi t}$ 的形状，以及四个完整的手算例子与常用变换对表。</p>
+  </a>
+  <a class="card" href="04-frequency.html">
+    <div class="no">第 4 章</div>
+    <div class="ti">频域：一台 90° 相移器</div>
+    <p class="de">推导 $\mathcal{F}\{\frac{1}{\pi t}\}=-j\,\mathrm{sgn}(\omega)$。为什么它是"全通滤波器"，为什么两次变换等于取负号。</p>
+  </a>
+  <a class="card" href="05-properties.html">
+    <div class="no">第 5 章</div>
+    <div class="ti">性质与定理</div>
+    <p class="de">线性、时移、$\mathcal{H}^2=-I$、能量守恒、正交性、与微分交换、Bedrosian 定理、Titchmarsh 定理。每条都给证明。</p>
+  </a>
+  <a class="card" href="06-analytic.html">
+    <div class="no">第 6 章</div>
+    <div class="ti">解析信号与瞬时频率</div>
+    <p class="de">造出 $z(t)=x(t)+j\hat{x}(t)$，于是有了瞬时幅度（包络）、瞬时相位、瞬时频率。以及三个必须知道的陷阱。</p>
+  </a>
+  <a class="card" href="07-discrete.html">
+    <div class="no">第 7 章</div>
+    <div class="ti">在计算机上怎么算</div>
+    <p class="de">FFT 法的完整步骤与 Python/MATLAB 代码、FIR 希尔伯特变换器的设计、端点效应与五个常见坑。</p>
+  </a>
+  <a class="card" href="08-applications.html">
+    <div class="no">第 8 章</div>
+    <div class="ti">工程应用全景</div>
+    <p class="de">单边带调制、包络检波、轴承故障诊断、地震瞬时属性、脑电相位同步、音频移相、Kramers–Kronig 关系。</p>
+  </a>
+  <a class="card" href="09-exercises.html">
+    <div class="no">第 9 章</div>
+    <div class="ti">习题册（含解答）</div>
+    <p class="de">概念题、计算题、证明题、编程题、思考题五类，共 40 余道，答案可折叠自测。</p>
+  </a>
+  <a class="card" href="10-cheatsheet.html">
+    <div class="no">第 10 章</div>
+    <div class="ti">速查表与参考书</div>
+    <p class="de">一页纸装下所有定义、变换对、性质、代码片段与符号约定。打印出来贴墙上。</p>
+  </a>
+</div>
+
+<h2>学习路线图</h2>
+
+<div class="road">
+<p style="margin-top:0"><strong>第一站 · 直觉（第 1 章）</strong><br>
+明白"我们缺了什么"。目标：能用自己的话说出"为什么一个实信号不够用"。</p>
+<p><strong>第二站 · 工具（第 2 章）</strong><br>
+补齐五件数学工具。目标：会算 $\mathrm{P}\int_{-1}^{1}\frac{\mathrm{d}t}{t}=0$，知道卷积是"滑动加权平均"。</p>
+<p><strong>第三站 · 定义（第 3、4 章）</strong><br>
+时域与频域两副面孔。目标：能独立算出 $\mathcal{H}\{\cos\omega_0 t\}=\sin\omega_0 t$，并能解释 $-j\,\mathrm{sgn}(\omega)$ 的含义。</p>
+<p><strong>第四站 · 运算规则（第 5 章）</strong><br>
+像用导数公式一样熟练地用它。目标：不查表就知道 $\mathcal{H}^2=-I$。</p>
+<p><strong>第五站 · 核心应用（第 6 章）</strong><br>
+解析信号是希尔伯特变换的"主战场"。目标：能解释包络提取的原理和它失效的条件。</p>
+<p style="margin-bottom:0"><strong>第六站 · 落地（第 7、8 章）</strong><br>
+写出能跑的代码，看懂工程文献里的术语。目标：用 20 行 Python 从一段振动数据里提取包络谱。</p>
+</div>
+
+<h2>全书符号约定</h2>
+
+<table>
+<tr><th>符号</th><th>含义</th><th>首次出现</th></tr>
+<tr><td>$t,\ \tau$</td><td>时间变量（秒）；$\tau$ 通常作为积分哑变量</td><td>第 1 章</td></tr>
+<tr><td>$x(t)$</td><td>实值输入信号</td><td>第 1 章</td></tr>
+<tr><td>$\hat{x}(t)$ 或 $\mathcal{H}\{x\}(t)$</td><td>$x(t)$ 的希尔伯特变换</td><td>第 3 章</td></tr>
+<tr><td>$z(t)$</td><td>解析信号 $x(t)+j\hat{x}(t)$</td><td>第 6 章</td></tr>
+<tr><td>$\mathcal{H}$</td><td>希尔伯特变换算子</td><td>第 3 章</td></tr>
+<tr><td>$\mathrm{P}\!\int$</td><td>柯西主值积分（Cauchy principal value）</td><td>第 2 章</td></tr>
+<tr><td>$*$</td><td>卷积运算</td><td>第 2 章</td></tr>
+<tr><td>$\mathcal{F}\{\cdot\}$，$X(\omega)$</td><td>傅里叶变换；约定 $X(\omega)=\int x(t)e^{-j\omega t}\mathrm{d}t$</td><td>第 2 章</td></tr>
+<tr><td>$\omega$，$f$</td><td>角频率（rad/s）与频率（Hz），$\omega=2\pi f$</td><td>第 2 章</td></tr>
+<tr><td>$j$</td><td>虚数单位，$j^2=-1$（工程惯例，数学书写 $i$）</td><td>第 2 章</td></tr>
+<tr><td>$\mathrm{sgn}(\omega)$</td><td>符号函数：$\omega&gt;0$ 取 $1$，$\omega&lt;0$ 取 $-1$，$\omega=0$ 取 $0$</td><td>第 2 章</td></tr>
+<tr><td>$u(t)$</td><td>单位阶跃函数</td><td>第 2 章</td></tr>
+<tr><td>$\delta(t)$</td><td>狄拉克冲激（广义函数）</td><td>第 2 章</td></tr>
+<tr><td>$A(t),\ \phi(t),\ \omega_i(t)$</td><td>瞬时幅度、瞬时相位、瞬时角频率</td><td>第 6 章</td></tr>
+</table>
+
+<div class="box def">
+  <span class="tag">一句话记住全书</span>
+  <p style="margin:6px 0 0">希尔伯特变换 = <strong>把每个频率成分的相位转 $-90°$、幅度一点不动</strong>的那台机器。它在时域长成 $\frac{1}{\pi t}$ 的卷积，在频域长成 $-j\,\mathrm{sgn}(\omega)$ 的乘法。它最大的用处是给实信号配一个"虚部搭档"，凑成解析信号，从而定义出瞬时幅度和瞬时频率。</p>
+</div>
+
+<h2>关于名字</h2>
+
+<p>大卫·希尔伯特（David Hilbert, 1862–1943）是二十世纪最重要的数学家之一。这个变换来自他 1905 年前后关于奇异积分方程的工作，但"希尔伯特变换"这个名字是后来 G. H. Hardy 叫起来的，所以有些老文献里也称它为 Hardy 变换。把它正式带进工程界的是 Dennis Gabor（1946 年提出解析信号）和 Ville（1948 年提出瞬时频率），那正是雷达和通信理论爆发的年代。</p>
+
+<p>顺便提醒一个容易混的点：希尔伯特变换（Hilbert transform）和希尔伯特空间（Hilbert space）、希尔伯特矩阵、希尔伯特第十问题都以同一人命名，但内容彼此独立。本书只讲变换。</p>
+
+<footer>
+希尔伯特变换入门读本 · 共 10 章 · 全部公式由 MathJax 渲染，交互图由原生 Canvas 实时计算<br>
+建议阅读顺序：<a href="01-motivation.html">第 1 章</a> → 第 2 章 → …… → 第 10 章
+</footer>
+
+</div>
+</body>
+</html>

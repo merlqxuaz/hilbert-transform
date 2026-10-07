@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>第6章 解析信号与瞬时频率</title>
+<script>
+window.MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']],displayMath:[['$$','$$'],['\\[','\\]']]},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<style>
+:root{--paper:#fbfaf6;--ink:#20242c;--muted:#5d6472;--line:#e3dfd3;--accent:#1f6f8b;--accent2:#b4531f;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:Georgia,"Songti SC","Noto Serif SC","Source Han Serif SC","SimSun",serif;line-height:1.85;font-size:17px;-webkit-text-size-adjust:100%}
+.wrap{max-width:880px;margin:0 auto;padding:0 22px 90px}
+header.ch{border-bottom:3px double var(--line);padding:44px 0 24px;margin-bottom:34px}
+.kicker{font-family:ui-sans-serif,system-ui,sans-serif;letter-spacing:.2em;font-size:11.5px;color:var(--accent);text-transform:uppercase}
+h1{font-size:29px;margin:12px 0 8px;line-height:1.3}
+.sub{color:var(--muted);font-size:15.5px;margin:0}
+h2{font-size:22px;margin:46px 0 14px;padding-left:12px;border-left:5px solid var(--accent)}
+h3{font-size:18px;margin:30px 0 10px;color:var(--accent2)}
+p{margin:14px 0}
+.box{background:#fff;border:1px solid var(--line);border-radius:8px;padding:14px 18px;margin:22px 0}
+.tag{font-family:ui-sans-serif,system-ui,sans-serif;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;display:block;margin-bottom:6px}
+.def{border-left:5px solid #1f6f8b}.def .tag{color:#1f6f8b}
+.thm{border-left:5px solid #7a4fb5}.thm .tag{color:#6b3fa8}
+.ex{border-left:5px solid #2e8b57}.ex .tag{color:#24704a}
+.warn{border-left:5px solid #c0392b;background:#fff8f7}.warn .tag{color:#a5321f}
+.tip{border-left:5px solid #d99b16;background:#fffdf5}.tip .tag{color:#a8760a}
+.pf{background:#f7f5ee;border-left:3px solid #c9c4b6;padding:2px 16px;margin:12px 0 18px;font-size:16px}
+.pf::after{content:"∎";display:block;text-align:right;color:#8a8f9a;margin-top:-8px}
+a{color:var(--accent);text-underline-offset:3px}
+table{width:100%;border-collapse:collapse;margin:20px 0;font-size:15px;background:#fff}
+th,td{border:1px solid var(--line);padding:8px 11px;text-align:left;vertical-align:top}
+th{background:#f2efe6;font-family:ui-sans-serif,system-ui,sans-serif;font-size:13.5px}
+ol,ul{padding-left:1.5em}li{margin:7px 0}
+figure.demo{margin:26px 0;border:1px solid var(--line);background:#fff;border-radius:10px;padding:14px}
+canvas{width:100%;display:block;border-radius:4px}
+.ctrl{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;font-family:ui-sans-serif,system-ui,sans-serif;font-size:13px;margin-top:12px}
+.ctrl label{display:flex;align-items:center;gap:8px;flex:1 1 200px}
+input[type=range]{flex:1;min-width:80px;accent-color:var(--accent)}
+select{font-family:inherit;font-size:13px;padding:4px 8px;border:1px solid var(--line);border-radius:6px;background:#f8f6f0}
+figcaption{font-family:ui-sans-serif,system-ui,sans-serif;font-size:13px;color:var(--muted);margin-top:10px;line-height:1.65}
+nav.pager{display:flex;justify-content:space-between;gap:12px;margin-top:64px;border-top:1px solid var(--line);padding-top:18px;font-family:ui-sans-serif,system-ui,sans-serif;font-size:14px}
+nav.pager a{text-decoration:none}
+.q{background:#fff;border:1px dashed var(--line);border-left:5px solid #8a8f9a;border-radius:8px;padding:14px 18px;margin:22px 0}
+.q .tag{color:#6c717c}
+pre{background:#22262e;color:#e8e6e1;padding:14px 16px;border-radius:8px;overflow:auto;line-height:1.65;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13.5px}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:14.5px;background:#efece1;padding:1px 5px;border-radius:4px}
+pre code{background:none;padding:0;font-size:13.5px;color:inherit}
+.cmt{color:#8f9aa8}
+.big{font-size:19px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="ch">
+  <div class="kicker">第 6 章</div>
+  <h1>解析信号与瞬时频率</h1>
+  <p class="sub">这是希尔伯特变换的主战场。前五章的所有准备都是为了这一章：把实信号升级成复信号，从而定义出"此刻的幅度"和"此刻的频率"。也是全书<strong>陷阱最多</strong>的一章。</p>
+</header>
+
+<h2>6.1 构造</h2>
+
+<div class="box def">
+  <span class="tag">定义 6.1 · 解析信号</span>
+  <p style="margin:6px 0 0">实信号 $x(t)$ 的<strong>解析信号</strong>（analytic signal）定义为</p>
+  <p class="big">$$z(t)=x(t)+j\,\hat{x}(t)=x(t)+j\,\mathcal{H}\{x\}(t)$$</p>
+  <p style="margin:6px 0 0">也记作 $z=x+j\mathcal{H}x=(I+j\mathcal{H})x$。它是复值的。</p>
+</div>
+
+<p>为什么叫"解析"？因为由 Titchmarsh 定理（定理 5.2），这样构造出来的 $z(t)$ 恰好是某个<strong>上半复平面解析函数</strong>在实轴上的取值。名字来自复变函数，不是来自信号处理。</p>
+
+<p>先核对最简单的例子。取 $x=\cos\omega_0t$（$\omega_0&gt;0$），则 $\hat x=\sin\omega_0t$，于是</p>
+
+<p>$$z(t)=\cos\omega_0t+j\sin\omega_0t=e^{j\omega_0t}$$</p>
+
+<p>正是第 1 章那个"转动的轮子"。<strong>解析信号就是把实信号还原成它背后的旋转矢量。</strong></p>
+
+<h2>6.2 关键性质：单边频谱</h2>
+
+<div class="box thm">
+  <span class="tag">定理 6.1 · 解析信号只含正频率</span>
+  <p style="margin:6px 0 0">$$Z(\omega)=\big[1+\mathrm{sgn}(\omega)\big]X(\omega)=2\,X(\omega)\,u(\omega)=\begin{cases}2X(\omega),&\omega&gt;0\\ X(0),&\omega=0\\ 0,&\omega&lt;0\end{cases}$$</p>
+</div>
+
+<div class="pf">
+<p><strong>证</strong>　对定义两边做傅里叶变换，用 $\hat{X}=-j\,\mathrm{sgn}(\omega)X$：</p>
+<p>$$Z(\omega)=X(\omega)+j\cdot\big(-j\,\mathrm{sgn}(\omega)X(\omega)\big)=X(\omega)+\mathrm{sgn}(\omega)X(\omega)=\big[1+\mathrm{sgn}(\omega)\big]X(\omega)$$</p>
+<p>而 $1+\mathrm{sgn}(\omega)$ 在 $\omega&gt;0$ 时为 $2$、在 $\omega&lt;0$ 时为 $0$、在 $\omega=0$ 时为 $1$（即 $2u(\omega)$，见第 2.6.2 节）。</p>
+</div>
+
+<p>这条定理是整个第 6 章的支点，值得用三种语言重述一遍：</p>
+
+<table>
+<tr><th>语言</th><th>说法</th></tr>
+<tr><td>数学</td><td>$Z(\omega)=0$ 对一切 $\omega&lt;0$</td></tr>
+<tr><td>信号处理</td><td>解析信号是"单边谱信号"，负频率被彻底删除，正频率幅度翻倍（保持总能量）</td></tr>
+<tr><td>直观</td><td>实信号的负频率只是正频率的镜像（第 2.5.3 节），是冗余的。解析信号把这份冗余<strong>换成了相位信息</strong>。</td></tr>
+</table>
+
+<div class="box tip">
+  <span class="tag">这给了我们算法</span>
+  <p style="margin:6px 0 0">定理 6.1 直接就是一个<strong>计算方法</strong>：想求解析信号（从而求希尔伯特变换），不必做主值积分 ——</p>
+  <ol style="margin:6px 0 0">
+    <li>做 FFT；</li>
+    <li>把负频率的系数全部置零，正频率的系数乘 2（直流和奈奎斯特点保持不变）；</li>
+    <li>做逆 FFT。</li>
+  </ol>
+  <p style="margin:6px 0 0">得到的复序列实部是原信号，<strong>虚部就是希尔伯特变换</strong>。这正是 MATLAB <code>hilbert()</code> 与 SciPy <code>scipy.signal.hilbert()</code> 的实现（注意这两个函数返回的是<strong>解析信号</strong>，不是希尔伯特变换本身 —— 见第 7 章的坑列表）。本书所有交互图都用这个算法实时计算。</p>
+</div>
+
+<h2>6.3 三个瞬时量</h2>
+
+<p>有了复信号，就可以像分解复数一样把它写成"模 × 相位因子"：</p>
+
+<p class="big">$$z(t)=A(t)\,e^{j\phi(t)}$$</p>
+
+<div class="box def">
+  <span class="tag">定义 6.2 · 瞬时幅度、相位、频率</span>
+  <table style="margin:8px 0 0">
+  <tr><th>名称</th><th>定义</th><th>别名</th></tr>
+  <tr><td><strong>瞬时幅度</strong></td><td>$A(t)=|z(t)|=\sqrt{x^2(t)+\hat{x}^2(t)}$</td><td>包络（envelope）、瞬时振幅</td></tr>
+  <tr><td><strong>瞬时相位</strong></td><td>$\phi(t)=\arg z(t)=\operatorname{atan2}\big(\hat{x}(t),\,x(t)\big)$</td><td>—</td></tr>
+  <tr><td><strong>瞬时角频率</strong></td><td>$\omega_i(t)=\dfrac{\mathrm{d}\phi(t)}{\mathrm{d}t}$</td><td>瞬时频率 $f_i=\omega_i/2\pi$</td></tr>
+  </table>
+</div>
+
+<p>于是原信号可以写成</p>
+
+<p>$$x(t)=\operatorname{Re}\{z(t)\}=A(t)\cos\phi(t)$$</p>
+
+<p>这个分解叫<strong>"幅相分解"</strong>。它把任意实信号唯一地写成"一个慢变的幅度乘一个振荡"，而且给出了明确的计算公式。<em>唯一性</em>是关键 —— 在解析信号的框架之外，"包络"和"瞬时频率"这两个词是模糊的（有无穷多种 $A\cos\phi$ 的写法），正是希尔伯特变换给了它们唯一的定义。</p>
+
+<h3>6.3.1 瞬时频率的另一个表达式</h3>
+
+<p>定义式 $\omega_i=\dot\phi$ 要求先算出相位 $\phi=\operatorname{atan2}(\hat x,x)$ 再求导，而反正切会把相位卷到 $(-\pi,\pi]$ 里（6.6.3 节的麻烦就出在这）。下面把它改写成一个只用 $x,\hat x$ 及其导数的公式，绕开反三角函数。</p>
+
+<div class="box thm">
+  <span class="tag">推导 · 瞬时频率的微分形式</span>
+
+  <p style="margin:6px 0 0"><strong>第一步 · 从一个不含反三角函数的关系式出发。</strong></p>
+  <p>与其对 $\phi=\arctan\frac{\hat x}{x}$ 求导，不如先把反正切消掉。两边取正切：</p>
+  <p>$$\tan\phi(t)=\frac{\hat x(t)}{x(t)}$$</p>
+  <p>这样等号两边都是初等函数，可以直接求导。</p>
+
+  <p style="margin:14px 0 0"><strong>第二步 · 两边同时对 $t$ 求导。</strong></p>
+  <p>左边用链式法则，$\frac{\mathrm{d}}{\mathrm{d}\phi}\tan\phi=\sec^2\phi$：</p>
+  <p>$$\frac{\mathrm{d}}{\mathrm{d}t}\tan\phi=\sec^2\phi\cdot\dot\phi$$</p>
+  <p>右边用商的求导法则 $\left(\frac{u}{v}\right)'=\frac{u'v-uv'}{v^2}$，取 $u=\hat x$、$v=x$：</p>
+  <p>$$\frac{\mathrm{d}}{\mathrm{d}t}\frac{\hat x}{x}=\frac{\dot{\hat x}\,x-\hat x\,\dot x}{x^2}$$</p>
+  <p>两边相等：</p>
+  <p>$$\sec^2\phi\cdot\dot\phi=\frac{x\,\dot{\hat x}-\hat x\,\dot x}{x^2}$$</p>
+
+  <p style="margin:14px 0 0"><strong>第三步 · 把 $\sec^2\phi$ 换成 $x,\hat x$ 的表达式。</strong></p>
+  <p>用恒等式 $\sec^2\phi=1+\tan^2\phi$，再代入第一步的 $\tan\phi=\hat x/x$：</p>
+  <p>$$\sec^2\phi=1+\frac{\hat x^2}{x^2}=\frac{x^2+\hat x^2}{x^2}$$</p>
+
+  <p style="margin:14px 0 0"><strong>第四步 · 代回并解出 $\dot\phi$。</strong></p>
+  <p>$$\frac{x^2+\hat x^2}{x^2}\cdot\dot\phi=\frac{x\,\dot{\hat x}-\hat x\,\dot x}{x^2}$$</p>
+  <p>两边同乘 $x^2$（$x^2$ 恰好约掉，这就是为什么最终公式里没有单独的 $x^2$），再除以 $x^2+\hat x^2$：</p>
+  <p>$$\boxed{\ \omega_i(t)=\dot\phi(t)=\frac{x(t)\,\dot{\hat{x}}(t)-\hat{x}(t)\,\dot{x}(t)}{x^2(t)+\hat{x}^2(t)}\ }$$</p>
+
+  <p style="margin:14px 0 0"><strong>第五步 · 写成复数形式（更好记，也是代码里用的形式）。</strong></p>
+  <p>取 $z=x+j\hat x$，则 $\bar z=x-j\hat x$、$\dot z=\dot x+j\dot{\hat x}$。把 $\bar z\,\dot z$ 展开：</p>
+  <p>$$\bar z\,\dot z=(x-j\hat x)(\dot x+j\dot{\hat x})=\underbrace{x\dot x+\hat x\dot{\hat x}}_{\text{实部}}+j\underbrace{\big(x\dot{\hat x}-\hat x\dot x\big)}_{\text{虚部}}$$</p>
+  <p>（展开时用了 $(-j\hat x)(j\dot{\hat x})=-j^2\hat x\dot{\hat x}=+\hat x\dot{\hat x}$。）</p>
+  <p>虚部正是分子，而分母 $x^2+\hat x^2=|z|^2$，所以</p>
+  <p>$$\omega_i(t)=\frac{\operatorname{Im}\{\overline{z}\,\dot{z}\}}{|z|^2}$$</p>
+
+  <p style="margin:14px 0 0"><strong>这一步的关键直觉</strong>：写成 $z=Ae^{j\phi}$ 就能一眼看穿这个公式。求导得 $\dot z=(\dot A+jA\dot\phi)e^{j\phi}$，于是</p>
+  <p>$$\bar z\,\dot z=Ae^{-j\phi}\cdot(\dot A+jA\dot\phi)e^{j\phi}=A\dot A+jA^2\dot\phi$$</p>
+  <p>实部 $A\dot A$ 记录"矢量伸缩得多快"，虚部 $A^2\dot\phi$ 记录"矢量转得多快"。除以 $|z|^2=A^2$ 就把长度的影响归一化掉，只剩下角速度 $\dot\phi$。所以 <strong>瞬时频率就是矢量 $z(t)$ 在复平面上转动的角速度</strong>，和它有多长无关。</p>
+</div>
+
+<p>这个形式在数值计算里更稳 —— 它<strong>完全不需要相位解缠</strong>（见 6.6.3 节），因为整个式子里根本没出现 $\phi$。代码见 6.6.3 节的"方法 B"。</p>
+
+<h2>6.4 例：调幅信号</h2>
+
+<div class="box ex">
+  <span class="tag">例 6.1 · AM 解调</span>
+  <p style="margin:6px 0 0">设 $x(t)=A(t)\cos(\omega_ct)$，$A(t)&gt;0$ 且带宽小于 $\omega_c$（Bedrosian 条件成立，定理 5.1）。求三个瞬时量。</p>
+  <p><strong>解</strong>　由 Bedrosian，$\hat x=A(t)\sin\omega_ct$，故</p>
+  <p>$$z(t)=A(t)\cos\omega_ct+jA(t)\sin\omega_ct=A(t)\,e^{j\omega_ct}$$</p>
+  <table style="margin:8px 0 0">
+  <tr><td>瞬时幅度</td><td>$A(t)=\sqrt{A^2\cos^2+A^2\sin^2}=A(t)$　✓ <strong>精确恢复调制信号</strong></td></tr>
+  <tr><td>瞬时相位</td><td>$\phi(t)=\omega_ct$</td></tr>
+  <tr><td>瞬时频率</td><td>$\omega_i=\dfrac{\mathrm{d}}{\mathrm{d}t}(\omega_ct)=\omega_c$　✓ <strong>恒为载波频率</strong></td></tr>
+  </table>
+  <p style="margin:6px 0 0">这就是<strong>希尔伯特包络检波</strong>的全部理论。三行代码可以实现，没有任何非线性失真。</p>
+</div>
+
+<h2>6.5 例：线性调频（chirp）</h2>
+
+<div class="box ex">
+  <span class="tag">例 6.2 · 扫频信号</span>
+  <p style="margin:6px 0 0">设 $x(t)=\cos\big(2\pi(f_0t+\tfrac{1}{2}kt^2)\big)$。这是雷达和声呐里的标准波形（"啾"声）。求瞬时频率。</p>
+  <p><strong>解</strong>　当扫频速率 $k$ 不太大、信号窄带时，$\hat{x}(t)\approx\sin\big(2\pi(f_0t+\frac{1}{2}kt^2)\big)$，于是</p>
+  <p>$$\phi(t)=2\pi\left(f_0t+\frac{1}{2}kt^2\right)\quad\Longrightarrow\quad f_i(t)=\frac{1}{2\pi}\frac{\mathrm{d}\phi}{\mathrm{d}t}=f_0+kt$$</p>
+  <p style="margin:6px 0 0">瞬时频率随时间<strong>线性上升</strong>，斜率就是扫频速率 $k$。这与"$k$ Hz/s 的扫频"的物理定义完全吻合 —— <strong>这是瞬时频率定义合理性的最有力证据</strong>。普通傅里叶变换对这个信号只能给出一个宽平的频谱，看不出"频率在变"这件事；瞬时频率一下就看出来了。</p>
+</div>
+
+<figure class="demo">
+  <canvas id="c1" height="400"></canvas>
+  <div class="ctrl">
+    <label>信号类型 <select id="sel1">
+      <option value="am">AM 调幅（例 6.1）</option>
+      <option value="chirp">线性 chirp（例 6.2）</option>
+      <option value="fm">FM 调频</option>
+      <option value="decay">衰减振动（模态测试）</option>
+      <option value="two">两分量之和（陷阱！）</option>
+      <option value="noise">窄带噪声</option>
+    </select></label>
+    <label>参数 <input id="s1" type="range" min="1" max="40" value="14"><span id="v1" style="min-width:30px;text-align:right">14</span></label>
+  </div>
+  <figcaption><strong>图 6.1</strong>　四行图：① 原信号 $x(t)$ 与瞬时幅度 $A(t)$（红）及其镜像 $-A(t)$；② 瞬时相位 $\phi(t)$（已解缠，随时间累积上升）；③ 瞬时频率 $f_i(t)$；④ 复平面上 $z(t)=x+j\hat x$ 的轨迹。对 AM 信号，$f_i$ 应当是一条水平线；对 chirp，应当是一条斜线。<strong>把类型换成"两分量之和"，观察 $f_i$ 如何剧烈振荡甚至变负 —— 那是 6.6 节要讲的陷阱。</strong></figcaption>
+</figure>
+
+<h2>6.6 四个必须知道的陷阱</h2>
+
+<p>瞬时频率这个概念极其有用，也极其容易被误用。下面四条是文献里被反复强调的警告。<strong>不懂这四条就用瞬时频率，结论很可能是错的。</strong></p>
+
+<h3>6.6.1 陷阱一：多分量信号的瞬时频率没有意义</h3>
+
+<p>考虑两个等幅正弦之和：</p>
+
+<p>$$x(t)=\cos(\omega_1t)+\cos(\omega_2t),\qquad \omega_1&lt;\omega_2$$</p>
+
+<p>由线性性（性质 1）与例 4.1，每一项的解析信号就是对应的复指数，所以 $z=e^{j\omega_1t}+e^{j\omega_2t}$。把它整理成"包络 × 载波"的形式：</p>
+
+<p><strong>第一步 · 引入中心频率与半频差。</strong>记</p>
+<p>$$\bar\omega=\frac{\omega_1+\omega_2}{2}\ (\text{中心频率}),\qquad \Delta=\frac{\omega_2-\omega_1}{2}\ (\text{半频差})$$</p>
+<p>则 $\omega_1=\bar\omega-\Delta$、$\omega_2=\bar\omega+\Delta$（相加、相减各验证一次即可）。</p>
+
+<p><strong>第二步 · 把公共的 $e^{j\bar\omega t}$ 提出来。</strong>复指数相乘即指数相加，所以可以反过来拆：</p>
+<p>$$z(t)=e^{j(\bar\omega-\Delta)t}+e^{j(\bar\omega+\Delta)t}=e^{j\bar\omega t}\Big(e^{-j\Delta t}+e^{j\Delta t}\Big)$$</p>
+
+<p><strong>第三步 · 括号里用欧拉反公式并成余弦。</strong>由 $e^{j\theta}+e^{-j\theta}=2\cos\theta$（第 2.1.2 节），取 $\theta=\Delta t$：</p>
+<p>$$z(t)=2\cos(\Delta t)\,e^{j\bar\omega t}=2\cos\!\left(\frac{\omega_2-\omega_1}{2}t\right)e^{j\frac{\omega_1+\omega_2}{2}t}$$</p>
+
+<p>看起来很漂亮：瞬时幅度是 $2|\cos\frac{\Delta\omega}{2}t|$（拍频包络），瞬时频率是中心频率 $\frac{\omega_1+\omega_2}{2}$。但<strong>问题出在 $\cos$ 变号的时刻</strong>：$A(t)$ 必须非负，所以每当 $\cos\frac{\Delta\omega}{2}t$ 穿过零，相位就要<strong>跳变 $\pi$</strong>，导致瞬时频率出现 $\delta$ 型的尖峰。</p>
+
+<p>更糟的是不等幅的情形：设 $z=e^{j\omega_1t}+a\,e^{j\omega_2t}$，当两个分量幅度接近（$a\to1$）时，$z$ 在复平面上的轨迹会<strong>紧贴原点</strong>（$a=1$ 时恰好穿过原点），此时瞬时频率会甩出剧烈的<strong>负值</strong>（可算出 $\omega_i^{\min}=\omega_1-\frac{a}{1-a}(\omega_2-\omega_1)$，只要 $a&gt;\omega_1/\omega_2$ 就为负，见第 9 章题 6.7）—— 物理上无法解释。</p>
+
+<div class="box warn">
+  <span class="tag">结论</span>
+  <p style="margin:6px 0 0">"瞬时频率"只对<strong>单分量（monocomponent）</strong>信号有意义。对多分量信号，必须<strong>先分解</strong>（用带通滤波、小波、或经验模态分解 EMD），再对每个分量分别求瞬时频率。把整段宽带信号直接丢给 <code>hilbert()</code> 然后求导，是工程上最常见的错误之一。</p>
+</div>
+
+<h3>6.6.2 陷阱二：瞬时频率可以为负</h3>
+
+<p>虽然解析信号的<strong>频谱</strong>只有正频率，但它的<strong>瞬时频率</strong>完全可以是负的！这看起来矛盾，其实不然 —— 前者是全局性质（关于整段信号的傅里叶分解），后者是局部性质（关于某一时刻的转动方向）。两者没有必然联系。</p>
+
+<p>不过有一条约束是跑不掉的：<strong>瞬时频率按能量加权的平均值，恰好等于频谱的重心，因而必定为正。</strong>即</p>
+
+<p>$$\frac{\int \omega_i(t)\,A^2(t)\,\mathrm{d}t}{\int A^2(t)\,\mathrm{d}t}=\frac{\int_0^\infty \omega\,|Z(\omega)|^2\,\mathrm{d}\omega}{\int_0^\infty |Z(\omega)|^2\,\mathrm{d}\omega}\;&gt;\;0$$</p>
+
+<div class="box thm">
+  <span class="tag">证明 · 为什么加权平均一定是正的</span>
+
+  <p style="margin:6px 0 0"><strong>第一步 · 把分子换成一个能做傅里叶变换的量。</strong></p>
+  <p>由 6.3.1 节末尾的展开，$\bar z\,\dot z=A\dot A+jA^2\dot\phi$，取虚部即</p>
+  <p>$$\operatorname{Im}\{\bar z\,\dot z\}=A^2\dot\phi=A^2(t)\,\omega_i(t)$$</p>
+  <p>所以分子可以整体写成</p>
+  <p>$$\int \omega_i(t)A^2(t)\,\mathrm{d}t=\int\operatorname{Im}\{\bar z(t)\,\dot z(t)\}\,\mathrm{d}t=\operatorname{Im}\left\{\int \bar z(t)\,\dot z(t)\,\mathrm{d}t\right\}$$</p>
+  <p>（取虚部和积分都是线性运算，可以交换次序。）这一步的用意是：$\omega_i$ 本身不好做傅里叶变换，$\bar z\dot z$ 却好办。</p>
+
+  <p style="margin:14px 0 0"><strong>第二步 · 用广义 Parseval 把积分搬到频域。</strong></p>
+  <p>广义 Parseval 定理说 $\int \overline{f(t)}\,g(t)\,\mathrm{d}t=\frac{1}{2\pi}\int\overline{F(\omega)}\,G(\omega)\,\mathrm{d}\omega$。取 $f=z$、$g=\dot z$。求导在频域是乘 $j\omega$（第 2.5 节），即 $\mathcal{F}\{\dot z\}=j\omega Z(\omega)$，于是</p>
+  <p>$$\int \bar z\,\dot z\,\mathrm{d}t=\frac{1}{2\pi}\int \overline{Z(\omega)}\cdot j\omega Z(\omega)\,\mathrm{d}\omega=\frac{j}{2\pi}\int \omega\,\underbrace{\overline{Z}Z}_{=\,|Z|^2}\,\mathrm{d}\omega=\frac{j}{2\pi}\int \omega\,|Z(\omega)|^2\,\mathrm{d}\omega$$</p>
+
+  <p style="margin:14px 0 0"><strong>第三步 · 取虚部。</strong></p>
+  <p>$\int\omega|Z|^2\mathrm{d}\omega$ 是实数（$\omega$ 实、$|Z|^2$ 实），所以整个式子是"$j$ × 实数"，虚部就是那个实数本身：</p>
+  <p>$$\int \omega_i(t)A^2(t)\,\mathrm{d}t=\frac{1}{2\pi}\int \omega\,|Z(\omega)|^2\,\mathrm{d}\omega$$</p>
+
+  <p style="margin:14px 0 0"><strong>第四步 · 分母同样搬到频域。</strong></p>
+  <p>$A^2=|z|^2$，由 Parseval 定理（定理 2.3）</p>
+  <p>$$\int A^2(t)\,\mathrm{d}t=\int|z(t)|^2\,\mathrm{d}t=\frac{1}{2\pi}\int|Z(\omega)|^2\,\mathrm{d}\omega$$</p>
+
+  <p style="margin:14px 0 0"><strong>第五步 · 相除，并用单边谱这个关键条件。</strong></p>
+  <p>两个 $\frac{1}{2\pi}$ 约掉：</p>
+  <p>$$\frac{\int \omega_i A^2\,\mathrm{d}t}{\int A^2\,\mathrm{d}t}=\frac{\int_{-\infty}^{\infty} \omega\,|Z(\omega)|^2\,\mathrm{d}\omega}{\int_{-\infty}^{\infty}|Z(\omega)|^2\,\mathrm{d}\omega}$$</p>
+  <p>现在用定理 6.1：解析信号的频谱是<strong>单边</strong>的，$Z(\omega)=0$ 对一切 $\omega&lt;0$。所以两个积分实际上都只在 $[0,\infty)$ 上有贡献：</p>
+  <p>$$=\frac{\int_0^\infty \omega\,|Z(\omega)|^2\,\mathrm{d}\omega}{\int_0^\infty |Z(\omega)|^2\,\mathrm{d}\omega}$$</p>
+  <p>分子的被积函数 $\omega|Z|^2$ 在 $\omega\ge0$ 上处处非负，分母恒正，所以整个比值 $&gt;0$（除非信号恒为零）。$\blacksquare$</p>
+
+  <p style="margin:14px 0 0"><strong>这个结论说明了什么</strong>：$\omega_i(t)$ 在某些时刻可以是负的，但它必须"借了还回来"—— 以 $A^2(t)$ 为权重平均之后，账一定是正的。所以负的瞬时频率只能出现在<strong>包络 $A(t)$ 很小的时刻</strong>（权重小，才不影响平均值）。这也正好对上图 6.2 的现象：轨迹靠近原点（$|z|$ 小）的地方，瞬时频率才会甩出剧烈的负向尖峰。</p>
+</div>
+
+<p>实用上的判断因此很简单：<strong>若算出大量负瞬时频率，几乎肯定是信号不满足单分量条件</strong>，应该回去检查分解。另外，正因为负值集中在 $A$ 小的地方，工程上常用<strong>以 $A^2$ 加权的平均频率</strong>代替裸的 $\omega_i$，把那些不可靠的时刻自动压下去（第 8.5 节地震属性里就是这么做的）。</p>
+
+<h3>6.6.3 陷阱三：相位解缠（phase unwrapping）</h3>
+
+<p><code>atan2</code> 返回的相位被限制在 $(-\pi,\pi]$，所以真实相位每累积 $2\pi$，计算结果就会"跳回来"，形成锯齿。直接对锯齿求导，每个跳变处都会产生一个巨大的虚假尖峰。</p>
+
+<p>两种解决办法：</p>
+
+<table>
+<tr><th>办法</th><th>做法</th><th>优缺点</th></tr>
+<tr><td><strong>解缠</strong></td><td>逐点检查相邻差，若 $|\Delta\phi|&gt;\pi$ 则加减 $2\pi$ 补偿。NumPy: <code>np.unwrap</code>；MATLAB: <code>unwrap</code></td><td>直观；但在噪声大或相邻点相位差本身接近 $\pi$（欠采样）时会解错</td></tr>
+<tr><td><strong>直接用微分公式</strong></td><td>用 6.3.1 节的 $\omega_i=\frac{x\dot{\hat x}-\hat x\dot x}{x^2+\hat x^2}$</td><td>完全绕开解缠，数值更稳；推荐做法</td></tr>
+</table>
+
+<p>参考代码（两种都给，方便对照）：</p>
+
+<pre><code>import numpy as np
+from scipy.signal import hilbert
+
+def instantaneous(x, fs):
+    z   = hilbert(x)                 # 解析信号（注意：不是 H{x}）
+    amp = np.abs(z)                  # 瞬时幅度
+    # 方法 A：解缠后求导
+    fi_A = np.gradient(np.unwrap(np.angle(z))) * fs / (2*np.pi)
+    # 方法 B：微分公式，无需解缠（更稳）
+    dz   = np.gradient(z) * fs
+    fi_B = np.imag(np.conj(z) * dz) / (np.abs(z)**2 + 1e-20) / (2*np.pi)
+    return amp, fi_A, fi_B
+</code></pre>
+
+<div class="box warn">
+  <span class="tag">还有一层误差：求导本身</span>
+  <p style="margin:6px 0 0">上面两种办法都要<strong>数值求导</strong>，而这一步有它自己的系统误差，与希尔伯特变换无关，却常被忽略。用中心差分 $\dot z\approx\frac{z[n+1]-z[n-1]}{2\Delta t}$ 作用在 $e^{j\omega t}$ 上：</p>
+  <p>$$\frac{e^{j\omega(t+\Delta t)}-e^{j\omega(t-\Delta t)}}{2\Delta t}=e^{j\omega t}\cdot j\,\frac{\sin(\omega\Delta t)}{\Delta t}$$</p>
+  <p>本该得到 $j\omega$，实际得到 $j\frac{\sin\omega\Delta t}{\Delta t}$。所以算出的瞬时频率<strong>被系统性低估</strong>：</p>
+  <p>$$\boxed{\ \hat{\omega}_i=\omega_i\cdot\frac{\sin(\omega_i\Delta t)}{\omega_i\Delta t}=\omega_i\cdot\mathrm{sinc}(\omega_i\Delta t)\ }$$</p>
+  <p style="margin:6px 0 0">代入 $\omega_i\Delta t=2\pi/(\text{每周期采样点数})$，得到下表：</p>
+  <table style="margin:8px 0 0">
+  <tr><th>每周期采样点</th><th>4</th><th>6</th><th>8</th><th>10</th><th>16</th><th>20</th><th>32</th></tr>
+  <tr><td>频率低估量</td><td>36.3%</td><td>17.3%</td><td><strong>10.0%</strong></td><td>6.5%</td><td>2.6%</td><td>1.6%</td><td>0.6%</td></tr>
+  </table>
+  <p style="margin:6px 0 0"><strong>这是本书交互图里 chirp 的瞬时频率在高频段略微偏低的原因</strong>，不是算法出错。三条对策：</p>
+  <ol style="margin:6px 0 0">
+    <li><strong>提高采样率</strong>，做到每周期 20 点以上（误差 &lt;2%）。最省事。</li>
+    <li><strong>反解修正</strong>：算出 $\hat f_i$ 后除以修正因子。NumPy 的 <code>np.sinc(a)</code> 定义为 $\frac{\sin\pi a}{\pi a}$（含 $\pi$），故 $\omega_i\Delta t=2\pi f_i/f_s$ 对应的参数是 $2f_i/f_s$：
+      <pre style="margin:6px 0 0"><code>fi = fi / np.sinc(2*fi/fs)   <span class="cmt"># 系数是 2，不是 1</span></code></pre>
+      这一步能把 8 点/周期时的 10% 误差压到 1% 以内。</li>
+    <li><strong>改用相位差分</strong>：$\omega_i\approx\frac{\Delta\phi}{\Delta t}$（对解缠后的相位做差分），它没有这个 $\mathrm{sinc}$ 失真 —— 但代价是要面对解缠的风险。<strong>两种方法各有各的病</strong>，这就是为什么高精度场合要两种都算一遍互相核对。</li>
+  </ol>
+</div>
+
+<h3>6.6.4 陷阱四：窄带条件与 Nuttall 定理</h3>
+
+<p>例 6.1 用 Bedrosian 定理保证了 $\hat{x}=A\sin\omega_ct$。但如果 $A(t)$ 的带宽<strong>不</strong>小于 $\omega_c$（宽带调制），Bedrosian 失效，包络就算不准了。</p>
+
+<p>Bedrosian 定理只回答"成立/不成立"，没回答"不成立时错多少"。Nuttall 定理补上了这个定量的答案，而且它的形式非常好记。</p>
+
+<div class="box thm">
+  <span class="tag">定理 · Nuttall（1966）</span>
+  <p style="margin:6px 0 0">设实信号写成 $x(t)=A(t)\cos\phi(t)$（$A\ge0$）。用 $A(t)\sin\phi(t)$ 去近似真正的 $\hat x=\mathcal{H}\{x\}$，其均方误差为</p>
+  <p>$$\varepsilon^2=\int_{-\infty}^{\infty}\Big[\hat{x}(t)-A(t)\sin\phi(t)\Big]^2\mathrm{d}t=\frac{2}{2\pi}\int_{-\infty}^{0}\big|Z_q(\omega)\big|^2\,\mathrm{d}\omega$$</p>
+  <p style="margin:6px 0 0">其中 $Z_q=A e^{j\phi}$ 是"假定的"复信号。一句话：<strong>误差 = 这个假定复信号漏到负频率去的那部分能量的两倍。</strong></p>
+</div>
+
+<p><strong>为什么会是这个形式？</strong>不必看完整证明，抓住机理就够了，分三句话：</p>
+
+<ol>
+  <li><strong>我们真正想要的是什么。</strong>写 $x=A\cos\phi$ 时，心里默认的复信号是 $Z_q=Ae^{j\phi}$，它的实部确实是 $x$，虚部是 $A\sin\phi$。所以"$\hat x\approx A\sin\phi$"这句话，等价于"$Z_q$ 就是 $x$ 的解析信号"。</li>
+  <li><strong>解析信号唯一的身份证是什么。</strong>定理 6.1 说：一个复信号是某实信号的解析信号，<em>当且仅当</em>它的频谱在负频率上恒为零。所以 $Z_q$ 够不够格，只看一件事 —— 它在 $\omega&lt;0$ 上剩多少。</li>
+  <li><strong>于是误差就只能由那部分决定。</strong>真正的解析信号 $z$ 是把 $Z_q$ 的负频率部分砍掉、正频率部分补齐后的结果，两者之差完全由"漏到负频率的那一块"刻画。把这个差用 Parseval 换算回时域，就得到上面的式子；系数 $2$ 来自"砍掉负频率的同时正频率要加倍"（定理 6.1 的那个 $\times2$）。</li>
+</ol>
+
+<p><strong>所以 Nuttall 定理和 Bedrosian 定理其实是同一件事的两种说法</strong>：</p>
+<table>
+  <tr><th></th><th>Bedrosian（第 5.9 节）</th><th>Nuttall</th></tr>
+  <tr><td>说法</td><td>频带分离 ⟹ $\mathcal{H}\{A\cos\omega_ct\}=A\sin\omega_ct$</td><td>误差 $=2\times$ 负频率残余能量</td></tr>
+  <tr><td>回答的问题</td><td>什么时候<em>完全</em>正确</td><td>不完全正确时<em>错多少</em></td></tr>
+  <tr><td>频域图像</td><td>$A$ 的谱推不动 $\cos\omega_ct$ 的谱越过原点</td><td>推过头了，越过原点的那部分就是误差</td></tr>
+</table>
+
+<p><strong>怎么用它做判断。</strong>$Z_q=Ae^{j\phi}$ 的频谱就是 $A$ 的频谱整体<em>右移</em> $\omega_c$（频移定理，定理 2.2）。所以"漏到负频率"的含义非常具体：<strong>$A(t)$ 的频谱有多少落在 $-\omega_c$ 左边</strong>。于是</p>
+<ul>
+  <li>$A$ 的带宽 $\ll\omega_c$（窄带）：几乎什么都不漏，误差近乎为零 —— 回到 Bedrosian 的理想情形；</li>
+  <li>$A$ 的带宽接近或超过 $\omega_c$（宽带）：大量能量漏过去，"包络"这个概念本身开始失去意义；</li>
+  <li>$A$ 的频谱衰减得<em>快不快</em>比它的<em>标称带宽</em>更重要 —— 这正是第 9 章题 5.6 中高斯包络（衰减 $e^{-\omega^2/4}$，几乎无漏）与矩形包络（衰减 $1/\omega$，明显有漏）差了几百个数量级的原因。<strong>实用准则：调制信号先加窗平滑，比单纯提高载波频率更有效。</strong></li>
+</ul>
+
+<div class="box tip">
+  <span class="tag">实用检查清单</span>
+  <p style="margin:6px 0 0">拿到一段数据，想求包络或瞬时频率，先问四个问题：</p>
+  <ol style="margin:6px 0 0">
+    <li><strong>去直流了吗？</strong>（第 4.3.4 节）</li>
+    <li><strong>是单分量吗？</strong>看频谱，有几个峰？多个峰就先滤波分离。</li>
+    <li><strong>窄带吗？</strong>带宽 $B$ 与中心频率 $f_0$ 之比 $B/f_0$ 应远小于 1（经验上 $&lt;0.5$）。</li>
+    <li><strong>相位处理对了吗？</strong>用解缠还是微分公式？</li>
+  </ol>
+  <p style="margin:6px 0 0">四条都过了，结果才可信。</p>
+</div>
+
+<figure class="demo">
+  <canvas id="c2" height="330"></canvas>
+  <div class="ctrl">
+    <label>第二分量幅度 $a_2$ <input id="s2" type="range" min="0" max="140" value="55"><span id="v2" style="min-width:36px;text-align:right">0.55</span></label>
+    <label>频率间距 <input id="s3" type="range" min="1" max="20" value="6"><span id="v3" style="min-width:30px;text-align:right">6</span></label>
+  </div>
+  <figcaption><strong>图 6.2</strong>　双分量信号 $x=\cos(2\pi\cdot 20t)+a_2\cos(2\pi(20{+}\Delta)t)$ 的瞬时频率。左：复平面轨迹与原点（红点）的关系。右：瞬时频率曲线。<strong>把 $a_2$ 从 0.5 拖到 0.9 附近</strong>，轨迹会从"远离原点"变成"紧贴原点"，右图的瞬时频率随之出现剧烈的负向尖峰（本例 $\omega_1/\omega_2=20/26\approx0.77$，$a_2$ 一旦越过它就出现负值）；继续拖过 $1.0$，主导分量换成高频那个，尖峰随之翻转为正向。这直观地展示了为什么多分量信号的瞬时频率不可信：它测的是矢量转动，而矢量掠过原点附近时，"转动"快得没有物理意义。</figcaption>
+</figure>
+
+<h2>6.7 与希尔伯特-黄变换（HHT）的联系</h2>
+
+<p>6.6.1 节说"多分量信号必须先分解"。那怎么分解？黄锷（Norden Huang）在 1998 年提出的<strong>经验模态分解</strong>（EMD, Empirical Mode Decomposition）提供了一个数据驱动的办法：</p>
+
+<ol>
+  <li>找出信号的所有极大值，用样条连成上包络；所有极小值连成下包络。</li>
+  <li>取两条包络的平均作为"局部趋势"，从原信号中减去。</li>
+  <li>重复，直到剩下的分量满足"极值点数与零点数相差不超过 1"等条件 —— 这个分量叫一个 <strong>IMF</strong>（本征模态函数，Intrinsic Mode Function）。</li>
+  <li>把该 IMF 从信号中减去，对余项重复，直到余项单调。</li>
+</ol>
+
+<p>结果是 $x(t)=\sum_k c_k(t)+r(t)$，每个 IMF $c_k$ 都是"准单分量"的。然后<strong>对每个 IMF 分别</strong>做希尔伯特变换求瞬时幅度和瞬时频率，画成时间-频率-能量的三维图，就是<strong>希尔伯特谱</strong>。整套流程叫 <strong>HHT（Hilbert–Huang Transform）</strong>。</p>
+
+<table>
+<tr><th>方法</th><th>基函数</th><th>时频分辨率</th><th>适用</th></tr>
+<tr><td>傅里叶变换</td><td>固定的 $e^{j\omega t}$</td><td>无时间分辨率</td><td>稳态、线性信号</td></tr>
+<tr><td>短时傅里叶（STFT）</td><td>加窗的 $e^{j\omega t}$</td><td>受窗长限制（测不准）</td><td>缓变非稳态</td></tr>
+<tr><td>小波变换</td><td>预先选定的母小波</td><td>多尺度，但仍受不确定性限制</td><td>突变、多尺度</td></tr>
+<tr><td><strong>HHT</strong></td><td><strong>从数据中自适应得到</strong></td><td>理论上不受测不准限制</td><td>非线性、非稳态</td></tr>
+</table>
+
+<div class="box warn">
+  <span class="tag">HHT 的争议</span>
+  <p style="margin:6px 0 0">HHT 在地球物理、生物医学、机械诊断领域应用极广，但它<strong>没有完整的数学理论</strong>：EMD 是一套算法流程而不是一个变换，缺少唯一性和收敛性证明，还存在"模态混叠"（一个 IMF 里混了多个尺度）和端点效应问题。后续的 EEMD、CEEMDAN、VMD 等改进方法都在处理这些毛病。用 HHT 发表结论时，通常需要补充别的方法交叉验证。</p>
+</div>
+
+<h2>6.8 本章要点</h2>
+
+<table>
+<tr><th>要点</th><th>内容</th></tr>
+<tr><td>解析信号</td><td>$z=x+j\hat{x}$，频谱单边：$Z(\omega)=2X(\omega)u(\omega)$</td></tr>
+<tr><td>算法</td><td>FFT → 负频置零、正频乘 2 → IFFT（虚部即 $\hat{x}$）</td></tr>
+<tr><td>瞬时幅度</td><td>$A=\sqrt{x^2+\hat{x}^2}$，即包络</td></tr>
+<tr><td>瞬时相位</td><td>$\phi=\operatorname{atan2}(\hat{x},x)$，须解缠</td></tr>
+<tr><td>瞬时频率</td><td>$\omega_i=\dot{\phi}=\dfrac{x\dot{\hat x}-\hat x\dot x}{x^2+\hat x^2}$（推荐后一形式）</td></tr>
+<tr><td>成立条件</td><td>去直流 + 单分量 + 窄带（Bedrosian / Nuttall）</td></tr>
+<tr><td>多分量对策</td><td>先分解（滤波 / 小波 / EMD），再逐分量求瞬时属性</td></tr>
+</table>
+
+<div class="q">
+  <span class="tag">本章练习</span>
+  <ol style="margin:6px 0 0">
+    <li>求 $x(t)=\cos(\omega_0t+\varphi)$ 的解析信号、瞬时幅度、瞬时相位、瞬时频率。</li>
+    <li>设 $x(t)=e^{-\alpha t}\cos(\omega_0t)\,u(t)$（衰减振动）。近似地（假设 $\alpha\ll\omega_0$）求 $A(t)$ 和 $\omega_i(t)$。由此说明如何从实测的自由衰减曲线估计阻尼比 $\zeta$。</li>
+    <li>验证定理 6.1：对 $x=\cos\omega_0t$ 直接算出 $Z(\omega)$，确认它在 $\omega=-\omega_0$ 处为零。</li>
+    <li>设 $x(t)=\cos(2\pi\cdot 10t)+\cos(2\pi\cdot 12t)$。写出 $z(t)$ 的解析表达式，求 $A(t)$，并指出 $\phi(t)$ 在哪些时刻发生 $\pi$ 跳变。</li>
+    <li>推导 6.3.1 节的公式 $\omega_i=\dfrac{x\dot{\hat x}-\hat x\dot x}{x^2+\hat x^2}$。（提示：对 $\tan\phi=\hat x/x$ 两边求导）</li>
+    <li>为什么 $A(t)=\sqrt{x^2+\hat x^2}$ 总是非负？这在多分量情形下引出什么问题？</li>
+    <li><strong>*</strong> 设 $z(t)=e^{j\omega_1t}+a\,e^{j\omega_2t}$（$0&lt;a&lt;1$，$\omega_1&lt;\omega_2$）。证明 $z$ 的轨迹包围原点，但瞬时频率<strong>并不</strong>始终为正：求出 $\omega_i$ 的最大值与最小值，指出它在什么条件下变负。再讨论 $a&gt;1$ 的情形。</li>
+    <li><strong>*</strong>（编程）用 Python 生成一段 chirp，分别用"解缠求导"和"微分公式"计算瞬时频率，加入不同强度的高斯噪声，比较两种方法的鲁棒性。</li>
+  </ol>
+  <p style="margin:10px 0 0;font-size:14.5px;color:#6c717c">完整解答见<a href="09-exercises.html">第 9 章习题册</a>。</p>
+</div>
+
+<nav class="pager">
+  <a href="05-properties.html">← 第 5 章　性质与定理</a>
+  <a href="07-discrete.html">第 7 章　在计算机上怎么算 →</a>
+</nav>
+
+</div>
+
+<script>
+function fft(re,im){const n=re.length;
+  for(let i=1,j=0;i<n;i++){let bit=n>>1;for(;j&bit;bit>>=1)j^=bit;j^=bit;
+    if(i<j){let t=re[i];re[i]=re[j];re[j]=t;t=im[i];im[i]=im[j];im[j]=t;}}
+  for(let len=2;len<=n;len<<=1){const ang=-2*Math.PI/len,half=len>>1;
+    for(let i=0;i<n;i+=len)for(let k=0;k<half;k++){
+      const wr=Math.cos(ang*k),wi=Math.sin(ang*k),ur=re[i+k],ui=im[i+k],
+            ar=re[i+k+half],ai=im[i+k+half],vr=ar*wr-ai*wi,vi=ar*wi+ai*wr;
+      re[i+k]=ur+vr;im[i+k]=ui+vi;re[i+k+half]=ur-vr;im[i+k+half]=ui-vi;}}}
+function ifft(re,im){const n=re.length;for(let i=0;i<n;i++)im[i]=-im[i];fft(re,im);
+  for(let i=0;i<n;i++){re[i]/=n;im[i]=-im[i]/n;}}
+function analytic(x){const n=x.length,re=Float64Array.from(x),im=new Float64Array(n);
+  fft(re,im);const h=new Float64Array(n);h[0]=1;
+  if(n%2===0){h[n/2]=1;for(let i=1;i<n/2;i++)h[i]=2;}else{for(let i=1;i<=(n-1)/2;i++)h[i]=2;}
+  for(let i=0;i<n;i++){re[i]*=h[i];im[i]*=h[i];}ifft(re,im);return{re:re,im:im};}
+function setupHiDPI(cv){
+  const dpr=window.devicePixelRatio||1;
+  if(!cv.dataset.baseH){cv.dataset.baseH=cv.getAttribute('height')||cv.clientHeight||300;}
+  const h=parseInt(cv.dataset.baseH,10);
+  const w=cv.clientWidth||cv.parentElement.clientWidth;
+  cv.style.height=h+'px';
+  const bw=Math.round(w*dpr),bh=Math.round(h*dpr);
+  if(cv.width!==bw||cv.height!==bh){cv.width=bw;cv.height=bh;}
+  const g=cv.getContext('2d');g.setTransform(dpr,0,0,dpr,0,0);
+  return {g:g,W:w,H:h};
+}
+function poly(g,pts,color,width,dash){if(!pts.length)return;g.save();g.beginPath();
+  if(dash)g.setLineDash(dash);
+  for(let i=0;i<pts.length;i++){i?g.lineTo(pts[i][0],pts[i][1]):g.moveTo(pts[i][0],pts[i][1]);}
+  g.strokeStyle=color;g.lineWidth=width||1.6;g.lineJoin='round';g.stroke();g.restore();}
+function axis(g,x0,y0,x1,y1){poly(g,[[x0,y0],[x1,y1]],'#c9c4b6',1);}
+/* 用微分公式算瞬时频率（免解缠），返回归一化频率（周期/全长） */
+function instFreq(x,im,N){
+  const f=new Float64Array(N);
+  for(let i=1;i<N-1;i++){
+    const dx=(x[i+1]-x[i-1])*0.5*N, dy=(im[i+1]-im[i-1])*0.5*N;
+    const den=x[i]*x[i]+im[i]*im[i]+1e-12;
+    f[i]=(x[i]*dy-im[i]*dx)/den/(2*Math.PI);
+  }
+  f[0]=f[1]; f[N-1]=f[N-2];
+  return f;
+}
+
+/* ===== 图 6.1 四联图 ===== */
+(function(){
+  const cv=document.getElementById('c1'),sel=document.getElementById('sel1'),
+        s=document.getElementById('s1'),v=document.getElementById('v1');
+  const N=1024;
+  let seed=12345;
+  function rnd(){seed=(seed*1103515245+12345)&0x7fffffff;return seed/0x7fffffff-0.5;}
+  function gen(){
+    const k=+s.value,m=sel.value,x=new Float64Array(N);
+    seed=12345;
+    /* 窄带噪声的 7 个随机幅度必须在逐点循环【之外】抽取，
+       否则每个采样点都换一组系数，得到的是宽带白噪声而不是窄带噪声 */
+    const nb=[];for(let q=0;q<7;q++)nb.push(rnd());
+    for(let i=0;i<N;i++){
+      const t=i/N;
+      if(m==='am') x[i]=(1+0.6*Math.sin(2*Math.PI*2*t))*Math.cos(2*Math.PI*k*t);
+      else if(m==='chirp') x[i]=Math.cos(2*Math.PI*(4*t+0.5*(k*1.6)*t*t));
+      else if(m==='fm') x[i]=Math.cos(2*Math.PI*k*t+3.0*Math.sin(2*Math.PI*2*t));
+      else if(m==='decay') x[i]=Math.exp(-3.2*t)*Math.cos(2*Math.PI*k*t);
+      else if(m==='two') x[i]=Math.cos(2*Math.PI*k*t)+0.85*Math.cos(2*Math.PI*(k+4)*t+0.4);
+      else if(m==='noise'){let s0=0;
+        for(let q=-3;q<=3;q++)s0+=nb[q+3]*Math.cos(2*Math.PI*(k+q*0.7)*t+q);
+        x[i]=s0*0.5;}
+    }
+    // 去直流
+    let mean=0;for(let i=0;i<N;i++)mean+=x[i];mean/=N;
+    for(let i=0;i<N;i++)x[i]-=mean;
+    return x;
+  }
+  function draw(){
+    const {g,W,H}=setupHiDPI(cv);
+    v.textContent=s.value;
+    const x=gen(), z=analytic(x), him=z.im;
+    const A=new Float64Array(N), ph=new Float64Array(N);
+    for(let i=0;i<N;i++){A[i]=Math.hypot(x[i],him[i]);ph[i]=Math.atan2(him[i],x[i]);}
+    // 解缠
+    const up=new Float64Array(N); up[0]=ph[0];
+    for(let i=1;i<N;i++){let d=ph[i]-ph[i-1];
+      while(d>Math.PI)d-=2*Math.PI; while(d<-Math.PI)d+=2*Math.PI; up[i]=up[i-1]+d;}
+    const fi=instFreq(x,him,N);
+    let mx=1e-6,fmin=1e9,fmax=-1e9,pmin=1e9,pmax=-1e9;
+    for(let i=0;i<N;i++){mx=Math.max(mx,A[i]);
+      if(i>3&&i<N-4){fmin=Math.min(fmin,fi[i]);fmax=Math.max(fmax,fi[i]);}
+      pmin=Math.min(pmin,up[i]);pmax=Math.max(pmax,up[i]);}
+    if(fmax-fmin<1e-6){fmax+=1;fmin-=1;}
+    const fpad=(fmax-fmin)*0.15; fmin-=fpad; fmax+=fpad;
+    g.clearRect(0,0,W,H);
+    const traceW=Math.min(H*0.22,W*0.24);
+    const padL=10,padR=traceW+26,w=W-padL-padR, X=i=>padL+w*i/(N-1);
+    const r=[H*0.135,H*0.40,H*0.66], amp=[H*0.095,H*0.085,H*0.085];
+    g.font='11.5px ui-sans-serif,system-ui,sans-serif';
+    // ① 信号 + 包络
+    axis(g,padL,r[0],padL+w,r[0]);
+    const p1=[],pe=[],pe2=[];
+    for(let i=0;i<N;i++){p1.push([X(i),r[0]-amp[0]*x[i]/mx]);
+      pe.push([X(i),r[0]-amp[0]*A[i]/mx]);pe2.push([X(i),r[0]+amp[0]*A[i]/mx]);}
+    poly(g,p1,'#20242c',1.3);poly(g,pe,'#c0392b',1.7);poly(g,pe2,'#e8a79f',1.2);
+    g.fillStyle='#5d6472';g.fillText('① x(t) 与瞬时幅度 A(t)',padL+2,r[0]-amp[0]-8);
+    // ② 相位
+    axis(g,padL,r[1]+amp[1],padL+w,r[1]+amp[1]);
+    const p2=[];for(let i=0;i<N;i++)p2.push([X(i),r[1]+amp[1]-2*amp[1]*(up[i]-pmin)/(pmax-pmin+1e-9)]);
+    poly(g,p2,'#6b3fa8',1.5);
+    g.fillStyle='#6b3fa8';g.fillText('② 瞬时相位 φ(t)（解缠后）',padL+2,r[1]-amp[1]-8);
+    // ③ 瞬时频率
+    const zeroY=r[2]+amp[2]-2*amp[2]*(0-fmin)/(fmax-fmin);
+    if(zeroY>r[2]-amp[2]-2&&zeroY<r[2]+amp[2]+2){
+      g.strokeStyle='#e8c8c2';g.setLineDash([4,3]);g.lineWidth=1.2;
+      g.beginPath();g.moveTo(padL,zeroY);g.lineTo(padL+w,zeroY);g.stroke();g.setLineDash([]);
+      g.fillStyle='#c0392b';g.fillText('0',padL+w+2,zeroY+4);
+    }
+    axis(g,padL,r[2]+amp[2],padL+w,r[2]+amp[2]);
+    /* 绘制区间必须与上面统计 fmin/fmax 的区间一致（i=4..N-5），
+       否则端点处的求导毛刺会把曲线甩出画布 */
+    const p3=[];for(let i=4;i<N-4;i++)p3.push([X(i),r[2]+amp[2]-2*amp[2]*(fi[i]-fmin)/(fmax-fmin)]);
+    poly(g,p3,'#1f6f8b',1.5);
+    g.fillStyle='#1f6f8b';
+    g.fillText('③ 瞬时频率 f_i(t)　范围 ['+fmin.toFixed(1)+', '+fmax.toFixed(1)+']',padL+2,r[2]-amp[2]-8);
+    // ④ 复平面轨迹
+    const cx=W-traceW/2-8, cy=H*0.42, R=traceW/2-4;
+    g.strokeStyle='#e3dfd3';g.lineWidth=1;
+    g.beginPath();g.arc(cx,cy,R,0,6.3);g.stroke();
+    axis(g,cx-R,cy,cx+R,cy);axis(g,cx,cy-R,cx,cy+R);
+    const pt=[];for(let i=0;i<N;i++)pt.push([cx+R*x[i]/mx,cy-R*him[i]/mx]);
+    poly(g,pt,'rgba(31,111,139,.55)',1);
+    g.fillStyle='#c0392b';g.beginPath();g.arc(cx,cy,3.4,0,6.3);g.fill();
+    g.fillStyle='#5d6472';g.font='11.5px ui-sans-serif,system-ui,sans-serif';
+    g.fillText('④ z(t) 轨迹',cx-R,cy+R+16);
+    g.fillText('(红点 = 原点)',cx-R,cy+R+30);
+  }
+  sel.addEventListener('change',draw);s.addEventListener('input',draw);
+  window.addEventListener('resize',draw);draw();
+})();
+
+/* ===== 图 6.2 双分量陷阱 ===== */
+(function(){
+  const cv=document.getElementById('c2');
+  const s2=document.getElementById('s2'),v2=document.getElementById('v2');
+  const s3=document.getElementById('s3'),v3=document.getElementById('v3');
+  const N=1024;
+  function draw(){
+    const {g,W,H}=setupHiDPI(cv);
+    const a2=(+s2.value)/100, dd=+s3.value;
+    v2.textContent=a2.toFixed(2); v3.textContent=dd;
+    const x=new Float64Array(N);
+    for(let i=0;i<N;i++){const t=i/N;
+      x[i]=Math.cos(2*Math.PI*20*t)+a2*Math.cos(2*Math.PI*(20+dd)*t+0.4);}
+    const z=analytic(x), fi=instFreq(x,z.im,N);
+    let mx=1e-6,fmin=1e9,fmax=-1e9;
+    for(let i=0;i<N;i++)mx=Math.max(mx,Math.hypot(x[i],z.im[i]));
+    for(let i=4;i<N-4;i++){fmin=Math.min(fmin,fi[i]);fmax=Math.max(fmax,fi[i]);}
+    const fpad=(fmax-fmin)*0.12||1; fmin-=fpad;fmax+=fpad;
+    g.clearRect(0,0,W,H);
+    // 左：轨迹
+    const R=Math.min(H*0.40,W*0.21), cx=R+22, cy=H*0.50;
+    g.strokeStyle='#e3dfd3';g.lineWidth=1;g.beginPath();g.arc(cx,cy,R,0,6.3);g.stroke();
+    axis(g,cx-R-8,cy,cx+R+8,cy);axis(g,cx,cy-R-8,cx,cy+R+8);
+    const pt=[];for(let i=0;i<N;i++)pt.push([cx+R*x[i]/mx,cy-R*z.im[i]/mx]);
+    poly(g,pt,'rgba(31,111,139,.5)',1.1);
+    g.fillStyle='#c0392b';g.beginPath();g.arc(cx,cy,4,0,6.3);g.fill();
+    g.font='12px ui-sans-serif,system-ui,sans-serif';g.fillStyle='#5d6472';
+    g.fillText('z(t) 复平面轨迹',cx-R,cy+R+22);
+    // 判断是否包围原点：最小 |z|
+    let minA=1e9; for(let i=0;i<N;i++)minA=Math.min(minA,Math.hypot(x[i],z.im[i]));
+    g.font='bold 12.5px ui-sans-serif,system-ui,sans-serif';
+    g.fillStyle=(minA>0.06*mx)?'#24704a':'#a5321f';
+    g.fillText(minA>0.06*mx?'✓ 轨迹远离原点':'✗ 轨迹紧贴原点（瞬时频率失控）',cx-R,cy-R-12);
+    // 右：瞬时频率
+    const px0=cx+R+42, px1=W-14, ww=px1-px0;
+    const ry=H*0.50, ra=H*0.34;
+    axis(g,px0,ry+ra,px1,ry+ra);
+    const zeroY=ry+ra-2*ra*(0-fmin)/(fmax-fmin);
+    if(zeroY>ry-ra&&zeroY<ry+ra){
+      g.strokeStyle='#e8c8c2';g.setLineDash([4,3]);g.lineWidth=1.2;
+      g.beginPath();g.moveTo(px0,zeroY);g.lineTo(px1,zeroY);g.stroke();g.setLineDash([]);
+      g.fillStyle='#c0392b';g.font='11px ui-sans-serif,system-ui,sans-serif';
+      g.fillText('f = 0',px0+2,zeroY-4);
+    }
+    const p=[];for(let i=3;i<N-3;i++)
+      p.push([px0+ww*i/(N-1),ry+ra-2*ra*(fi[i]-fmin)/(fmax-fmin)]);
+    poly(g,p,'#1f6f8b',1.4);
+    g.fillStyle='#1f6f8b';g.font='12px ui-sans-serif,system-ui,sans-serif';
+    g.fillText('瞬时频率 f_i(t)',px0+2,ry-ra-8);
+    g.fillStyle='#5d6472';g.font='11px ui-sans-serif,system-ui,sans-serif';
+    g.fillText('范围 ['+fmin.toFixed(1)+', '+fmax.toFixed(1)+'] Hz',px0+2,ry+ra+16);
+  }
+  s2.addEventListener('input',draw);s3.addEventListener('input',draw);
+  window.addEventListener('resize',draw);draw();
+})();
+</script>
+</body>
+</html>

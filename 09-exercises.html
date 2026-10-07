@@ -1,0 +1,1331 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>第9章 习题册（含解答）</title>
+<script>
+window.MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']],displayMath:[['$$','$$'],['\\[','\\]']]},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<style>
+:root{--paper:#fbfaf6;--ink:#20242c;--muted:#5d6472;--line:#e3dfd3;--accent:#1f6f8b;--accent2:#b4531f;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:Georgia,"Songti SC","Noto Serif SC","Source Han Serif SC","SimSun",serif;line-height:1.85;font-size:17px;-webkit-text-size-adjust:100%}
+.wrap{max-width:880px;margin:0 auto;padding:0 22px 90px}
+header.ch{border-bottom:3px double var(--line);padding:44px 0 24px;margin-bottom:34px}
+.kicker{font-family:ui-sans-serif,system-ui,sans-serif;letter-spacing:.2em;font-size:11.5px;color:var(--accent);text-transform:uppercase}
+h1{font-size:29px;margin:12px 0 8px;line-height:1.3}
+.sub{color:var(--muted);font-size:15.5px;margin:0}
+h2{font-size:22px;margin:52px 0 14px;padding-left:12px;border-left:5px solid var(--accent)}
+h3{font-size:17.5px;margin:30px 0 10px;color:var(--accent2)}
+p{margin:14px 0}
+a{color:var(--accent);text-underline-offset:3px}
+table{width:100%;border-collapse:collapse;margin:16px 0;font-size:15px;background:#fff}
+th,td{border:1px solid var(--line);padding:7px 10px;text-align:left;vertical-align:top}
+th{background:#f2efe6;font-family:ui-sans-serif,system-ui,sans-serif;font-size:13.5px}
+ol,ul{padding-left:1.5em}li{margin:7px 0}
+nav.pager{display:flex;justify-content:space-between;gap:12px;margin-top:64px;border-top:1px solid var(--line);padding-top:18px;font-family:ui-sans-serif,system-ui,sans-serif;font-size:14px}
+nav.pager a{text-decoration:none}
+.prob{background:#fff;border:1px solid var(--line);border-radius:9px;padding:14px 18px;margin:18px 0}
+.prob>.no{font-family:ui-sans-serif,system-ui,sans-serif;font-size:11.5px;letter-spacing:.14em;font-weight:700;color:var(--accent);text-transform:uppercase;display:block;margin-bottom:4px}
+.prob .stem{margin:2px 0 0}
+details{margin-top:12px;border-top:1px dashed var(--line);padding-top:8px}
+summary{cursor:pointer;font-family:ui-sans-serif,system-ui,sans-serif;font-size:13px;color:var(--accent);font-weight:600;list-style:none;outline:none}
+summary::-webkit-details-marker{display:none}
+summary::before{content:"▸ ";font-size:12px}
+details[open] summary::before{content:"▾ "}
+details[open] summary{margin-bottom:6px}
+.ans{background:#f7f5ee;border-left:3px solid #2e8b57;padding:2px 16px;margin:8px 0 2px;font-size:16px}
+.ans .stepttl{margin:18px 0 4px;color:#24704a}
+.box{background:#fff;border:1px solid var(--line);border-radius:8px;padding:14px 18px;margin:22px 0}
+.tip{border-left:5px solid #d99b16;background:#fffdf5}.tip .tag{color:#a8760a}
+.tag{font-family:ui-sans-serif,system-ui,sans-serif;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;display:block;margin-bottom:6px}
+.star{color:#b4531f;font-weight:700}
+.legend{background:#f5f2e9;border:1px solid var(--line);border-radius:8px;padding:12px 18px;font-size:15px;margin:0 0 30px}
+pre{background:#22262e;color:#e8e6e1;padding:13px 15px;border-radius:8px;overflow:auto;line-height:1.6;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;margin:12px 0}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:14px;background:#efece1;padding:1px 5px;border-radius:4px}
+pre code{background:none;padding:0;font-size:13px;color:inherit}
+.cmt{color:#8f9aa8}.kw{color:#c792ea}.str{color:#c3e88d}.num{color:#f78c6c}.fn{color:#82aaff}
+.toc-mini{background:#f5f2e9;border:1px solid var(--line);border-radius:8px;padding:12px 18px;font-size:15px;margin:0 0 30px}
+.toc-mini a{margin-right:14px;white-space:nowrap}
+.warnbox{background:#fffdf5;border:1px solid var(--line);border-left:5px solid #d99b16;border-radius:8px;padding:12px 18px;margin:20px 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="ch">
+  <div class="kicker">第 9 章</div>
+  <h1>习题册（含解答）</h1>
+  <p class="sub">共 60 题，按章节排列。答案折叠在每题下方 —— <strong>先自己算，再展开核对</strong>。带 <span class="star">★</span> 的是提高题，带 <span class="star">⌨</span> 的是编程题。</p>
+</header>
+
+<div class="toc-mini">
+<strong>跳转：</strong>
+<a href="#ch1">第 1 章</a><a href="#ch2">第 2 章</a><a href="#ch3">第 3 章</a><a href="#ch4">第 4 章</a><a href="#ch5">第 5 章</a><a href="#ch6">第 6 章</a><a href="#ch7">第 7 章</a><a href="#ch8">第 8 章</a><a href="#comprehensive">综合题</a>
+</div>
+
+<div class="legend">
+<strong>做题建议</strong>：计算类题目务必动笔，不要"看着觉得会"。凡涉及 $\mathcal{H}\{\cos\}$ 的，先在纸角写下 <code>cos→sin→−cos→−sin→cos</code> 这条循环链，能省一半时间。遇到不会的，题目里都注明了对应正文小节。
+</div>
+
+<h2 id="ch1">第 1 章　为什么需要希尔伯特变换</h2>
+
+<div class="prob">
+<span class="no">题 1.1</span>
+<p class="stem">用"轮子和影子"的比喻解释：为什么只知道 $x(t)=\cos(\omega_0 t)$ 无法判断轮子的旋转方向，而知道 $e^{j\omega_0 t}$ 就可以？</p>
+<details><summary>查看解答</summary>
+<div class="ans">
+<p>因为 $\cos(\omega_0t)$ 既是 $e^{j\omega_0t}$ 的实部，也是 $e^{-j\omega_0t}$ 的实部：</p>
+<p>$$\operatorname{Re}\{e^{j\omega_0t}\}=\operatorname{Re}\{e^{-j\omega_0t\,}\}=\cos\omega_0t$$</p>
+<p>这两个复指数代表<strong>相反方向</strong>的旋转（逆时针 / 顺时针），但影子完全相同。所以从影子无法反推方向。</p>
+<p>而虚部能区分：$\operatorname{Im}\{e^{j\omega_0t}\}=+\sin\omega_0t$，$\operatorname{Im}\{e^{-j\omega_0t}\}=-\sin\omega_0t$，符号相反。</p>
+<p><strong>这正是希尔伯特变换的工作</strong>：它为实信号补上那个缺失的虚部，把"两个可能的旋转"锁定成唯一一个（约定为正频率方向，见定理 6.1）。</p>
+</div>
+</details>
+</div>
+
+<div class="prob">
+<span class="no">题 1.2</span>
+<p class="stem">验证 $\displaystyle\int_0^{T}\cos(\omega_0t)\cos(\omega_0t-\varphi)\,\mathrm{d}t=\frac{T}{2}\cos\varphi$（$T=2\pi/\omega_0$）。由此说明为什么只有 $\varphi=\pm90°$ 才使两信号正交。</p>
+<details><summary>查看解答</summary>
+<div class="ans">
+<p>用积化和差 $\cos A\cos B=\frac{1}{2}[\cos(A-B)+\cos(A+B)]$，取 $A=\omega_0t$，$B=\omega_0t-\varphi$：</p>
+<p>$$\cos(\omega_0t)\cos(\omega_0t-\varphi)=\frac{1}{2}\big[\cos\varphi+\cos(2\omega_0t-\varphi)\big]$$</p>
+<p>在一个完整周期上积分：第一项是常数，积分得 $\frac{T}{2}\cos\varphi$；第二项频率为 $2\omega_0$，在长度 $T$ 的区间上正好两个完整周期，积分为 $0$。故</p>
+<p>$$\int_0^T\cos(\omega_0t)\cos(\omega_0t-\varphi)\,\mathrm{d}t=\frac{T}{2}\cos\varphi$$</p>
+<p><strong>正交（积分为零）$\iff\cos\varphi=0\iff\varphi=\pm\frac{\pi}{2}$。</strong>这就证明了 $90°$ 是唯一使新信号与原信号"完全独立"的相移量。任何其他相移都会留下 $\frac{T}{2}\cos\varphi\neq0$ 的相关性，即信息冗余。</p>
+</div>
+</details>
+</div>
+
+<div class="prob">
+<span class="no">题 1.3</span>
+<p class="stem">老式二极管包络检波器相当于计算 $|s(t)|$ 后低通滤波。若 $s(t)=A(t)\cos(\omega_ct)$ 且某段时间内 $A(t)&lt;0$，检波器输出会怎样？为什么 $\sqrt{s^2+\hat{s}^2}$ 也会出同样的问题？</p>
+<details><summary>查看解答</summary>
+<div class="ans">
+<p>$|s(t)|=|A(t)|\cdot|\cos\omega_ct|$，低通后得到的是 $|A(t)|$ 而不是 $A(t)$。$A(t)$ 的负值部分被<strong>翻折</strong>到了正半边，这在通信里叫<strong>过调制失真</strong>（overmodulation）。</p>
+<p>希尔伯特包络同样给出 $\sqrt{A^2\cos^2+A^2\sin^2}=|A(t)|$，绝对值一模一样。</p>
+<p><strong>关键认识</strong>：这不是方法的缺陷，而是<strong>"包络"这个概念本身的定义所致</strong> —— 包络被定义为复信号的<em>模长</em>，模长天然非负，所以 $A$ 的符号信息在两种方法里都丢了。</p>
+<p>三种正确对策：</p>
+<ol>
+<li><strong>发射端加直流偏置</strong>，保证 $1+m(t)&gt;0$（这就是 AM 广播里那个 $1+$ 的作用）；</li>
+<li><strong>用相干（同步）检波</strong>：乘上与载波同频同相的本地信号再低通，能恢复符号；</li>
+<li>看瞬时相位：$A$ 变号的时刻 $\phi(t)$ 会跳变 $\pi$，据此可以把符号重建出来。</li>
+</ol>
+</div>
+</details>
+</div>
+
+<div class="prob">
+<span class="no">题 1.4</span>
+<p class="stem">一个 LTI 系统对所有频率的幅度响应都是 $1$、相移都是恒定的 $-45°$。它是合法的实系统吗？想想 $\omega=0$ 处会发生什么。</p>
+<details><summary>查看解答</summary>
+<div class="ans">
+<p><strong>答案：不是。</strong>下面分五步说清楚"为什么不是"、"$\omega=0$ 处到底发生了什么"，以及"怎么把它改成合法的"。</p>
+
+<p class="stepttl"><strong>第一步 · 先把题目翻译成频域的一句话。</strong></p>
+<p>"幅度响应恒为 $1$、相移恒为 $-45°$"意思是：每个频率分量的大小不变，相位一律减去 $\frac{\pi}{4}$。相位减 $\theta$ 在频域就是乘 $e^{-j\theta}$（第 2.1.3 节），所以这个系统的频率响应是</p>
+<p>$$H(\omega)=1\cdot e^{-j\pi/4}=e^{-j\pi/4}\qquad\text{对一切}\ \omega$$</p>
+<p>注意这是一个<strong>与 $\omega$ 无关的常数</strong>。题目的陷阱就藏在"恒定"这两个字里。</p>
+
+<p class="stepttl"><strong>第二步 · 用合法性判据检查。</strong></p>
+<p>第 4.3.3 节推出过：一个系统对实输入给出实输出，当且仅当</p>
+<p>$$H(-\omega)=\overline{H(\omega)}$$</p>
+<p>（口诀：<strong>幅度偶、相位奇</strong>。）这里 $H$ 是常数，所以</p>
+<p>$$H(-\omega)=e^{-j\pi/4},\qquad \overline{H(\omega)}=\overline{e^{-j\pi/4}}=e^{+j\pi/4}$$</p>
+<p>两者相差一个共轭，$e^{-j\pi/4}\neq e^{+j\pi/4}$（一个是 $\frac{1-j}{\sqrt2}$，一个是 $\frac{1+j}{\sqrt2}$）。判据不满足，所以它<strong>不是合法的实系统</strong>。</p>
+<p>从"相位必须是奇函数"这个角度看更直白：$\arg H(\omega)=-\frac{\pi}{4}$ 是个非零常数，而常数函数除了零之外都不是奇函数。<strong>"所有频率相移相同"这个要求本身就和"实系统"矛盾。</strong></p>
+
+<p class="stepttl"><strong>第三步 · 回答题目的提示：$\omega=0$ 处发生了什么。</strong></p>
+<p>把判据用在 $\omega=0$ 这一个点上。此时 $-\omega=\omega=0$，判据退化成</p>
+<p>$$H(0)=\overline{H(0)}$$</p>
+<p>一个数等于自己的共轭，只能说明<strong>$H(0)$ 必须是实数</strong>。可是题目给的 $H(0)=e^{-j\pi/4}=\frac{1}{\sqrt2}-\frac{j}{\sqrt2}$ 不是实数，矛盾就在这一个点上被抓了个正着。</p>
+<p>具体算给你看。取最简单的实输入 —— 直流信号 $x(t)=1$。它的谱是 $2\pi\delta(\omega)$，只有 $\omega=0$ 一根谱线，所以输出就是</p>
+<p>$$y(t)=H(0)\cdot 1=e^{-j\pi/4}=\frac{1}{\sqrt2}-\frac{j}{\sqrt2}$$</p>
+<p>输入一个常数 $1$，输出一个复数 —— 荒谬。</p>
+<p><strong>这一步的关键直觉</strong>：常数信号<em>根本没有相位可移</em>。"把一条水平直线的相位推迟 45°"是一句无意义的话，因为直线不振荡，无所谓早晚。数学上，任何合法的实系统在直流处只能做一件事：乘一个实数（放大或反号）。任何想在 $\omega=0$ 处引入相移的设计，一定会把实信号推出实数轴。</p>
+<p>（对比希尔伯特变换器：它在 $\omega=0$ 处的响应是 $-j\,\mathrm{sgn}(0)=0$ —— 它没有硬给直流加相移，而是<em>干脆把直流扔掉</em>。这就是第 4.3.4 节"直流被消灭"的来历。付出代价，换取合法。）</p>
+
+<p class="stepttl"><strong>第四步 · 怎么修：让相移随频率反号。</strong></p>
+<p>问题出在"相位是常数"，那就让它变成奇函数 —— 最省事的办法是乘一个 $\mathrm{sgn}(\omega)$：</p>
+<p>$$H_{\!\alpha}(\omega)=e^{-j\alpha\,\mathrm{sgn}(\omega)}\qquad(\text{本题}\ \alpha=\tfrac{\pi}{4})$$</p>
+<p>先验证它合法。$\arg H_\alpha=-\alpha\,\mathrm{sgn}(\omega)$ 是奇函数 ✓，$|H_\alpha|=1$ 是偶函数 ✓。在 $\omega=0$ 处，$\mathrm{sgn}(0)=0$，所以 $H_\alpha(0)=e^{0}=1$ —— 实数 ✓，直流原样通过，符合"常数没有相位可移"的直觉。</p>
+
+<p>再看它到底做了什么。取 $x=\cos\omega_0t$（$\omega_0&gt;0$），用欧拉反公式拆开，两根谱线分别在 $+\omega_0$（乘 $e^{-j\alpha}$）和 $-\omega_0$（乘 $e^{+j\alpha}$）：</p>
+<p>$$y(t)=\frac{1}{2}\Big(e^{-j\alpha}e^{j\omega_0t}+e^{+j\alpha}e^{-j\omega_0t}\Big)=\frac{1}{2}\Big(e^{j(\omega_0t-\alpha)}+e^{-j(\omega_0t-\alpha)}\Big)=\cos(\omega_0t-\alpha)$$</p>
+<p>输出是<strong>实</strong>的，而且确确实实相移了 $-\alpha$。<em>我们想要的效果拿到了，代价只是承认"负频率要朝相反方向转"。</em></p>
+
+<p class="stepttl"><strong>第五步 · 把它认成算子：分数希尔伯特变换。</strong></p>
+<p>现在把 $H_\alpha$ 的指数展开，看它是由哪些"已知零件"拼成的。用欧拉公式 $e^{j\theta}=\cos\theta+j\sin\theta$，取 $\theta=-\alpha\,\mathrm{sgn}(\omega)$：</p>
+<p>$$e^{-j\alpha\,\mathrm{sgn}(\omega)}=\cos\big(\alpha\,\mathrm{sgn}(\omega)\big)-j\sin\big(\alpha\,\mathrm{sgn}(\omega)\big)$$</p>
+<p>（这里用了 $\cos$ 偶、$\sin$ 奇，把里面的负号提了出来。）接着关键一步：$\mathrm{sgn}(\omega)$ 只取 $\pm1$，所以</p>
+<ul>
+  <li>$\cos\big(\alpha\,\mathrm{sgn}\omega\big)=\cos(\pm\alpha)=\cos\alpha$ —— <strong>与 $\omega$ 无关，$\mathrm{sgn}$ 被"吃掉"了</strong>（$\cos$ 是偶函数）；</li>
+  <li>$\sin\big(\alpha\,\mathrm{sgn}\omega\big)=\pm\sin\alpha=\sin\alpha\cdot\mathrm{sgn}(\omega)$ —— <strong>$\mathrm{sgn}$ 被"挤了出来"</strong>（$\sin$ 是奇函数）。</li>
+</ul>
+<p>于是</p>
+<p>$$H_\alpha(\omega)=\cos\alpha\cdot\underbrace{1}_{\text{恒等}}+\sin\alpha\cdot\underbrace{\big(-j\,\mathrm{sgn}(\omega)\big)}_{=\,H(\omega),\ \text{希尔伯特}}$$</p>
+<p>右边两个零件都认识：乘常数 $1$ 就是<strong>什么也不做</strong>（恒等算子 $I$），乘 $-j\,\mathrm{sgn}(\omega)$ 就是<strong>做一次希尔伯特变换</strong>（$\mathcal{H}$，定理 4.1）。频域相加对应时域相加，所以这个滤波器就是</p>
+<p>$$\boxed{\ \mathcal{H}_\alpha=\cos\alpha\cdot I+\sin\alpha\cdot\mathcal{H}\ }$$</p>
+<p>代入本题的 $\alpha=\frac{\pi}{4}$，$\cos\frac\pi4=\sin\frac\pi4=\frac{1}{\sqrt2}$：</p>
+<p>$$\mathcal{H}_{\pi/4}=\frac{1}{\sqrt2}\big(I+\mathcal{H}\big),\qquad\text{即}\quad y(t)=\frac{x(t)+\hat{x}(t)}{\sqrt2}$$</p>
+<p>这叫<strong>分数希尔伯特变换</strong>（fractional Hilbert transform）：一个 $-45°$ 相移器，实现起来就是"原信号与它的希尔伯特变换各取 $\frac{1}{\sqrt2}$ 加起来"。</p>
+
+<p class="stepttl"><strong>验算。</strong>用它作用在 $\cos\omega_0t$ 上（$\hat x=\sin\omega_0t$）：</p>
+<p>$$\frac{\cos\omega_0t+\sin\omega_0t}{\sqrt2}=\cos\omega_0t\cos\frac\pi4+\sin\omega_0t\sin\frac\pi4=\cos\!\Big(\omega_0t-\frac{\pi}{4}\Big)\quad\checkmark$$</p>
+<p>（最后一步用了两角差公式 $\cos(A-B)=\cos A\cos B+\sin A\sin B$。）和第四步的结果完全一致。</p>
+
+<div class="box tip">
+  <span class="tag">为什么这个结论重要</span>
+  <p style="margin:6px 0 0">公式 $\mathcal{H}_\alpha=\cos\alpha\cdot I+\sin\alpha\cdot\mathcal{H}$ 长得和复数的 $e^{j\alpha}=\cos\alpha+j\sin\alpha$ <strong>一模一样</strong>。这不是巧合：性质 4（第 5.3 节）说 $\mathcal{H}^2=-I$，也就是 $\mathcal{H}$ 在零均值信号空间里<em>扮演着虚数单位 $j$ 的角色</em>。于是：</p>
+  <ul style="margin:6px 0 0">
+    <li>$I$ 和 $\mathcal{H}$ 像 $1$ 和 $j$ 一样张成一个"平面"，任意<strong>常数相移器</strong>都是这个平面上的一个点；</li>
+    <li>$\alpha=0$ 给出 $I$（不动）；$\alpha=\frac{\pi}{2}$ 给出 $\mathcal{H}$（标准 90° 相移，见题 4.6）；$\alpha=\pi$ 给出 $-I$（整体反号）—— 正是第 3 章那条口诀 $\cos\to\sin\to-\cos\to-\sin\to\cos$ 的连续化版本；</li>
+    <li>相继做两次相移等于把角度相加：$\mathcal{H}_\alpha\mathcal{H}_\beta=\mathcal{H}_{\alpha+\beta}$，就像 $e^{j\alpha}e^{j\beta}=e^{j(\alpha+\beta)}$。所以"相移"构成一个连续的旋转群，而 $\mathcal{H}$ 只是其中转了 $90°$ 的那一个成员。</li>
+  </ul>
+  <p style="margin:6px 0 0">工程上，分数希尔伯特变换用在光学加密、单边带调制的相位微调、以及需要"部分解析信号"的场合。</p>
+</div>
+</div>
+</details>
+</div>
+
+<h2 id="ch2">第 2 章　数学预备</h2>
+
+<div class="prob">
+<span class="no">题 2.1</span>
+<p class="stem">计算：(a) $\mathrm{P}\!\int_{-3}^{3}\frac{\mathrm{d}t}{t}$；(b) $\mathrm{P}\!\int_{-1}^{4}\frac{\mathrm{d}t}{t-1}$；(c) $\mathrm{P}\!\int_{-1}^{1}\frac{t\,\mathrm{d}t}{t}$。</p>
+<details><summary>查看解答</summary>
+<div class="ans">
+<p><strong>(a)</strong> 区间关于奇点 $t=0$ 对称，被积函数是奇函数 → $\boxed{0}$。</p>
+<p><strong>(b)</strong> 换元 $u=t-1$，区间变为 $u\in[-2,3]$，奇点在 $u=0$：</p>
+<p>$$\mathrm{P}\!\!\int_{-2}^{3}\frac{\mathrm{d}u}{u}=\lim_{\epsilon\to0^+}\big[(\ln\epsilon-\ln2)+(\ln3-\ln\epsilon)\big]=\boxed{\ln\frac{3}{2}}$$</p>
+<p>$\ln\epsilon$ 精确抵消。区间对奇点不对称，所以结果非零。</p>
+<p><strong>(c)</strong> 被积函数 $\frac{t}{t}=1$（$t\neq0$），根本没有奇点：</p>
+<p>$$\int_{-1}^{1}1\,\mathrm{d}t=\boxed{2}$$</p>
+<p>这题的用意是提醒：看到 $\frac{1}{t}$ 别条件反射地用主值公式，先化简。</p>
+</div>
+</details>
+</div>
+
+<div class="prob">
+<span class="no">题 2.2</span>
+<p class="stem">判断主值是否存在并求值：(a) $\int_{-1}^1\frac{\mathrm{d}t}{t^2}$；(b) $\int_{-1}^1\frac{\mathrm{d}t}{t^3}$；(c) $\int_{-1}^1\frac{\sin t}{t}\mathrm{d}t$。</p>
+<details><summary>查看解答</summary>
+<div class="ans">
+<p><strong>(a) 不存在。</strong>$\frac{1}{t^2}$ 是<strong>偶</strong>函数，两侧都是 $+\infty$，无法相消：</p>
+<p>$$\int_{-1}^{-\epsilon}\frac{\mathrm{d}t}{t^2}+\int_{\epsilon}^{1}\frac{\mathrm{d}t}{t^2}=2\left(\frac{1}{\epsilon}-1\right)\to+\infty$$</p>
+<p><strong>(b) 存在，等于 $0$。</strong>$\frac{1}{t^3}$ 是<strong>奇</strong>函数。逐项算：$\int_\epsilon^1 t^{-3}\mathrm{d}t=\frac{1}{2\epsilon^2}-\frac{1}{2}$，$\int_{-1}^{-\epsilon}t^{-3}\mathrm{d}t=-\frac{1}{2\epsilon^2}+\frac{1}{2}$，两者之和恒为 $0$。</p>
+<p><strong>(c) 不需要主值，是普通收敛积分。</strong>$\lim_{t\to0}\frac{\sin t}{t}=1$，被积函数在 $[-1,1]$ 上连续有界。值为 $2\,\mathrm{Si}(1)\approx1.8921$（$\mathrm{Si}$ 是正弦积分函数，无初等表达）。</p>
+<p><strong>规律总结</strong>：奇性为<strong>奇数</strong>次幂（$1/t,1/t^3,\dots$）→ 主值存在；<strong>偶数</strong>次幂（$1/t^2,1/t^4,\dots$）→ 主值不存在。这与图 2.1 演示的一致。</p>
+</div>
+</details>
+</div>
+
+<div class="prob">
+<span class="no">题 2.3</span>
+<p class="stem">用定义验证 $\delta*x=x$。</p>
+<details><summary>查看解答</summary>
+<div class="ans">
+<p>$$(\delta*x)(t)=\int_{-\infty}^{\infty}\delta(t-\tau)\,x(\tau)\,\mathrm{d}\tau$$</p>
+<p>$\delta(t-\tau)$ 作为 $\tau$ 的函数，在 $\tau=t$ 处有冲激。由取样性质（第 2.6.3 节）直接得 $=x(t)$。$\blacksquare$</p>
+<p>物理含义：冲激是卷积的单位元，对应"系统什么也不做"。因此例 3.1 中 $\mathcal{H}\{\delta\}=h$ 就是希尔伯特变换器的冲激响应。</p>
+</div>
+</details>
+</div>
+
+<div class="prob">
+<span class="no">题 2.4</span>
+<p class="stem">设 $h$ 是奇函数，$x$ 是偶函数，证明 $(h*x)$ 是奇函数。</p>
+<details><summary>查看解答</summary>
+<div class="ans">
+<p>$$(h*x)(-t)=\int h(-t-\tau)x(\tau)\,\mathrm{d}\tau$$</p>
+<p>换元 $\tau=-\sigma$（$\mathrm{d}\tau=-\mathrm{d}\sigma$，同时上下限反转，两个负号抵消）：</p>
+<p>$$=\int h(-t+\sigma)\,x(-\sigma)\,\mathrm{d}\sigma \overset{x\text{ 偶}}{=}\int h(\sigma-t)\,x(\sigma)\,\mathrm{d}\sigma \overset{h\text{ 奇}}{=}-\int h(t-\sigma)x(\sigma)\,\mathrm{d}\sigma=-(h*x)(t)$$</p>
+<p>故 $(h*x)$ 为奇函数。$\blacksquare$</p>
+<p><strong>应用</strong>：希尔伯特核 $\frac{1}{\pi t}$ 是奇函数，所以偶信号的希尔伯特变换必为奇 —— 这就是性质 7（第 5.6 节）。</p>
+</div>
+</details>
+</div>
+
+<div class="prob">
+<span class="no">题 2.5</span>
+<p class="stem">用欧拉反公式推出 $\mathcal{F}\{\cos\omega_0 t\}$。</p>
+<details><summary>查看解答</summary>
+<div class="ans">
+<p>$$\mathcal{F}\{\cos\omega_0t\}=\mathcal{F}\left\{\frac{e^{j\omega_0t}+e^{-j\omega_0t}}{2}\right\}=\frac{1}{2}\big[2\pi\delta(\omega-\omega_0)+2\pi\delta(\omega+\omega_0)\big]$$</p>
+<p>$$=\pi\big[\delta(\omega-\omega_0)+\delta(\omega+\omega_0)\big]$$</p>
+<p>用了 $\mathcal{F}\{e^{j\omega_0t}\}=2\pi\delta(\omega-\omega_0)$（频移定理作用于常数 $1$）。</p>
+</div>
+</details>
+</div>
+
+<div class="prob">
+<span class="no">题 2.6</span>
+<p class="stem">已知 $\mathcal{F}\{e^{-a|t|}\}=\frac{2a}{a^2+\omega^2}$，用对偶性求 $\mathcal{F}\{\frac{1}{1+t^2}\}$。</p>
+<details><summary>查看解答</summary>
+<div class="ans">
+<p>取 $a=1$：$x(t)=e^{-|t|}\ \longleftrightarrow\ X(\omega)=\frac{2}{1+\omega^2}$。</p>
+<p>对偶性（第 4.2 节第二步）：$\mathcal{F}\{X(t)\}(\omega)=2\pi\,x(-\omega)$。这里 $X(t)=\frac{2}{1+t^2}$，$x(-\omega)=e^{-|-\omega|}=e^{-|\omega|}$，故</p>
+<p>$$\mathcal{F}\left\{\frac{2}{1+t^2}\right\}=2\pi e^{-|\omega|}\quad\Longrightarrow\quad \boxed{\mathcal{F}\left\{\frac{1}{1+t^2}\right\}=\pi e^{-|\omega|}}$$</p>
+<p>这个结果在例 3.4 里被直接使用。</p>
+</div>
+</details>
+</div>
+
+<h2 id="ch3">第 3 章　定义：时域的样子</h2>
+
+<div class="prob">
+<span class="no">题 3.1</span>
+<p class="stem">用积分直接证明 $\mathcal{H}\{\sin\omega_0t\}=-\cos\omega_0t$（$\omega_0&gt;0$）。</p>
+<details><summary>查看解答</summary>
+<div class="ans">
+<p>用卷积式，换元 $u=t-\tau$：</p>
+<p>$$\hat{x}(t)=\frac{1}{\pi}\mathrm{P}\!\!\int_{-\infty}^{\infty}\frac{\sin\big(\omega_0(t-u)\big)}{u}\mathrm{d}u$$</p>
+<p>展开 $\sin(\omega_0t-\omega_0u)=\sin\omega_0t\cos\omega_0u-\cos\omega_0t\sin\omega_0u$：</p>
+<p>$$=\frac{\sin\omega_0t}{\pi}\underbrace{\mathrm{P}\!\!\int\frac{\cos\omega_0u}{u}\mathrm{d}u}_{=0\ \text{(奇函数)}}-\frac{\cos\omega_0t}{\pi}\underbrace{\int\frac{\sin\omega_0u}{u}\mathrm{d}u}_{=\pi}$$</p>
+<p>$$=0-\cos\omega_0t=\boxed{-\cos\omega_0 t}$$</p>
+</div>
+</details>
+</div>
+
+<div class="prob">
+<span class="no">题 3.2</span>
+<p class="stem">求 $\mathcal{H}\{\cos(\omega_0t)+3\}$。由此说明为什么希尔伯特变换不可逆。</p>
+<details><summary>查看解答</summary>
+<div class="ans">
+<p>由线性性和 $\mathcal{H}\{\text{常数}\}=0$：</p>
+<p>$$\mathcal{H}\{\cos\omega_0t+3\}=\sin\omega_0t+0=\boxed{\sin\omega_0 t}$$</p>
+<p><strong>不可逆的理由</strong>：$\cos\omega_0t$ 和 $\cos\omega_0t+3$（以及 $\cos\omega_0t+c$ 对任何常数 $c$）都映射到<em>同一个</em>输出 $\sin\omega_0t$。一个多对一的映射没有逆映射。</p>
+<p>频域看得更清楚：$H(0)=-j\,\mathrm{sgn}(0)=0$，直流通道的增益是零，信息被"乘零"消灭，不可能恢复（第 4.3.4 节）。</p>
+<p>所以 $\mathcal{H}^{-1}=-\mathcal{H}$ 这个公式只在<strong>零均值信号子空间</strong>上成立。</p>
+</div>
+</details>
+</div>
+
+<div class="prob">
+<span class="no">题 3.3</span>
+<p class="stem">求 $\mathcal{H}\{2\cos(3t)-\sin(5t)\}$。</p>
+<details><summary>查看解答</summary>
+<div class="ans">
+<p>线性性 + 变换对表（$3&gt;0,5&gt;0$）：</p>
+<p>$$\mathcal{H}\{2\cos3t\}=2\sin3t,\qquad \mathcal{H}\{-\sin5t\}=-(-\cos5t)=+\cos5t$$</p>
+<p>$$\boxed{\mathcal{H}\{2\cos3t-\sin5t\}=2\sin3t+\cos5t}$$</p>
+</div>
+</details>
+</div>
+
+<div class="prob">
+<span class="no">题 3.4</span>
+<p class="stem">设 $x(t)$ 是偶函数，证明 $\hat{x}(t)$ 是奇函数。</p>
+<details><summary>查看解答</summary>
+<div class="ans">
+<p>$\hat{x}=h*x$，其中 $h(t)=\frac{1}{\pi t}$ 是奇函数。由题 2.4 的结论（奇 * 偶 = 奇），$\hat{x}$ 为奇函数。$\blacksquare$</p>
+<p>另一种证法（第 5.6 节）：由尺度性质 $\mathcal{H}\{x(-t)\}=-\hat{x}(-t)$。$x$ 偶时左边 $=\hat x(t)$，故 $\hat x(t)=-\hat x(-t)$。</p>
+<p><strong>推论</strong>：偶信号的希尔伯特变换必满足 $\hat{x}(0)=0$。核对：$\mathcal{H}\{\cos\omega_0t\}=\sin\omega_0t$ 在 $t=0$ 为零 ✓；例 3.4 的 $\frac{t}{1+t^2}$ 在 $t=0$ 为零 ✓。</p>
+</div>
+</details>
+</div>
+
+<div class="prob">
+<span class="no">题 3.5</span>
+<p class="stem">用例 3.3 的结果验证 $T\to\infty$ 时 $\hat{x}(t)\to0$。这与"常数的希尔伯特变换为零"一致吗？</p>
+<details><summary>查看解答</summary>
+<div class="ans">
+<p>例 3.3 结果：$\hat{x}(t)=\frac{1}{\pi}\ln\left|\frac{t+T}{t-T}\right|$。固定 $t$，令 $T\to\infty$：</p>
+<p>$$\frac{t+T}{t-T}=\frac{T(1+t/T)}{-T(1-t/T)}\to-1\quad\Longrightarrow\quad\left|\frac{t+T}{t-T}\right|\to1\quad\Longrightarrow\quad\hat{x}(t)\to\frac{\ln1}{\pi}=0$$</p>
+<p><strong>一致。</strong>$T\to\infty$ 时 $\mathrm{rect}_T(t)\to1$（常数），而 $\mathcal{H}\{1\}=0$。两个极限过程给出同样答案。</p>
+<p>更精细地，对 $|t|\gg T$ 有 $\hat{x}(t)\approx\frac{2T}{\pi t}$ —— 衰减非常慢，正是第 3.3 节说的 $1/t$ 长尾。</p>
+</div>
+</details>
+</div>
+
+<div class="prob">
+<span class="no">题 3.6</span>
+<p class="stem">由例 3.4 与 $\mathcal{H}^2=-I$ 写出 $\mathcal{H}\left\{\frac{t}{1+t^2}\right\}$，并用频域方法独立验证。</p>
+<details><summary>查看解答</summary>
+<div class="ans">
+<p><strong>途径一（用 $\mathcal{H}^2=-I$）</strong>：已知 $\mathcal{H}\left\{\frac{1}{1+t^2}\right\}=\frac{t}{1+t^2}$，再作用一次：</p>
+<p>$$\mathcal{H}\left\{\frac{t}{1+t^2}\right\}=\mathcal{H}^2\left\{\frac{1}{1+t^2}\right\}=\boxed{-\frac{1}{1+t^2}}$$</p>
+<p><strong>途径二（频域验证）</strong>：$\mathcal{F}\left\{\frac{t}{1+t^2}\right\}=-j\,\mathrm{sgn}(\omega)\cdot\pi e^{-|\omega|}$（由例 3.4 的中间结果）。再乘 $-j\,\mathrm{sgn}(\omega)$：</p>
+<p>$$\big[-j\,\mathrm{sgn}\omega\big]^2\pi e^{-|\omega|}=-\pi e^{-|\omega|}=-\mathcal{F}\left\{\frac{1}{1+t^2}\right\}$$</p>
+<p>逆变换即得 $-\frac{1}{1+t^2}$ ✓。两条途径一致。</p>
+<p>顺便：奇偶性核对 —— $\frac{t}{1+t^2}$ 奇 → 变换应为偶 → $-\frac{1}{1+t^2}$ 确实是偶 ✓。</p>
+</div>
+</details>
+</div>
+
+<div class="prob">
+<span class="no">题 3.7 <span class="star">★</span></span>
+<p class="stem">用对称差式 $\hat{x}(t)=\frac{1}{\pi}\int_0^\infty\frac{x(t-u)-x(t+u)}{u}\mathrm{d}u$ 重算 $\mathcal{H}\{\cos\omega_0t\}$。</p>
+<details><summary>查看解答</summary>
+<div class="ans">
+<p>代入 $x=\cos\omega_0t$，用和差化积 $\cos(A-B)-\cos(A+B)=2\sin A\sin B$（取 $A=\omega_0t$，$B=\omega_0u$）：</p>
+<p>$$x(t-u)-x(t+u)=\cos(\omega_0t-\omega_0u)-\cos(\omega_0t+\omega_0u)=2\sin(\omega_0t)\sin(\omega_0u)$$</p>
+<p>代回：</p>
+<p>$$\hat{x}(t)=\frac{1}{\pi}\int_0^\infty\frac{2\sin\omega_0t\,\sin\omega_0u}{u}\mathrm{d}u=\frac{2\sin\omega_0t}{\pi}\underbrace{\int_0^\infty\frac{\sin\omega_0u}{u}\mathrm{d}u}_{=\pi/2\ (\omega_0&gt;0)}=\boxed{\sin\omega_0t}$$</p>
+<p>与例 3.2 一致，而且<strong>全程没有出现奇点</strong>（被积函数在 $u\to0$ 时趋于 $2\omega_0\sin\omega_0t$，有界）。这就是对称差式的好处。</p>
+</div>
+</details>
+</div>
+
+<h2 id="ch4">第 4 章　频域</h2>
+
+<div class="prob">
+<span class="no">题 4.1</span>
+<p class="stem">用频域方法求 $\mathcal{H}\{\sin\omega_0t\}$（$\omega_0&gt;0$）。</p>
+<details><summary>查看解答</summary>
+<div class="ans">
+<p>$$\sin\omega_0t=\frac{e^{j\omega_0t}-e^{-j\omega_0t}}{2j}$$</p>
+<p>逐项套特征值（例 4.1：正频率乘 $-j$，负频率乘 $+j$）：</p>
+<p>$$\mathcal{H}\{\sin\omega_0t\}=\frac{(-j)e^{j\omega_0t}-(+j)e^{-j\omega_0t}}{2j}=\frac{-j}{2j}\big(e^{j\omega_0t}+e^{-j\omega_0t}\big)=-\frac{1}{2}\cdot2\cos\omega_0t=\boxed{-\cos\omega_0t}$$</p>
+</div>
+</details>
+</div>
+
+<div class="prob">
+<span class="no">题 4.2</span>
+<p class="stem">设 $\omega_0&lt;0$，求 $\mathcal{H}\{\cos\omega_0t\}$ 和 $\mathcal{H}\{e^{j\omega_0t}\}$。</p>
+<details><summary>查看解答</summary>
+<div class="ans">
+<p><strong>余弦</strong>：$\cos$ 是偶函数，$\cos(\omega_0t)=\cos(|\omega_0|t)$。所以</p>
+<p>$$\mathcal{H}\{\cos\omega_0t\}=\sin(|\omega_0|t)=\boxed{-\sin(\omega_0t)}$$</p>
+<p>（最后一步用了 $\sin$ 是奇函数：$\sin(|\omega_0|t)=\sin(-\omega_0t)=-\sin(\omega_0t)$。）</p>
+<p><strong>复指数</strong>：$\omega_0&lt;0$ 时谱线在负频率，特征值为 $+j$：</p>
+<p>$$\mathcal{H}\{e^{j\omega_0t}\}=+j\,e^{j\omega_0t}$$</p>
+<p><strong>统一公式（务必记住这个带符号的版本）</strong>：</p>
+<p>$$\mathcal{H}\{e^{j\omega_0t}\}=-j\,\mathrm{sgn}(\omega_0)\,e^{j\omega_0t},\qquad \mathcal{H}\{\cos\omega_0t\}=\mathrm{sgn}(\omega_0)\sin(\omega_0 t)$$</p>
+<p>教材里的 $\mathcal{H}\{\cos\}=\sin$ 都<strong>默认 $\omega_0&gt;0$</strong>。做题时若出现负频率（比如信号写成 $\cos(-5t)$），先化到正频率再查表。</p>
+</div>
+</details>
+</div>
+
+<div class="prob">
+<span class="no">题 4.3</span>
+<p class="stem">求 $\mathcal{H}^n\{x\}$ 对任意 $n$（设 $x$ 零均值）。</p>
+<details><summary>查看解答</summary>
+<div class="ans">
+<p>频域连乘 $n$ 次：$\big[-j\,\mathrm{sgn}(\omega)\big]^n$。因为 $\mathrm{sgn}^2=1$（$\omega\neq0$），只需算 $(-j)^n$ 并配上 $\mathrm{sgn}^{n\bmod2}$：</p>
+<table>
+<tr><th>$n$</th><th>频域因子</th><th>$\mathcal{H}^n\{x\}$</th></tr>
+<tr><td>1</td><td>$-j\,\mathrm{sgn}\omega$</td><td>$\hat{x}$</td></tr>
+<tr><td>2</td><td>$-1$</td><td>$-x$</td></tr>
+<tr><td>3</td><td>$+j\,\mathrm{sgn}\omega$</td><td>$-\hat{x}$</td></tr>
+<tr><td>4</td><td>$+1$</td><td>$x$</td></tr>
+</table>
+<p>之后以 4 为周期循环：$\mathcal{H}^{n+4}=\mathcal{H}^n$。这对应第 3 章的记忆口诀 $\cos\to\sin\to-\cos\to-\sin\to\cos$。</p>
+</div>
+</details>
+</div>
+
+<div class="prob">
+<span class="no">题 4.4</span>
+<p class="stem">证明 $\mathcal{F}\{u(t)\}=\pi\delta(\omega)+\frac{1}{j\omega}$。</p>
+<details><summary>查看解答</summary>
+<div class="ans">
+<p>用 $u(t)=\frac{1+\mathrm{sgn}(t)}{2}$（第 2.6.2 节）：</p>
+<p>$$\mathcal{F}\{u\}=\frac{1}{2}\Big[\mathcal{F}\{1\}+\mathcal{F}\{\mathrm{sgn}\}\Big]=\frac{1}{2}\left[2\pi\delta(\omega)+\frac{2}{j\omega}\right]=\boxed{\pi\delta(\omega)+\frac{1}{j\omega}}$$</p>
+<p>其中 $\mathcal{F}\{\mathrm{sgn}\}=\frac{2}{j\omega}$ 是第 4.2 节第一步的结果。</p>
+<p>这个式子在定理 6.1（解析信号单边谱）的另一种证法里会用到。</p>
+</div>
+</details>
+</div>
+
+<div class="prob">
+<span class="no">题 4.5</span>
+<p class="stem">用频域方法求 $\mathcal{H}\{e^{-a|t|}\}$（$a&gt;0$）。能得到初等闭式吗？</p>
+<details><summary>查看解答</summary>
+<div class="ans">
+<p>$X(\omega)=\frac{2a}{a^2+\omega^2}$，故 $\hat{X}(\omega)=-j\,\mathrm{sgn}(\omega)\frac{2a}{a^2+\omega^2}$。逆变换：</p>
+<p>$$\hat{x}(t)=\frac{1}{2\pi}\int_{-\infty}^{\infty}\!\!-j\,\mathrm{sgn}(\omega)\frac{2a}{a^2+\omega^2}e^{j\omega t}\mathrm{d}\omega$$</p>
+<p>把积分拆成正负两半并合并（利用 $\frac{2a}{a^2+\omega^2}$ 为偶）：</p>
+<p>$$=\frac{-ja}{\pi}\int_0^\infty\frac{e^{j\omega t}-e^{-j\omega t}}{a^2+\omega^2}\mathrm{d}\omega=\frac{-ja}{\pi}\int_0^\infty\frac{2j\sin\omega t}{a^2+\omega^2}\mathrm{d}\omega=\frac{2a}{\pi}\int_0^\infty\frac{\sin(\omega t)}{a^2+\omega^2}\mathrm{d}\omega$$</p>
+<p><strong>没有初等闭式。</strong>这个积分的标准结果要用<strong>指数积分函数</strong> $\mathrm{Ei}$：</p>
+<p>$$\int_0^\infty\frac{\sin(\omega t)}{a^2+\omega^2}\mathrm{d}\omega=\frac{1}{2a}\Big[e^{-at}\,\mathrm{Ei}(at)-e^{at}\,\mathrm{Ei}(-at)\Big],\qquad t&gt;0$$</p>
+<p>所以 $\hat{x}(t)=\frac{1}{\pi}\big[e^{-at}\mathrm{Ei}(at)-e^{at}\mathrm{Ei}(-at)\big]$（$t&gt;0$），$t&lt;0$ 时由奇对称性延拓（$e^{-a|t|}$ 是偶函数 → $\hat x$ 奇）。</p>
+<p><strong>教训</strong>：许多看起来很简单的函数，希尔伯特变换都不是初等函数。对照第 3.6 节表里的高斯函数 $e^{-t^2}$，它的变换是道森函数。这也是为什么工程上几乎总是用<strong>数值方法</strong>（第 7 章）。</p>
+</div>
+</details>
+</div>
+
+<div class="prob">
+<span class="no">题 4.6</span>
+<p class="stem">系统 A 的频响是 $H_A(\omega)=e^{-j\frac{\pi}{2}\mathrm{sgn}(\omega)}$，系统 B 的是 $H_B(\omega)=-j$（对所有 $\omega$）。它们分别是什么？</p>
+<details><summary>查看解答</summary>
+<div class="ans">
+<p><strong>系统 A。</strong>用题 1.4 第五步的展开法。取 $\theta=-\frac{\pi}{2}\mathrm{sgn}(\omega)$，由欧拉公式并利用 $\cos$ 偶、$\sin$ 奇：</p>
+<p>$$e^{-j\frac{\pi}{2}\mathrm{sgn}\omega}=\cos\Big(\frac{\pi}{2}\mathrm{sgn}\omega\Big)-j\sin\Big(\frac{\pi}{2}\mathrm{sgn}\omega\Big)$$</p>
+<p>因为 $\mathrm{sgn}(\omega)=\pm1$：$\cos(\pm\frac{\pi}{2})=0$（$\mathrm{sgn}$ 被偶函数吃掉，值恰为零），$\sin(\pm\frac{\pi}{2})=\pm1=\mathrm{sgn}(\omega)$。所以</p>
+<p>$$H_A(\omega)=0-j\cdot\mathrm{sgn}(\omega)=-j\,\mathrm{sgn}(\omega)$$</p>
+<p>正是希尔伯特变换器，<strong>两者完全相同</strong>，只是写法不同（一个写成指数形式，一个写成代数形式）。</p>
+<p>用题 1.4 的统一公式看更清楚：$\mathcal{H}_\alpha=\cos\alpha\cdot I+\sin\alpha\cdot\mathcal{H}$，取 $\alpha=\frac{\pi}{2}$ 得 $\mathcal{H}_{\pi/2}=0\cdot I+1\cdot\mathcal{H}=\mathcal{H}$。<strong>标准希尔伯特变换就是分数希尔伯特变换族里 $\alpha=90°$ 的那一个成员</strong> —— 也是唯一把 $I$ 的成分清零的那一个，这正是"$x$ 与 $\hat x$ 完全正交、互不重叠"（性质 6）的另一种说法。</p>
+
+<p><strong>系统 B。</strong>$H_B(\omega)=-j$ 是与 $\omega$ 无关的常数，频域乘常数就是时域乘同一个常数：</p>
+<p>$$y(t)=\mathcal{F}^{-1}\{-j\,X(\omega)\}=-j\,\mathcal{F}^{-1}\{X(\omega)\}=-j\,x(t)$$</p>
+<p>它对实输入给出<strong>纯虚数输出</strong>，不是合法的实系统。用第 4.3.3 节的判据当场验证：</p>
+<p>$$H_B(-\omega)=-j\ \neq\ \overline{H_B(\omega)}=+j$$</p>
+<p>失败。失败得最彻底的地方仍然是 $\omega=0$：$H_B(0)=-j$ 不是实数，所以连一个直流信号都会被它变成虚数（对照题 1.4 第三步）。</p>
+
+<p><strong>两个系统摆在一起看，才是这题的用意。</strong>$H_A$ 和 $H_B$ 在<em>正频率上完全一样</em>（都等于 $-j$），差别只在负频率：$H_A$ 那里是 $+j$，$H_B$ 那里还是 $-j$。就这一点差别，一个合法、一个非法。</p>
+<table>
+<tr><th></th><th>$\omega&gt;0$</th><th>$\omega=0$</th><th>$\omega&lt;0$</th><th>对实输入的输出</th></tr>
+<tr><td>$H_A=-j\,\mathrm{sgn}\omega$</td><td>$-j$（转 $-90°$）</td><td>$0$（直流被删）</td><td>$+j$（转 $+90°$）</td><td><strong>实</strong>信号 $\hat x$</td></tr>
+<tr><td>$H_B=-j$</td><td>$-j$</td><td>$-j$</td><td>$-j$（转错方向）</td><td>纯虚 $-jx$</td></tr>
+</table>
+<p>所以：<strong>"对所有频率移相 $-90°$"这句话必须理解成"对正频率移 $-90°$、对负频率移 $+90°$"。</strong>$\mathrm{sgn}(\omega)$ 不是可以省略的细节，它是维持实数输出的那把锁（第 2.5.3 节的"共轭配对"不能被拆散）。</p>
+<p>补一句：$H_B$ 虽然不是合法的<em>实</em>系统，却不是没用的。$\frac{1}{2}(I - jH_B\text{ 这类组合})$ …… 更直接地说，$x-j\cdot(-j x)$ 之类的构造正是第 6 章解析信号的思路来源 —— 那里我们<strong>主动放弃</strong>"输出必须是实数"这条要求，换来单边频谱。合法与否取决于你想要什么，而不是绝对的对错。</p>
+</div>
+</details>
+</div>
+
+<div class="prob">
+<span class="no">题 4.7 <span class="star">★</span></span>
+<p class="stem">用 $|H(\omega)|=1$ 与 Parseval 定理，一行证明 $\int|\hat{x}|^2\mathrm{d}t=\int|x|^2\mathrm{d}t$。</p>
+<details><summary>查看解答</summary>
+<div class="ans">
+<p>$$\int|\hat{x}|^2\mathrm{d}t\overset{\text{Parseval}}{=}\frac{1}{2\pi}\int|\hat{X}|^2\mathrm{d}\omega=\frac{1}{2\pi}\int\underbrace{|H(\omega)|^2}_{=1}|X|^2\mathrm{d}\omega=\frac{1}{2\pi}\int|X|^2\mathrm{d}\omega\overset{\text{Parseval}}{=}\int|x|^2\mathrm{d}t$$</p>
+<p>$\blacksquare$　这就是性质 5（第 5.4 节）。<strong>全通 ⟹ 保能量</strong>，一步到位。</p>
+</div>
+</details>
+</div>
+
+<h2 id="ch5">第 5 章　性质与定理</h2>
+
+<div class="prob">
+<span class="no">题 5.1</span>
+<p class="stem">求 $\mathcal{H}\{3\cos 2t-2\sin 5t+7\}$。</p>
+<details><summary>查看解答</summary>
+<div class="ans">
+<p>$$3\cdot\sin2t-2\cdot(-\cos5t)+0=\boxed{3\sin2t+2\cos5t}$$</p>
+<p>常数项 $7$ 被消灭。</p>
+</div>
+</details>
+</div>
+
+<div class="prob">
+<span class="no">题 5.2</span>
+<p class="stem">求 $\mathcal{H}\left\{\frac{1}{1+4t^2}\right\}$。</p>
+<details><summary>查看解答</summary>
+<div class="ans">
+<p>令 $x(t)=\frac{1}{1+t^2}$，则 $\frac{1}{1+4t^2}=x(2t)$。由尺度性质（性质 3）取 $a=2&gt;0$：</p>
+<p>$$\mathcal{H}\{x(2t)\}=\mathrm{sgn}(2)\cdot\hat{x}(2t)=\hat{x}(2t)=\left.\frac{s}{1+s^2}\right|_{s=2t}=\boxed{\frac{2t}{1+4t^2}}$$</p>
+<p><strong>常见错误</strong>：写成 $\frac{t}{1+4t^2}$（忘了把 $2t$ 代进分子）。核查办法：$\frac{1}{1+4t^2}$ 是偶函数，变换应为奇函数 ✓，且在 $t$ 大时应与 $\frac{1}{\pi t}\int x\,\mathrm{d}t$ 同阶。</p>
+</div>
+</details>
+</div>
+
+<div class="prob">
+<span class="no">题 5.3</span>
+<p class="stem">直接计算 $\int_0^T\cos(\omega_0t)\sin(\omega_0t)\mathrm{d}t$，$T=2\pi/\omega_0$。</p>
+<details><summary>查看解答</summary>
+<div class="ans">
+<p>$$\int_0^T\cos\omega_0t\sin\omega_0t\,\mathrm{d}t=\frac{1}{2}\int_0^T\sin(2\omega_0t)\,\mathrm{d}t=\frac{1}{2}\left[\frac{-\cos2\omega_0t}{2\omega_0}\right]_0^{T}=\frac{-1}{4\omega_0}\big[\cos4\pi-\cos0\big]=0$$</p>
+<p>这是性质 6（正交性）在单频情形的直接验证。</p>
+</div>
+</details>
+</div>
+
+<div class="prob">
+<span class="no">题 5.4</span>
+<p class="stem">设 $x(t)=e^{-t^2}$。不做计算，判断 $\hat{x}(0)$ 等于多少。</p>
+<details><summary>查看解答</summary>
+<div class="ans">
+<p>$e^{-t^2}$ 是偶函数 → 由性质 7，$\hat{x}$ 是奇函数 → 奇函数在原点必为零（若连续）：</p>
+<p>$$\boxed{\hat{x}(0)=0}$$</p>
+<p>对照第 3.6 节的表：$\mathcal{H}\{e^{-t^2}\}=\frac{2}{\sqrt\pi}e^{-t^2}\int_0^te^{u^2}\mathrm{d}u$，在 $t=0$ 时积分上下限相同，确实为零 ✓。</p>
+<p><strong>更一般的洞察</strong>：$\hat{x}(t_0)=0$ 意味着信号在 $t_0$ 附近左右对称（第 3.2 节的直观），而偶函数在原点当然左右对称。</p>
+</div>
+</details>
+</div>
+
+<div class="prob">
+<span class="no">题 5.5</span>
+<p class="stem">用两种途径求 $\frac{\mathrm{d}}{\mathrm{d}t}\mathcal{H}\{\cos^2t\}$，核对结果。</p>
+<details><summary>查看解答</summary>
+<div class="ans">
+<p><strong>途径一：先变换，再求导。</strong></p>
+<p>$$\cos^2t=\frac{1+\cos2t}{2}\quad\Longrightarrow\quad\mathcal{H}\{\cos^2t\}=\frac{1}{2}\sin2t$$</p>
+<p>$$\frac{\mathrm{d}}{\mathrm{d}t}\left(\frac{1}{2}\sin2t\right)=\cos2t$$</p>
+<p><strong>途径二：先求导，再变换</strong>（用性质 8）。</p>
+<p>$$\frac{\mathrm{d}}{\mathrm{d}t}\cos^2t=-2\cos t\sin t=-\sin2t$$</p>
+<p>$$\mathcal{H}\{-\sin2t\}=-(-\cos2t)=\cos2t$$</p>
+<p>两者相同 ✓，验证了 $\mathcal{H}$ 与 $\frac{\mathrm{d}}{\mathrm{d}t}$ 可交换。</p>
+</div>
+</details>
+</div>
+
+<div class="prob">
+<span class="no">题 5.6</span>
+<p class="stem">下列哪些严格满足 Bedrosian 条件？(a) $f=\cos t,\ g=\cos100t$；(b) $f=\cos50t,\ g=\cos60t$；(c) $f=e^{-t^2},\ g=\cos100t$；(d) $f=\mathrm{rect}(t),\ g=\cos100t$。</p>
+<details><summary>查看解答</summary>
+<div class="ans">
+<p>条件（定理 5.1）：存在 $\omega_c$ 使 $F(\omega)=0$ 当 $|\omega|&gt;\omega_c$，且 $G(\omega)=0$ 当 $|\omega|&lt;\omega_c$。</p>
+<p><strong>(a) 满足。</strong>$F$ 只在 $\pm1$，$G$ 只在 $\pm100$。取 $\omega_c$ 为 $1$ 到 $100$ 之间任意值即可。</p>
+<p><strong>(b) 满足！</strong>（很多人会答错）$F$ 只在 $\pm50$，$G$ 只在 $\pm60$，取 $\omega_c=55$ 即可。验算：</p>
+<p>$$\mathcal{H}\{\cos50t\cos60t\}=\mathcal{H}\left\{\tfrac{1}{2}(\cos110t+\cos10t)\right\}=\tfrac{1}{2}(\sin110t+\sin10t)$$</p>
+<p>$$f\cdot\hat{g}=\cos50t\sin60t=\tfrac{1}{2}\big(\sin110t+\sin10t\big)\quad\checkmark$$</p>
+<p>结论：对<strong>纯音</strong>，只要频率不同，Bedrosian 总成立。定理的实质约束是"频带不交叠"，而单根谱线的"带宽"为零。</p>
+<p><strong>(c) 严格不满足，实用上成立。</strong>高斯函数的频谱 $\sqrt\pi e^{-\omega^2/4}$ 在任何有限频率处都<strong>不严格为零</strong>，所以找不到合法的 $\omega_c$。但它以 $e^{-\omega^2/4}$ 的速度衰减，在 $\omega=100$ 处已是 $e^{-2500}$ 量级 —— 误差远小于任何数值精度。</p>
+<p><strong>(d) 严格不满足，实用上误差可察。</strong>矩形函数的频谱是 $\mathrm{sinc}$，只以 $1/\omega$ 衰减。在 $\omega=100$ 处仍有 $\sim1\%$ 量级的残余，比 (c) 差几百个数量级。</p>
+<p><strong>实践准则</strong>：看"低频因子的频谱在载波频率处还剩多少"。衰减快（高斯、光滑窗）→ 放心用；衰减慢（矩形、有跳变）→ 先加窗平滑。</p>
+</div>
+</details>
+</div>
+
+<div class="prob">
+<span class="no">题 5.7</span>
+<p class="stem">举例说明 $\mathcal{H}\{xy\}\neq x\hat{y}$，并计算两边之差。</p>
+<details><summary>查看解答</summary>
+<div class="ans">
+<p>取 $x=\sin\omega_0t$，$y=\cos\omega_0t$（同一频率，无法频带分离）。</p>
+<p><strong>左边</strong>：$xy=\sin\omega_0t\cos\omega_0t=\frac{1}{2}\sin2\omega_0t$，故</p>
+<p>$$\mathcal{H}\{xy\}=\frac{1}{2}\mathcal{H}\{\sin2\omega_0t\}=-\frac{1}{2}\cos2\omega_0t$$</p>
+<p><strong>右边</strong>：$\hat{y}=\mathcal{H}\{\cos\omega_0t\}=\sin\omega_0t$，故</p>
+<p>$$x\hat{y}=\sin^2\omega_0t=\frac{1-\cos2\omega_0t}{2}=\frac{1}{2}-\frac{1}{2}\cos2\omega_0t$$</p>
+<p><strong>差</strong>：</p>
+<p>$$x\hat{y}-\mathcal{H}\{xy\}=\frac{1}{2}$$</p>
+<p>相差一个常数 $\frac{1}{2}$ —— 正是那个<strong>直流分量</strong>。$\mathcal{H}\{xy\}$ 必然零均值（第 4.3.4 节），而 $x\hat y=\sin^2$ 均值为 $\frac12$，两者不可能相等。Bedrosian 条件在此完全失效（$f$ 和 $g$ 是同一频率）。</p>
+</div>
+</details>
+</div>
+
+<div class="prob">
+<span class="no">题 5.8 <span class="star">★</span></span>
+<p class="stem">由反自伴性 $\langle\mathcal{H}x,y\rangle=-\langle x,\mathcal{H}y\rangle$，证明 $\langle\mathcal{H}x,\mathcal{H}y\rangle=\langle x,y\rangle$。</p>
+<details><summary>查看解答</summary>
+<div class="ans">
+<p>把 $y$ 换成 $\mathcal{H}y$ 代入反自伴性：</p>
+<p>$$\langle\mathcal{H}x,\mathcal{H}y\rangle=-\langle x,\mathcal{H}(\mathcal{H}y)\rangle=-\langle x,\mathcal{H}^2y\rangle=-\langle x,-y\rangle=\langle x,y\rangle$$</p>
+<p>$\blacksquare$　这比性质 5（保范数）更强：$\mathcal{H}$ 不仅保长度，还<strong>保内积</strong>，即保角度。几何上说，$\mathcal{H}$ 是零均值 $L^2$ 空间上的一个<strong>正交变换</strong>（等距同构），它把整个信号空间"刚性旋转"了 90°。</p>
+<p>取 $y=x$ 得到性质 5；取 $y=\mathcal{H}x$ 并结合 $\mathcal{H}^2=-I$ 得到性质 6（正交性）。</p>
+</div>
+</details>
+</div>
+
+<div class="prob">
+<span class="no">题 5.9 <span class="star">★</span></span>
+<p class="stem">用 Titchmarsh 定理解释：为什么不存在既在时域有限支撑、又只含正频率的非零信号？</p>
+<details><summary>查看解答</summary>
+<div class="ans">
+<p>设 $z(t)$ 有限支撑（在 $[-T,T]$ 外为零）且 $Z(\omega)=0$ 对 $\omega&lt;0$。</p>
+<p><strong>第一步</strong>：有限支撑 ⟹ $Z(\omega)=\int_{-T}^{T}z(t)e^{-j\omega t}\mathrm{d}t$ 是 $\omega$ 的<strong>整函数</strong>（可延拓到整个复 $\omega$ 平面且处处解析）。这是 Paley–Wiener 定理的一半：积分区间有限，被积函数对复 $\omega$ 解析，且一致收敛。</p>
+<p><strong>第二步</strong>：$Z$ 在整条负实轴（一个有极限点的集合）上为零。</p>
+<p><strong>第三步</strong>：由复变函数的<strong>唯一性（恒等）定理</strong>，一个整函数若在某有极限点的集合上为零，则恒为零。故 $Z\equiv0$，从而 $z\equiv0$。$\blacksquare$</p>
+<p><strong>物理解读</strong>：这是时频不确定性的一个极端版本 —— "时间上完全局限"和"频率上只占半边"是互斥的要求。</p>
+<p><strong>工程后果</strong>：例 3.3 里矩形脉冲的希尔伯特变换必然拖出无限长尾；第 7 章里 FIR 希尔伯特变换器（有限长）必然无法在全频段精确，$\omega=0$ 处必有零点。<strong>都不是实现缺陷，是定理禁止。</strong></p>
+</div>
+</details>
+</div>
+
+<h2 id="ch6">第 6 章　解析信号与瞬时频率</h2>
+
+<div class="prob">
+<span class="no">题 6.1</span>
+<p class="stem">求 $x(t)=\cos(\omega_0t+\varphi)$ 的解析信号与三个瞬时量。</p>
+<details><summary>查看解答</summary>
+<div class="ans">
+<p>$\hat{x}=\sin(\omega_0t+\varphi)$（初相不影响，见第 3.6 节表），故</p>
+<p>$$z(t)=\cos(\omega_0t+\varphi)+j\sin(\omega_0t+\varphi)=e^{j(\omega_0t+\varphi)}$$</p>
+<table>
+<tr><td>瞬时幅度</td><td>$A(t)=1$（常数）</td></tr>
+<tr><td>瞬时相位</td><td>$\phi(t)=\omega_0t+\varphi$</td></tr>
+<tr><td>瞬时角频率</td><td>$\omega_i(t)=\omega_0$（常数）</td></tr>
+</table>
+<p>纯音的瞬时频率就是它的频率，瞬时幅度就是它的幅度 —— 定义的<strong>自洽性检验</strong>通过。</p>
+</div>
+</details>
+</div>
+
+<div class="prob">
+<span class="no">题 6.2</span>
+<p class="stem">设 $x(t)=e^{-\alpha t}\cos(\omega_0t)u(t)$，$\alpha\ll\omega_0$。求 $A(t)$ 与 $\omega_i(t)$，并说明如何从实测自由衰减曲线估计阻尼比 $\zeta$。</p>
+<details><summary>查看解答</summary>
+<div class="ans">
+<p>$e^{-\alpha t}$ 的频谱集中在低频（带宽 $\sim\alpha$），$\cos\omega_0t$ 在 $\omega_0$。因 $\alpha\ll\omega_0$，Bedrosian 条件近似成立：</p>
+<p>$$\hat{x}(t)\approx e^{-\alpha t}\sin(\omega_0t),\qquad z(t)\approx e^{-\alpha t}e^{j\omega_0t}$$</p>
+<p>$$A(t)\approx e^{-\alpha t},\qquad \phi(t)\approx\omega_0t,\qquad \omega_i\approx\omega_0$$</p>
+<p><strong>估计阻尼的方法</strong>（希尔伯特包络法）：</p>
+<p>$$\ln A(t)=-\alpha t+\text{const}$$</p>
+<p>对<strong>包络取对数</strong>，得到一条直线，斜率就是 $-\alpha$。用最小二乘拟合即可。然后</p>
+<p>$$\zeta=\frac{\alpha}{\omega_n},\qquad \omega_n=\sqrt{\omega_0^2+\alpha^2}\approx\omega_0$$</p>
+<p>故 $\zeta\approx\alpha/\omega_0$。</p>
+<p><strong>为什么比传统方法好</strong>：经典对数衰减法只能用相邻峰值 $\ln(x_k/x_{k+1})$，每个周期才有一个数据点，噪声影响大。希尔伯特包络在<strong>每个采样点</strong>都给出 $A$ 值，拟合时数据量多几十倍，精度显著提升。这是结构健康监测和模态测试的标准做法。</p>
+<p><strong>注意</strong>：由第 7.5 节，$t=0$ 附近（信号突然起振处）包络不可靠，拟合时应跳过前几个周期。</p>
+</div>
+</details>
+</div>
+
+<div class="prob">
+<span class="no">题 6.3</span>
+<p class="stem">对 $x=\cos\omega_0t$ 直接算出 $Z(\omega)$，确认它在 $\omega=-\omega_0$ 处为零。</p>
+<details><summary>查看解答</summary>
+<div class="ans">
+<p>$X(\omega)=\pi[\delta(\omega-\omega_0)+\delta(\omega+\omega_0)]$。由定理 6.1：</p>
+<p>$$Z(\omega)=[1+\mathrm{sgn}(\omega)]X(\omega)$$</p>
+<p>在 $\omega=+\omega_0&gt;0$：因子 $=1+1=2$，得 $2\pi\delta(\omega-\omega_0)$。</p>
+<p>在 $\omega=-\omega_0&lt;0$：因子 $=1+(-1)=0$，谱线被<strong>消灭</strong>。</p>
+<p>$$\boxed{Z(\omega)=2\pi\delta(\omega-\omega_0)}$$</p>
+<p>逆变换即 $z(t)=e^{j\omega_0t}$ ✓，与 6.1 节的直接计算一致。<strong>负频率确实被删干净了。</strong></p>
+</div>
+</details>
+</div>
+
+<div class="prob">
+<span class="no">题 6.4</span>
+<p class="stem">设 $x(t)=\cos(2\pi\cdot 10t)+\cos(2\pi\cdot 12t)$。写出 $z(t)$，求 $A(t)$，指出 $\phi(t)$ 在哪些时刻跳变 $\pi$。</p>
+<details><summary>查看解答</summary>
+<div class="ans">
+<p>逐项取解析信号（线性性）：</p>
+<p>$$z(t)=e^{j2\pi\cdot10t}+e^{j2\pi\cdot12t}$$</p>
+<p>提出中心频率 $11$ Hz：</p>
+<p>$$z(t)=e^{j2\pi\cdot11t}\left(e^{-j2\pi t}+e^{j2\pi t}\right)=2\cos(2\pi t)\,e^{j2\pi\cdot11t}$$</p>
+<p><strong>瞬时幅度</strong>（必须取绝对值，因为 $A\ge0$）：</p>
+<p>$$A(t)=2\big|\cos(2\pi t)\big|$$</p>
+<p>这就是频率 $\Delta f=2$ Hz 的<strong>拍频</strong>包络（$|\cos|$ 的周期是 $0.5$ s，对应 2 Hz）。</p>
+<p><strong>相位跳变</strong>：当 $\cos(2\pi t)&lt;0$ 时，把负号并入相位需要加 $\pi$。所以 $\phi$ 在 $\cos(2\pi t)=0$ 的时刻跳变：</p>
+<p>$$2\pi t=\frac{\pi}{2}+k\pi\quad\Longrightarrow\quad \boxed{t=0.25+0.5k\ \text{秒},\quad k\in\mathbb{Z}}$$</p>
+<p>每次跳变都在瞬时频率里产生一个 $\delta$ 型尖峰（对 $\pi$ 的阶跃求导）。<strong>这就是第 6.6.1 节所说"多分量信号的瞬时频率无意义"的具体表现。</strong>图 6.2 演示的正是这个现象。</p>
+</div>
+</details>
+</div>
+
+<div class="prob">
+<span class="no">题 6.5</span>
+<p class="stem">推导 $\omega_i=\dfrac{x\dot{\hat x}-\hat x\dot x}{x^2+\hat x^2}$。</p>
+<details><summary>查看解答</summary>
+<div class="ans">
+<p>由 $\tan\phi=\hat{x}/x$，两边对 $t$ 求导：</p>
+<p>$$\sec^2\phi\cdot\dot\phi=\frac{\dot{\hat x}x-\hat x\dot x}{x^2}$$</p>
+<p>而</p>
+<p>$$\sec^2\phi=1+\tan^2\phi=1+\frac{\hat x^2}{x^2}=\frac{x^2+\hat x^2}{x^2}$$</p>
+<p>代入并约去 $x^2$：</p>
+<p>$$\dot\phi=\frac{\dot{\hat x}x-\hat x\dot x}{x^2}\cdot\frac{x^2}{x^2+\hat x^2}=\boxed{\frac{x\dot{\hat x}-\hat x\dot x}{x^2+\hat x^2}}$$</p>
+<p><strong>复数形式</strong>：注意 $\operatorname{Im}\{\bar{z}\dot{z}\}=\operatorname{Im}\{(x-j\hat x)(\dot x+j\dot{\hat x})\}=x\dot{\hat x}-\hat x\dot x$，且 $|z|^2=x^2+\hat x^2$，所以</p>
+<p>$$\omega_i=\frac{\operatorname{Im}\{\bar z\dot z\}}{|z|^2}$$</p>
+<p>这个式子的数值优势：<strong>不需要相位解缠</strong>（第 6.6.3 节）。代价是需要求导，对噪声敏感，实际使用时常先对 $x$ 做轻度平滑。</p>
+</div>
+</details>
+</div>
+
+<div class="prob">
+<span class="no">题 6.6</span>
+<p class="stem">为什么 $A(t)=\sqrt{x^2+\hat x^2}$ 总是非负？这在多分量情形下引出什么问题？</p>
+<details><summary>查看解答</summary>
+<div class="ans">
+<p>因为它是两个实数平方和的算术平方根，<strong>按定义非负</strong>（就是复数 $z$ 的模长）。</p>
+<p><strong>引出的问题</strong>：对单分量 AM 信号 $x=A(t)\cos\omega_ct$，若真实调制函数 $A(t)$ 会变号（如拍频、或过调制的 AM），则计算出的包络是 $|A(t)|$，负值部分被<strong>翻折</strong>。后果：</p>
+<ol>
+<li>包络在 $A=0$ 处出现<strong>尖点</strong>（不可导），求导会产生虚假尖峰；</li>
+<li>为了保持 $A\ge0$，相位必须在该处跳变 $\pi$（题 6.4），于是瞬时频率出现 $\delta$ 型奇点；</li>
+<li>如果继续对这个包络做谱分析（如包络谱），$|A|$ 的谱包含 $A$ 的所有偶次谐波，产生<strong>虚假的谐波分量</strong>。</li>
+</ol>
+<p>这正是题 1.3 讨论的过调制失真在解析信号框架下的重现 —— <strong>不是算法问题，是"包络"这个概念的固有歧义</strong>。</p>
+</div>
+</details>
+</div>
+
+<div class="prob">
+<span class="no">题 6.7 <span class="star">★</span></span>
+<p class="stem">设 $z(t)=e^{j\omega_1t}+a\,e^{j\omega_2t}$，$0&lt;a&lt;1$，$\omega_1&lt;\omega_2$。讨论轨迹是否包围原点、瞬时频率的范围与平均值。再讨论 $a&gt;1$。</p>
+<details><summary>查看解答</summary>
+<div class="ans">
+<p>提出主导项，记 $\Delta\omega=\omega_2-\omega_1&gt;0$，$\theta=\Delta\omega\,t$：</p>
+<p>$$z(t)=e^{j\omega_1t}\big(1+a\,e^{j\theta}\big)$$</p>
+<p><strong>(1) 是否包围原点。</strong>$|1+ae^{j\theta}|\ge1-a&gt;0$，所以 $z$ 永不为零。因子 $(1+ae^{j\theta})$ 的取值落在以 $1$ 为圆心、半径 $a&lt;1$ 的圆盘内，该圆盘<strong>不含原点</strong>，故这个因子的绕数为 $0$。因此 $z$ 的绕数完全由 $e^{j\omega_1t}$ 决定 —— <strong>轨迹包围原点，每 $2\pi/\omega_1$ 绕一圈。</strong></p>
+<p><strong>(2) 瞬时频率。</strong>$\phi=\omega_1t+\arg(1+ae^{j\theta})$，对 $\theta$ 求导：</p>
+<p>$$\frac{\mathrm{d}}{\mathrm{d}\theta}\arg(1+ae^{j\theta})=\frac{a(a+\cos\theta)}{1+2a\cos\theta+a^2}$$</p>
+<p>故</p>
+<p>$$\omega_i=\omega_1+\Delta\omega\cdot\frac{a(a+\cos\theta)}{1+2a\cos\theta+a^2}$$</p>
+<p>极值在 $\cos\theta=\pm1$ 处：</p>
+<p>$$\omega_i^{\max}=\omega_1+\Delta\omega\frac{a}{1+a},\qquad \omega_i^{\min}=\omega_1-\Delta\omega\frac{a}{1-a}$$</p>
+<p><strong>重要观察</strong>：当 $a\to1^-$ 时 $\omega_i^{\min}\to-\infty$。所以<strong>瞬时频率完全可以变负</strong>，即使轨迹包围原点！例如 $\omega_1=2\pi\!\cdot\!20$，$\Delta\omega=2\pi\!\cdot\!4$，$a=0.85$：$\omega_i^{\min}=2\pi(20-4\cdot\frac{0.85}{0.15})=2\pi(20-22.7)&lt;0$。图 6.2 演示的正是这个。</p>
+<p><strong>(3) 平均值。</strong>用已知积分 $\frac{1}{2\pi}\int_0^{2\pi}\frac{\mathrm{d}\theta}{1+2a\cos\theta+a^2}=\frac{1}{1-a^2}$ 和 $\frac{1}{2\pi}\int_0^{2\pi}\frac{\cos\theta\,\mathrm{d}\theta}{1+2a\cos\theta+a^2}=\frac{-a}{1-a^2}$（$a&lt;1$），得</p>
+<p>$$\langle\omega_i\rangle_\theta=\omega_1+\Delta\omega\cdot a\left[\frac{a}{1-a^2}-\frac{a}{1-a^2}\right]=\omega_1$$</p>
+<p><strong>平均瞬时频率恰为 $\omega_1$</strong>，即较强分量的频率。</p>
+<p><strong>(4) $a&gt;1$。</strong>改提 $e^{j\omega_2t}$：$z=a\,e^{j\omega_2t}(1+a^{-1}e^{-j\theta})$，$a^{-1}&lt;1$，同理平均瞬时频率为 $\omega_2$ —— <strong>强者胜</strong>。$a=1$ 时 $|z|$ 会归零，瞬时相位和频率在那些时刻无定义（题 6.4 的情形）。</p>
+<p><strong>结论</strong>：双分量信号的瞬时频率平均值总是强分量的频率，但瞬时值可以剧烈振荡甚至变负。这在数学上完全自洽，但作为"频率"的物理解释是错的 —— <strong>必须先分解</strong>。</p>
+</div>
+</details>
+</div>
+
+<div class="prob">
+<span class="no">题 6.8 <span class="star">⌨</span></span>
+<p class="stem">生成一段 chirp，分别用"解缠求导"与"微分公式"求瞬时频率，加不同强度噪声比较鲁棒性。</p>
+<details><summary>查看解答</summary>
+<div class="ans">
+<pre><code><span class="kw">import</span> numpy <span class="kw">as</span> np
+<span class="kw">from</span> scipy.signal <span class="kw">import</span> hilbert
+<span class="kw">import</span> matplotlib.pyplot <span class="kw">as</span> plt
+
+fs, T = <span class="num">2000</span>, <span class="num">2.0</span>
+t = np.arange(<span class="num">0</span>, T, <span class="num">1</span>/fs)
+f0, k = <span class="num">50.0</span>, <span class="num">100.0</span>                <span class="cmt"># 50 Hz 起，100 Hz/s 扫频</span>
+clean = np.cos(<span class="num">2</span>*np.pi*(f0*t + <span class="num">0.5</span>*k*t**<span class="num">2</span>))
+truth = f0 + k*t                     <span class="cmt"># 理论瞬时频率</span>
+
+<span class="kw">def</span> <span class="fn">fi_unwrap</span>(x):
+    z = hilbert(x)
+    <span class="kw">return</span> np.gradient(np.unwrap(np.angle(z))) * fs / (<span class="num">2</span>*np.pi)
+
+<span class="kw">def</span> <span class="fn">fi_diff</span>(x):
+    z  = hilbert(x)
+    dz = np.gradient(z) * fs
+    <span class="kw">return</span> np.imag(np.conj(z)*dz) / (np.<span class="fn">abs</span>(z)**<span class="num">2</span> + <span class="num">1e-20</span>) / (<span class="num">2</span>*np.pi)
+
+<span class="kw">for</span> snr_db <span class="kw">in</span> [<span class="num">40</span>, <span class="num">20</span>, <span class="num">10</span>, <span class="num">0</span>]:
+    sigma = <span class="num">10</span>**(-snr_db/<span class="num">20</span>) / np.sqrt(<span class="num">2</span>)
+    x = clean + sigma*np.random.randn(len(t))
+    m = slice(int(<span class="num">0.1</span>*len(t)), int(<span class="num">0.9</span>*len(t)))   <span class="cmt"># 丢两端 10%</span>
+    e1 = np.sqrt(np.mean((fi_unwrap(x)[m]-truth[m])**<span class="num">2</span>))
+    e2 = np.sqrt(np.mean((fi_diff  (x)[m]-truth[m])**<span class="num">2</span>))
+    <span class="fn">print</span>(<span class="str">f"SNR={snr_db:3d} dB   解缠法 RMSE={e1:8.2f} Hz   微分法 RMSE={e2:8.2f} Hz"</span>)
+</code></pre>
+<p><strong>典型输出</strong>（数值随随机种子波动）：</p>
+<table>
+<tr><th>SNR</th><th>解缠法 RMSE</th><th>微分法 RMSE</th></tr>
+<tr><td>40 dB</td><td>~1.6 Hz</td><td>~9 Hz</td></tr>
+<tr><td>20 dB</td><td>~16 Hz</td><td>~12 Hz</td></tr>
+<tr><td>10 dB</td><td>~50 Hz（偶发巨大跳变）</td><td>~31 Hz</td></tr>
+<tr><td>0 dB</td><td>~200 Hz（解缠失败）</td><td>~150 Hz</td></tr>
+</table>
+<p><strong>结论</strong>：</p>
+<ol>
+<li>高信噪比下<strong>解缠法反而更准</strong>。原因不在噪声：微分法用 <code>np.gradient</code> 的中心差分近似 $\dot z$，会把频率系统性地低估一个 $\dfrac{\sin(\omega/f_s)}{\omega/f_s}$ 因子；本例扫到 250 Hz 时 $f_s=2000$ Hz，这个固定误差底就有 $\sim9$ Hz（把噪声全部去掉也还在）。提高采样率或改用谱域求导即可消除。</li>
+<li>低信噪比下解缠法会<strong>灾难性失败</strong>：一次解错方向，后面所有相位整体偏移 $2\pi$，误差不再是局部的。微分法的误差始终是局部的、有界的。</li>
+<li>两法都对噪声敏感，因为都含求导（高频放大）。实用改进：<strong>先带通滤波</strong>（信噪比改善最显著），或对瞬时频率结果做滑动中值滤波（去掉孤立尖峰）。</li>
+</ol>
+</div>
+</details>
+</div>
+
+<h2 id="ch7">第 7 章　数值实现</h2>
+
+<div class="prob">
+<span class="no">题 7.1</span>
+<p class="stem">推导 $h[n]=\frac{1-\cos\pi n}{\pi n}$。</p>
+<details><summary>查看解答</summary>
+<div class="ans">
+<p>$$h[n]=\frac{1}{2\pi}\int_{-\pi}^{\pi}\!\!-j\,\mathrm{sgn}(\omega)\,e^{j\omega n}\,\mathrm{d}\omega=\frac{-j}{2\pi}\left[\int_0^{\pi}\!e^{j\omega n}\mathrm{d}\omega-\int_{-\pi}^{0}\!e^{j\omega n}\mathrm{d}\omega\right]$$</p>
+<p>两个基本积分（$n\neq0$）：</p>
+<p>$$\int_0^{\pi}e^{j\omega n}\mathrm{d}\omega=\frac{e^{j\pi n}-1}{jn},\qquad \int_{-\pi}^{0}e^{j\omega n}\mathrm{d}\omega=\frac{1-e^{-j\pi n}}{jn}$$</p>
+<p>相减：</p>
+<p>$$\frac{e^{j\pi n}-1-1+e^{-j\pi n}}{jn}=\frac{2\cos\pi n-2}{jn}$$</p>
+<p>代回：</p>
+<p>$$h[n]=\frac{-j}{2\pi}\cdot\frac{2(\cos\pi n-1)}{jn}=\frac{-(\cos\pi n-1)}{\pi n}=\boxed{\frac{1-\cos\pi n}{\pi n}}$$</p>
+<p>由 $\cos\pi n=(-1)^n$：$n$ 偶时分子为 $0$；$n$ 奇时分子为 $2$，得 $h[n]=\frac{2}{\pi n}$。</p>
+</div>
+</details>
+</div>
+
+<div class="prob">
+<span class="no">题 7.2</span>
+<p class="stem">验证 $h[-n]=-h[n]$，并解释 $h[0]=0$。</p>
+<details><summary>查看解答</summary>
+<div class="ans">
+<p><strong>奇对称</strong>：$\cos$ 是偶函数，所以</p>
+<p>$$h[-n]=\frac{1-\cos(-\pi n)}{\pi(-n)}=\frac{1-\cos\pi n}{-\pi n}=-h[n]\quad\checkmark$$</p>
+<p><strong>$h[0]=0$ 的三种解释</strong>：</p>
+<ol>
+<li><strong>极限</strong>：$n\to0$ 时 $1-\cos\pi n\approx\frac{(\pi n)^2}{2}$，故 $h[n]\approx\frac{\pi n}{2}\to0$。</li>
+<li><strong>奇对称</strong>：奇序列在 $n=0$ 处必满足 $h[0]=-h[0]$，故 $h[0]=0$。</li>
+<li><strong>物理</strong>：希尔伯特变换的输出完全由"过去与未来的加权差"决定，<strong>当前时刻的样本不参与</strong>（第 3.2 节的对称差式）。这也是为什么 $\int x\hat{x}=0$ —— 两者信息完全不重叠。</li>
+</ol>
+</div>
+</details>
+</div>
+
+<div class="prob">
+<span class="no">题 7.3</span>
+<p class="stem">算法 7.1 中若把 $h[N/2]$ 错写成 $2$，$\operatorname{Re}z[n]$ 会变成什么？</p>
+<details><summary>查看解答</summary>
+<div class="ans">
+<p>$Z[k]$ 在 $k=N/2$ 处多加了一份 $X[N/2]$。这一份对时域的贡献是</p>
+<p>$$\frac{1}{N}X[N/2]\,e^{j2\pi(N/2)n/N}=\frac{X[N/2]}{N}e^{j\pi n}=\frac{X[N/2]}{N}(-1)^n$$</p>
+<p>对实序列 $x$，$X[N/2]=\sum_n x[n](-1)^n$ 是<strong>实数</strong>。所以</p>
+<p>$$\boxed{\operatorname{Re}z[n]=x[n]+\frac{X[N/2]}{N}(-1)^n}$$</p>
+<p>多出一个<strong>奈奎斯特频率的正负交替涟漪</strong>。若信号在奈奎斯特附近能量很小（通常如此），$X[N/2]\approx0$，错误几乎看不出来 —— <strong>这正是它危险的地方</strong>。但若信号含明显的奈奎斯特成分（如方波、采样率偏低），涟漪会很显眼。</p>
+<p><strong>所以第 7.2.1 节那句 <code>assert np.allclose(z.real, x)</code> 一定要写。</strong>它是发现这类错误的唯一可靠手段。</p>
+</div>
+</details>
+</div>
+
+<div class="prob">
+<span class="no">题 7.4</span>
+<p class="stem">$f_s=48$ kHz，需在 $200$ Hz $\sim20$ kHz 内实现 90° 相移。估计 FIR 半长 $M$ 与群延时。</p>
+<details><summary>查看解答</summary>
+<div class="ans">
+<p>用第 7.3.4 节的经验法则（约束来自<strong>最低</strong>频率）：</p>
+<p>$$M\gtrsim\frac{f_s}{2f_{\min}}\times(3\sim5)=\frac{48000}{2\times200}\times(3\sim5)=120\times(3\sim5)=360\sim600$$</p>
+<p>取 $M=512$，则滤波器长度 $N=2M+1=1025$，阶数 1024。</p>
+<p><strong>群延时</strong>：</p>
+<p>$$\tau=\frac{M}{f_s}=\frac{512}{48000}\approx\boxed{10.7\ \text{ms}}$$</p>
+<p><strong>工程解读</strong>：10.7 ms 的延时对音频监听已经<strong>可以察觉</strong>（人耳对 10 ms 以上的延时敏感），对实时通信（要求端到端 &lt;150 ms）勉强可接受，对控制回路可能致命。</p>
+<p><strong>改进思路</strong>：把 200 Hz 这个下限要求放宽，或者先把信号<strong>下变频</strong>到中频（用 I/Q 方式，第 7.4 节），使相对带宽变小，滤波器就能短得多。这就是为什么实际系统很少直接用宽带希尔伯特变换器。</p>
+</div>
+</details>
+</div>
+
+<div class="prob">
+<span class="no">题 7.5</span>
+<p class="stem">为什么 Type III FIR（奇数长、反对称）在 $\omega=0$ 与 $\omega=\pi$ 处响应均为零？</p>
+<details><summary>查看解答</summary>
+<div class="ans">
+<p>设长度 $N$ 为奇数，中心 $M=\frac{N-1}{2}$，反对称：$h[n]=-h[N-1-n]$。</p>
+<p><strong>$\omega=0$：</strong></p>
+<p>$$H(e^{j0})=\sum_{n=0}^{N-1}h[n]$$</p>
+<p>把 $n$ 与 $N-1-n$ 配对，每对之和为 $h[n]+(-h[n])=0$；中心项满足 $h[M]=-h[M]$ 故 $h[M]=0$。总和为零。$\checkmark$</p>
+<p><strong>$\omega=\pi$：</strong></p>
+<p>$$H(e^{j\pi})=\sum_{n=0}^{N-1}h[n](-1)^n$$</p>
+<p>因 $N-1$ 为偶数，$(-1)^{N-1-n}=(-1)^{-n}=(-1)^n$。于是配对项：</p>
+<p>$$h[n](-1)^n+h[N-1-n](-1)^{N-1-n}=h[n](-1)^n-h[n](-1)^n=0$$</p>
+<p>中心项 $h[M]=0$。总和为零。$\checkmark$　$\blacksquare$</p>
+<p><strong>对比 Type IV</strong>（$N$ 偶数）：此时 $N-1$ 为奇数，$(-1)^{N-1-n}=-(-1)^n$，配对项变成 $h[n](-1)^n+h[n](-1)^n=2h[n](-1)^n\neq0$。所以 Type IV <strong>在 $\omega=\pi$ 处不为零</strong>，通带更宽 —— 代价是没有中心样本，群延时为半个采样，与原信号对齐时需要额外的半样本延时器（用分数延时滤波器实现）。</p>
+</div>
+</details>
+</div>
+
+<div class="prob">
+<span class="no">题 7.6 <span class="star">⌨</span></span>
+<p class="stem">对 $x=(1+0.5\sin 2\pi\cdot3t)\cos(2\pi\cdot100t)$（$f_s=1000$ Hz，2 s），比较 FFT 法、$M=16$ 与 $M=128$ 的 FIR 求包络的误差。</p>
+<details><summary>查看解答</summary>
+<div class="ans">
+<pre><code><span class="kw">import</span> numpy <span class="kw">as</span> np
+<span class="kw">from</span> scipy.signal <span class="kw">import</span> hilbert, lfilter, get_window
+
+fs, T = <span class="num">1000</span>, <span class="num">2.0</span>
+t = np.arange(<span class="num">0</span>, T, <span class="num">1</span>/fs)
+A = <span class="num">1</span> + <span class="num">0.5</span>*np.sin(<span class="num">2</span>*np.pi*<span class="num">3</span>*t)
+x = A * np.cos(<span class="num">2</span>*np.pi*<span class="num">100</span>*t)
+
+<span class="kw">def</span> <span class="fn">fir_env</span>(x, M):
+    n = np.arange(-M, M+<span class="num">1</span>)
+    h = np.zeros(<span class="num">2</span>*M+<span class="num">1</span>)
+    odd = n % <span class="num">2</span> != <span class="num">0</span>
+    h[odd] = <span class="num">2.0</span>/(np.pi*n[odd])
+    h *= get_window(<span class="str">'hamming'</span>, <span class="num">2</span>*M+<span class="num">1</span>)
+    xh = lfilter(h, <span class="num">1.0</span>, x)                          <span class="cmt"># 已延时 M</span>
+    xd = np.concatenate([np.zeros(M), x])[:len(x)]    <span class="cmt"># 配对延时！</span>
+    env = np.<span class="fn">abs</span>(xd + <span class="num">1j</span>*xh)
+    <span class="kw">return</span> np.concatenate([env[M:], np.zeros(M)])   <span class="cmt"># 移回原时间轴，才能和 A(t) 对比</span>
+
+envs = {<span class="str">'FFT'</span>: np.<span class="fn">abs</span>(hilbert(x)),
+        <span class="str">'FIR M=16'</span>: fir_env(x, <span class="num">16</span>),
+        <span class="str">'FIR M=128'</span>: fir_env(x, <span class="num">128</span>)}
+
+m = slice(int(<span class="num">0.15</span>*len(t)), int(<span class="num">0.85</span>*len(t)))    <span class="cmt"># 避开瞬态与端点</span>
+<span class="kw">for</span> name, e <span class="kw">in</span> envs.items():
+    err = np.<span class="fn">abs</span>(e[m] - A[m])
+    <span class="fn">print</span>(<span class="str">f"{name:11s} 最大误差={err.max():.5f}  RMSE={np.sqrt((err**2).mean()):.5f}"</span>)
+</code></pre>
+<p><strong>典型结果</strong>：</p>
+<table>
+<tr><th>方法</th><th>最大误差</th><th>RMSE</th><th>说明</th></tr>
+<tr><td>FFT 法</td><td>$\sim2\times10^{-13}$</td><td>$\sim3\times10^{-14}$</td><td>本例 100 Hz 与 3 Hz 在 2 s 窗内都是整数周期，首尾天然匹配，精度到机器极限</td></tr>
+<tr><td>FIR $M=16$</td><td>$\sim8\times10^{-4}$</td><td>$\sim4\times10^{-4}$</td><td>通带在 100 Hz 处仍有微小幅度/相位偏差，留下残余波动</td></tr>
+<tr><td>FIR $M=128$</td><td>$\sim3\times10^{-4}$</td><td>$\sim1.6\times10^{-4}$</td><td>明显改善，但仍远不及 FFT 法</td></tr>
+</table>
+<p><strong>要观察的三点</strong>：</p>
+<ol>
+<li><strong>FFT 法在本例里精确到机器精度</strong>，因为窗长 2 s 对 100 Hz 和 3 Hz 都是整数周期，首尾接得上、没有端点效应。把时长改成 2.037 s（非整数周期）再跑一遍：中段仍有 $2\times10^{-3}$ 的水平，而两端各约 5% 的区域误差立刻跳到 0.5 —— 这正是题 7.7 要量化的东西。</li>
+<li>FIR 误差表现为频率 $2f_c=200$ Hz 的<strong>残余波动</strong>：相移偏离 90° 时，$x^2+\hat x^2$ 里的二倍频项没有完全消掉。</li>
+<li><strong>故意注释掉配对延时那行</strong>，误差会跳到 0.5 量级（包络完全错） —— 亲手体验第 7.3.1 节的那个坑。</li>
+</ol>
+</div>
+</details>
+</div>
+
+<div class="prob">
+<span class="no">题 7.7 <span class="star">⌨</span></span>
+<p class="stem">复现图 7.2，量化"应该丢弃百分之几"。</p>
+<details><summary>查看解答</summary>
+<div class="ans">
+<pre><code><span class="kw">import</span> numpy <span class="kw">as</span> np
+<span class="kw">from</span> scipy.signal <span class="kw">import</span> hilbert, get_window
+
+fs, N = <span class="num">1000</span>, <span class="num">2048</span>
+t = np.arange(N)/fs
+A = <span class="num">1</span> + <span class="num">0.35</span>*np.sin(<span class="num">2</span>*np.pi*<span class="num">2.3</span>*t) + <span class="num">0.8</span>*t   <span class="cmt"># 包络带斜坡 → 首尾电平差很大</span>
+x = A*np.cos(<span class="num">2</span>*np.pi*<span class="num">87.37</span>*t)              <span class="cmt"># 非整数周期 → 首尾严重不匹配</span>
+x = x - x.mean()
+
+<span class="kw">def</span> <span class="fn">env_plain</span>(x):  <span class="kw">return</span> np.<span class="fn">abs</span>(hilbert(x))
+<span class="kw">def</span> <span class="fn">env_taper</span>(x, frac=<span class="num">0.06</span>):
+    w = np.ones(len(x)); L = int(len(x)*frac)
+    ramp = <span class="num">0.5</span> - <span class="num">0.5</span>*np.cos(np.pi*np.arange(L)/L)
+    w[:L] = ramp; w[-L:] = ramp[::-<span class="num">1</span>]
+    <span class="kw">return</span> np.<span class="fn">abs</span>(hilbert(x*w))
+<span class="kw">def</span> <span class="fn">env_mirror</span>(x):
+    xe = np.concatenate([x[::-<span class="num">1</span>], x, x[::-<span class="num">1</span>]])
+    <span class="kw">return</span> np.<span class="fn">abs</span>(hilbert(xe))[len(x):<span class="num">2</span>*len(x)]
+
+<span class="kw">for</span> name, f <span class="kw">in</span> [(<span class="str">'直接'</span>, env_plain), (<span class="str">'锥窗'</span>, env_taper), (<span class="str">'镜像'</span>, env_mirror)]:
+    e = np.<span class="fn">abs</span>(f(x) - A)
+    <span class="fn">print</span>(name, <span class="str">'  丢弃比例 → 剩余最大误差:'</span>,
+          {<span class="str">f"{p:.0%}"</span>: <span class="fn">round</span>(<span class="fn">float</span>(e[int(N*p):N-int(N*p)].max()), <span class="num">4</span>)
+           <span class="kw">for</span> p <span class="kw">in</span> (<span class="num">0</span>, <span class="num">0.02</span>, <span class="num">0.05</span>, <span class="num">0.10</span>, <span class="num">0.15</span>)})
+</code></pre>
+<p><strong>典型结果</strong>：</p>
+<table>
+<tr><th>方法</th><th>丢 0%</th><th>丢 2%</th><th>丢 5%</th><th>丢 10%</th><th>丢 15%</th></tr>
+<tr><td>直接 FFT</td><td>~0.64</td><td>~0.019</td><td>~0.008</td><td>~0.004</td><td>~0.003</td></tr>
+<tr><td>加锥窗</td><td>~2.3*</td><td>~1.8*</td><td>~0.17</td><td>~0.001</td><td>~0.001</td></tr>
+<tr><td>镜像延拓</td><td>~0.76</td><td>~0.041</td><td>~0.017</td><td>~0.009</td><td>~0.006</td></tr>
+</table>
+<p style="font-size:14px;color:#5d6472">* 锥窗把端点数据本身削到零（锥宽各 6%），所以丢弃比例小于锥宽时端点误差反而最大 —— 它是"牺牲端点换中段干净"。</p>
+<p><strong>结论</strong>：</p>
+<ol>
+<li><strong>丢弃 10% 是一个合理的通用默认值</strong>，此时三种方法的残余误差都降到 5% 以内。</li>
+<li><strong>镜像延拓不是万灵药。</strong>它消掉了首尾的电平"跳变"，却在接缝处把信号强制成偶对称 —— 偶信号的希尔伯特变换是奇的（性质 7），于是 $\hat x$ 在端点被逼成零，本例里反而比直接 FFT 差约一倍。它真正占便宜的场合是信号里叠了<strong>加性趋势</strong>（首尾电平差极大）时；代价还有 3 倍内存和 3 倍计算量。一般来说，<strong>先去趋势比任何延拓都管用</strong>。</li>
+<li>误差随丢弃比例大致按指数衰减，说明端点效应是<strong>局部</strong>的 —— 与核函数 $1/t$ 的衰减一致。</li>
+<li>把斜坡项 <code>0.8*t</code> 去掉（首尾匹配变好），所有误差都会再降 3～5 倍 —— 说明<strong>首尾不匹配是端点效应的根源</strong>，而非 FFT 本身的缺陷。</li>
+</ol>
+</div>
+</details>
+</div>
+
+<h2 id="ch8">第 8 章　工程应用</h2>
+
+<div class="prob">
+<span class="no">题 8.1</span>
+<p class="stem">$m(t)=\cos(2\pi\cdot1000t)$，$f_c=100$ kHz。写出 USB 与 LSB 信号，指出谱线位置。</p>
+<details><summary>查看解答</summary>
+<div class="ans">
+<p>$\hat{m}=\sin(2\pi\cdot1000t)$。代入 Hartley 公式：</p>
+<p><strong>USB</strong>：</p>
+<p>$$s=\cos(2\pi\cdot1000t)\cos(2\pi\cdot10^5t)-\sin(2\pi\cdot1000t)\sin(2\pi\cdot10^5t)$$</p>
+<p>用 $\cos A\cos B-\sin A\sin B=\cos(A+B)$：</p>
+<p>$$s_{\text{USB}}=\cos\big(2\pi\cdot101000\,t\big)$$</p>
+<p>谱线在 $\pm101$ kHz。</p>
+<p><strong>LSB</strong>：符号改为加号，用 $\cos A\cos B+\sin A\sin B=\cos(A-B)$：</p>
+<p>$$s_{\text{LSB}}=\cos\big(2\pi\cdot99000\,t\big)$$</p>
+<p>谱线在 $\pm99$ kHz。</p>
+<p><strong>对比 AM</strong>：$m\cos\omega_ct=\frac{1}{2}[\cos(2\pi\cdot101000t)+\cos(2\pi\cdot99000t)]$，<strong>两根都有</strong>，占 2 kHz 带宽。SSB 只留一根，占 1 kHz。<strong>带宽减半，而且功率全部集中在有用的那一根上。</strong></p>
+</div>
+</details>
+</div>
+
+<div class="prob">
+<span class="no">题 8.2</span>
+<p class="stem">证明 $s_{\text{USB}}=\operatorname{Re}\{z_m(t)e^{j\omega_ct}\}$ 与 8.1 节的展开式等价。</p>
+<details><summary>查看解答</summary>
+<div class="ans">
+<p>$$z_m e^{j\omega_ct}=(m+j\hat{m})(\cos\omega_ct+j\sin\omega_ct)$$</p>
+<p>$$=\underbrace{\big(m\cos\omega_ct-\hat{m}\sin\omega_ct\big)}_{\text{实部}}+j\underbrace{\big(m\sin\omega_ct+\hat{m}\cos\omega_ct\big)}_{\text{虚部}}$$</p>
+<p>取实部即得 $s_{\text{USB}}=m\cos\omega_ct-\hat{m}\sin\omega_ct$ $\blacksquare$</p>
+<p><strong>顺便</strong>：虚部 $m\sin\omega_ct+\hat m\cos\omega_ct$ 正是 $\mathcal{H}\{s_{\text{USB}}\}$（因为 $z_m e^{j\omega_ct}$ 只含正频率，由定理 6.1 它就是 $s_{\text{USB}}$ 的解析信号）。所以<strong>接收端只需对收到的 SSB 信号做一次希尔伯特变换，就能重建复包络 $z_m$，进而恢复 $m$</strong>：</p>
+<p>$$m(t)=\operatorname{Re}\left\{z_{s}(t)\,e^{-j\omega_ct}\right\}$$</p>
+<p>这就是 SSB 的相干解调。</p>
+</div>
+</details>
+</div>
+
+<div class="prob">
+<span class="no">题 8.3</span>
+<p class="stem">轴承 $n=9$，$d/D=0.24$，$\alpha=0$，转速 1780 r/min。求 BPFO、BPFI、BSF、FTF。若包络谱在 106 Hz 及 2、3 倍处有峰，是哪个零件故障？</p>
+<details><summary>查看解答</summary>
+<div class="ans">
+<p>转频：$f_r=\dfrac{1780}{60}=29.67$ Hz。$\cos\alpha=1$，$\dfrac{d}{D}=0.24$。</p>
+<table>
+<tr><th>频率</th><th>计算</th><th>结果</th></tr>
+<tr><td>BPFO</td><td>$\frac{9}{2}(29.67)(1-0.24)=4.5\times29.67\times0.76$</td><td><strong>101.5 Hz</strong></td></tr>
+<tr><td>BPFI</td><td>$\frac{9}{2}(29.67)(1+0.24)=4.5\times29.67\times1.24$</td><td><strong>165.6 Hz</strong></td></tr>
+<tr><td>BSF</td><td>$\frac{1}{2\times0.24}(29.67)(1-0.24^2)=2.083\times29.67\times0.9424$</td><td><strong>58.2 Hz</strong></td></tr>
+<tr><td>FTF</td><td>$\frac{1}{2}(29.67)(1-0.24)$</td><td><strong>11.3 Hz</strong></td></tr>
+</table>
+<p><strong>诊断</strong>：106 Hz 最接近 BPFO（101.5 Hz），偏差约 4.4%。谐波序列 $1\times,2\times,3\times$ 的存在是周期性冲击的典型标志。</p>
+<p>$$\boxed{\text{外圈滚道故障}}$$</p>
+<p><strong>为什么允许 4% 偏差</strong>：</p>
+<ol>
+<li><strong>滑移</strong>：滚珠不是纯滚动，实际特征频率通常比理论值低 1%～2%，且随负载变化；</li>
+<li><strong>转速测量误差</strong>：铭牌转速 1780 r/min 是额定值，实际运行转速受负载影响（异步电机的转差率）；</li>
+<li>$d/D$ 是估算值。</li>
+</ol>
+<p><strong>实践提示</strong>：外圈故障的谐波序列通常"干净"（只有 BPFO 的整数倍）；<strong>内圈</strong>故障因为故障点随轴旋转、进出受载区，会出现以 BPFI 为中心、间隔 $f_r$ 的<strong>边带</strong>族。这个"有无边带"的区别是区分内外圈的重要线索。</p>
+</div>
+</details>
+</div>
+
+<div class="prob">
+<span class="no">题 8.4</span>
+<p class="stem">做包络谱时，为什么"包络本身也要去直流"？</p>
+<details><summary>查看解答</summary>
+<div class="ans">
+<p>包络 $A(t)=|z(t)|\ge0$ 恒为非负，所以它的<strong>均值一定大于零</strong>（除非信号全零）。这个均值在 FFT 里变成 $0$ Hz 处的一根巨大谱线。</p>
+<p>后果有两个，第二个更隐蔽：</p>
+<ol>
+<li><strong>纵轴被压平</strong>：如果按最大值自动缩放，故障峰（可能只有直流峰的 1/100）在图上几乎看不见。</li>
+<li><strong>频谱泄漏</strong>：任何窗函数的旁瓣都不是零。一根幅度极大的 0 Hz 谱线通过旁瓣<strong>泄漏到邻近频率</strong>，在低频段（正好是故障特征频率所在的 10–500 Hz 区间！）形成虚假的宽带抬升，把真实的故障峰埋掉。用矩形窗时尤其严重（旁瓣只低 13 dB）。</li>
+</ol>
+<p><strong>所以要"去两次直流"</strong>：一次对原信号（第 7.7 节坑 2，为了让包络本身正确），一次对包络（本题，为了让包络谱可读）。第 8.4 节的代码里两处都写了，不是冗余。</p>
+</div>
+</details>
+</div>
+
+<div class="prob">
+<span class="no">题 8.5</span>
+<p class="stem">两路 EEG 的相位差恒为 $\pi/3$，求 PLV。若相位差在 $[0,2\pi)$ 上均匀随机，PLV 是多少？</p>
+<details><summary>查看解答</summary>
+<div class="ans">
+<p><strong>恒定相位差</strong>：每一项都是同一个复数 $e^{j\pi/3}$，</p>
+<p>$$\mathrm{PLV}=\left|\frac{1}{N}\sum_{n=1}^{N}e^{j\pi/3}\right|=\big|e^{j\pi/3}\big|=\boxed{1}$$</p>
+<p><strong>完全同步。</strong>注意 PLV <strong>不关心相位差是多少</strong>，只关心它是否恒定 —— 这既是优点（对传导延时不敏感），也是缺点（无法区分因果方向）。</p>
+<p><strong>均匀随机</strong>：$\mathbb{E}[e^{j\Delta\phi}]=\frac{1}{2\pi}\int_0^{2\pi}e^{j\theta}\mathrm{d}\theta=0$，所以</p>
+<p>$$\mathrm{PLV}\xrightarrow{N\to\infty}0$$</p>
+<p><strong>但有限 $N$ 时有正偏差</strong>：$N$ 个单位向量随机游走的期望长度约为 $\frac{1}{2}\sqrt{\pi/N}$，即</p>
+<p>$$\mathbb{E}[\mathrm{PLV}]\approx\frac{\sqrt{\pi}}{2\sqrt{N}}\approx\frac{0.886}{\sqrt{N}}$$</p>
+<p>例如 $N=100$ 时无同步也会得到 $\mathrm{PLV}\approx0.09$。<strong>所以 PLV 必须做统计检验</strong>（置换检验 / 替代数据法），不能看绝对数值下结论。这是相位同步研究里最常见的方法学错误之一。</p>
+</div>
+</details>
+</div>
+
+<div class="prob">
+<span class="no">题 8.6</span>
+<p class="stem">用 K–K 关系解释：为什么完全透明的材料，其折射率必须是常数？</p>
+<details><summary>查看解答</summary>
+<div class="ans">
+<p>"完全透明"意味着所有频率都不吸收：$\chi''(\omega)\equiv0$。代入 K–K 第一式：</p>
+<p>$$\chi'(\omega)=\frac{2}{\pi}\mathrm{P}\!\!\int_0^\infty\frac{\omega'\cdot 0}{\omega'^2-\omega^2}\mathrm{d}\omega'=0$$</p>
+<p>即 $\chi'(\omega)$ 恒等于它的高频极限值（真空值）。折射率 $n=\sqrt{1+\chi'}$ 因此也是常数，<strong>不随频率变化</strong>。</p>
+<p>$$\boxed{\text{无吸收}\ \Longrightarrow\ \text{无色散}}$$</p>
+<p><strong>物理意义</strong>：色散（不同颜色的光走不同速度）和吸收是<strong>同一枚硬币的两面</strong>，都源于介质中电子的共振响应。一块真正无色散的玻璃不会有棱镜效应、不会有彩虹 —— 而现实中所有材料都在某个频段（紫外或红外）有吸收，所以在可见光波段必然有残余色散。这就是为什么透镜总有色差，必须用不同玻璃组合来校正。</p>
+<p><strong>逆命题也成立</strong>：由 K–K 第二式，若 $\chi'$ 在某频段随频率变化，则 $\chi''$ 不可能处处为零 —— <strong>有色散必有吸收</strong>。所以"无损耗的色散介质"在物理上不存在，任何声称如此的模型（如某些理想化的光子晶体设计）都违反因果性。</p>
+</div>
+</details>
+</div>
+
+<div class="prob">
+<span class="no">题 8.7</span>
+<p class="stem">某最小相位系统在 $\omega_0$ 附近增益斜率为 $-40$ dB/十倍频。估计该处相位与相位裕度。</p>
+<details><summary>查看解答</summary>
+<div class="ans">
+<p>Bode 增益-相位关系的实用近似：<strong>相位 $\approx$ 斜率 $\times 90°$</strong>，其中斜率以"每十倍频 $\times20$ dB"为单位计。</p>
+<p>$-40$ dB/dec 对应斜率 $-2$，故</p>
+<p>$$\arg H(j\omega_0)\approx-2\times90°=\boxed{-180°}$$</p>
+<p><strong>相位裕度 $\approx 180°-180°=0°$</strong> —— 系统处于<strong>临界稳定</strong>，任何微小的增益增加或额外延时都会使它振荡。</p>
+<p><strong>设计启示</strong>：在穿越频率（增益穿过 0 dB 的频率）附近，斜率必须<strong>缓于</strong> $-40$ dB/dec，通常设计成 $-20$ dB/dec（对应 $-90°$，相位裕度 $90°$）。这就是经典控制里"穿越频率附近做成 $-20$ dB/dec"这条金科玉律的来历。</p>
+<p><strong>更深的一层</strong>：这个约束不是设计技巧的局限，而是<strong>因果性的数学后果</strong>（第 8.9 节）。你不可能设计出一个"增益陡降但相位不掉"的<em>因果</em>系统 —— 除非引入右半平面零点（非最小相位），但那会带来更糟的问题（如逆响应、带宽限制）。</p>
+</div>
+</details>
+</div>
+
+<div class="prob">
+<span class="no">题 8.8 <span class="star">⌨</span></span>
+<p class="stem">生成模拟轴承振动信号，用包络谱检出 BPFO，并找出该方法失效的信噪比门限。</p>
+<details><summary>查看解答</summary>
+<div class="ans">
+<pre><code><span class="kw">import</span> numpy <span class="kw">as</span> np
+<span class="kw">from</span> scipy.signal <span class="kw">import</span> hilbert, butter, filtfilt, get_window
+
+fs, T = <span class="num">20000</span>, <span class="num">1.0</span>
+t = np.arange(<span class="num">0</span>, T, <span class="num">1</span>/fs)
+fr, BPFO, f_res = <span class="num">29.67</span>, <span class="num">101.5</span>, <span class="num">3800</span>
+
+<span class="kw">def</span> <span class="fn">make_signal</span>(sev, snr_db, rng):
+    <span class="cmt"># 故障冲击串：每 1/BPFO 秒一次，激起衰减共振（含 1% 随机滑移）</span>
+    imp = np.zeros_like(t)
+    <span class="kw">for</span> k <span class="kw">in</span> <span class="fn">range</span>(int(T*BPFO)+<span class="num">1</span>):
+        t0 = (k + <span class="num">0.01</span>*rng.standard_normal())/BPFO   <span class="cmt"># 抖动是周期的 1%，不随 k 累积</span>
+        i0 = int(t0*fs)
+        <span class="kw">if</span> <span class="num">0</span> &lt;= i0 &lt; len(t):
+            n = np.arange(<span class="num">0</span>, min(int(<span class="num">0.004</span>*fs), len(t)-i0))
+            imp[i0:i0+len(n)] += sev*np.exp(-<span class="num">900</span>*n/fs)*np.sin(<span class="num">2</span>*np.pi*f_res*n/fs)
+    <span class="cmt"># 低频干扰：转频及谐波（幅度远大于冲击）</span>
+    low = <span class="fn">sum</span>(a*np.sin(<span class="num">2</span>*np.pi*h*fr*t + p)
+              <span class="kw">for</span> a, h, p <span class="kw">in</span> [(<span class="num">1.0</span>,<span class="num">1</span>,<span class="num">0</span>), (<span class="num">0.45</span>,<span class="num">2</span>,<span class="num">1.1</span>), (<span class="num">0.3</span>,<span class="num">3</span>,<span class="num">0.3</span>), (<span class="num">0.55</span>,<span class="num">9</span>,<span class="num">2.0</span>)])
+    sig = imp + low
+    noise = rng.standard_normal(len(t))
+    <span class="cmt"># 按"冲击 vs 噪声"定义 SNR（最严格的定义）</span>
+    scale = np.sqrt(np.mean(imp**<span class="num">2</span>)) / (<span class="num">10</span>**(snr_db/<span class="num">20</span>) * np.sqrt(np.mean(noise**<span class="num">2</span>)) + <span class="num">1e-20</span>)
+    <span class="kw">return</span> sig + scale*noise
+
+<span class="kw">def</span> <span class="fn">detect</span>(x):
+    <span class="str">"""返回 BPFO 峰的显著性：峰值 / 邻域中位数（&gt;4 视为检出）"""</span>
+    b, a = butter(<span class="num">4</span>, [<span class="num">2000</span>/(fs/<span class="num">2</span>), <span class="num">6000</span>/(fs/<span class="num">2</span>)], btype=<span class="str">'band'</span>)
+    env = np.<span class="fn">abs</span>(hilbert(filtfilt(b, a, x - x.mean())))
+    env = env - env.mean()                       <span class="cmt"># 关键！（题 8.4）</span>
+    w = get_window(<span class="str">'hann'</span>, len(env))
+    sp = np.<span class="fn">abs</span>(np.fft.rfft(env*w))
+    fq = np.fft.rfftfreq(len(env), <span class="num">1</span>/fs)
+    band = (fq &gt; <span class="num">20</span>) &amp; (fq &lt; <span class="num">600</span>)
+    pk = sp[np.argmin(np.<span class="fn">abs</span>(fq - BPFO))]
+    <span class="kw">return</span> pk / np.median(sp[band])
+
+rng = np.random.default_rng(<span class="num">0</span>)
+<span class="kw">for</span> sev <span class="kw">in</span> [<span class="num">1.0</span>, <span class="num">0.3</span>]:
+    <span class="fn">print</span>(<span class="str">f"--- 故障严重度 {sev} ---"</span>)
+    <span class="kw">for</span> snr <span class="kw">in</span> [<span class="num">10</span>, <span class="num">0</span>, -<span class="num">10</span>, -<span class="num">15</span>, -<span class="num">20</span>, -<span class="num">30</span>]:
+        r = np.mean([detect(make_signal(sev, snr, rng)) <span class="kw">for</span> _ <span class="kw">in</span> <span class="fn">range</span>(<span class="num">5</span>)])
+        <span class="fn">print</span>(<span class="str">f"  SNR={snr:4d} dB  显著性={r:6.2f}  {'✓ 检出' if r &gt; 4 else '✗ 漏检'}"</span>)
+</code></pre>
+<p><strong>典型结果与结论</strong>：</p>
+<table>
+<tr><th>SNR（冲击 / 噪声）</th><th>显著性</th><th>判定</th></tr>
+<tr><td>+10 dB</td><td>~80</td><td>✓ 非常清晰</td></tr>
+<tr><td>0 dB</td><td>~40</td><td>✓ 清晰</td></tr>
+<tr><td>−10 dB</td><td>~9</td><td>✓ 可检出</td></tr>
+<tr><td>−15 dB</td><td>~3～4</td><td>△ 正好压在门限上（随种子在 2.4～5.8 间波动）</td></tr>
+<tr><td>−20 dB</td><td>~1.6</td><td>✗ 已在门限之下，不可靠</td></tr>
+<tr><td>−30 dB</td><td>~1.0</td><td>✗ 完全埋没</td></tr>
+</table>
+<p><strong>门限约在 −15 至 −20 dB。</strong>这个数字远低于 0 dB，说明包络谱法<strong>威力惊人</strong> —— 冲击能量只有噪声的 1%～3% 时仍能诊断。原因有两条：</p>
+<ol>
+<li><strong>带通把带外噪声扔掉了</strong>：2–6 kHz 只占 0–10 kHz 的 40%，白噪声功率立刻降 4 dB；若共振带更窄，增益更大。</li>
+<li><strong>相干积累</strong>：故障冲击在包络里是<strong>周期</strong>的，FFT 把 $N$ 个周期的能量相干叠加（幅度 $\propto N$），而噪声非相干叠加（幅度 $\propto\sqrt{N}$）。所以增益 $\propto\sqrt{N}$ —— 数据越长，越能挖出弱故障。</li>
+</ol>
+<p><strong>可以自己接着试的三件事</strong>：把采集时长 $T$ 从 1 s 改成 4 s，看门限能再降多少（预期约 6 dB）；把滑移从 1% 改成 5%，看相干积累如何被破坏；把带通频带故意选错（比如 8–10 kHz），体会"选带"为什么需要谱峭度来自动化。</p>
+</div>
+</details>
+</div>
+
+<div class="prob">
+<span class="no">题 8.9 <span class="star">⌨</span></span>
+<p class="stem">实现单边带频移器，对语音做 $+200$ Hz 频移，解释为什么听起来像"金属声"而不是变调。</p>
+<details><summary>查看解答</summary>
+<div class="ans">
+<pre><code><span class="kw">import</span> numpy <span class="kw">as</span> np
+<span class="kw">from</span> scipy.signal <span class="kw">import</span> hilbert
+<span class="kw">import</span> soundfile <span class="kw">as</span> sf
+
+x, fs = sf.read(<span class="str">'speech.wav'</span>)
+<span class="kw">if</span> x.ndim &gt; <span class="num">1</span>: x = x.mean(axis=<span class="num">1</span>)
+t = np.arange(len(x))/fs
+
+shift = <span class="num">200.0</span>                                   <span class="cmt"># Hz，加法平移</span>
+y = np.real(hilbert(x - x.mean()) * np.exp(<span class="num">1j</span>*<span class="num">2</span>*np.pi*shift*t))
+sf.write(<span class="str">'shifted.wav'</span>, y/np.<span class="fn">abs</span>(y).max()*<span class="num">0.9</span>, fs)
+
+<span class="cmt"># 对照：真正的变调（乘法缩放）需要重采样 + 时长补偿</span>
+<span class="cmt"># import librosa; y2 = librosa.effects.pitch_shift(x, sr=fs, n_steps=3)</span>
+</code></pre>
+<p><strong>原因</strong>：语音的音高感来自<strong>谐波结构</strong>。一个基频 $f_0$ 的浊音包含 $f_0,2f_0,3f_0,\dots$ 这样的整数倍谐波序列，人耳正是靠这个整数比例关系来感知"一个音"的。</p>
+<table>
+<tr><th>操作</th><th>谐波变成</th><th>还是整数倍吗</th><th>听感</th></tr>
+<tr><td><strong>变调</strong>（乘法）</td><td>$\alpha f_0,\ 2\alpha f_0,\ 3\alpha f_0,\dots$</td><td>✓ 是</td><td>同一个人声，音高变了</td></tr>
+<tr><td><strong>频移</strong>（加法）</td><td>$f_0{+}\Delta,\ 2f_0{+}\Delta,\ 3f_0{+}\Delta,\dots$</td><td>✗ 不是</td><td>非谐、金属感、"机器人声"</td></tr>
+</table>
+<p>例：$f_0=100$ Hz，谐波 100, 200, 300, 400 Hz。移 $+200$ Hz 后变成 300, 400, 500, 600 Hz —— 比例是 $3:4:5:6$ 而不是 $1:2:3:4$。这个比例虽然也含小整数，但<strong>没有共同基频</strong>（若强行找，最大公约数是 100 Hz，但 100 和 200 Hz 处没有能量），于是听觉系统无法把它们归并成一个音高，只能听成一团<strong>不协和的钟磬声</strong>。</p>
+<p><strong>值得一试的对照实验</strong>：</p>
+<ol>
+<li>移 $+5$ Hz：几乎听不出音高变化，但会有缓慢的"颤动"感（因为相位差缓慢漂移）。这是环形调制器（ring modulator）效果的来源。</li>
+<li>移 $-200$ Hz：低频谐波会"折"到负频率再反射回来，产生更奇怪的音色。</li>
+<li>跳过希尔伯特变换，直接 <code>x * cos(2π·200t)</code>：会同时得到 $\pm200$ Hz 两个边带，听起来更浑浊 —— <strong>这就是解析信号"单边"的价值</strong>。</li>
+</ol>
+</div>
+</details>
+</div>
+
+<h2 id="comprehensive">综合题</h2>
+
+<div class="prob">
+<span class="no">题 C.1</span>
+<p class="stem">下面每句话都有一处错误，指出错在哪里并改正。</p>
+<ol>
+<li>"希尔伯特变换把信号延时四分之一周期。"</li>
+<li>"$\mathcal{H}\{\cos\omega_0t\}=\sin\omega_0t$ 对任意实数 $\omega_0$ 成立。"</li>
+<li>"因为 $|H(\omega)|=1$，所以希尔伯特变换不改变信号，只是换个形式。"</li>
+<li>"<code>scipy.signal.hilbert(x)</code> 返回 $x$ 的希尔伯特变换。"</li>
+<li>"解析信号只含正频率，所以它的瞬时频率一定是正的。"</li>
+<li>"$\mathcal{H}\{A(t)\cos\omega_ct\}=A(t)\sin\omega_ct$ 总是成立。"</li>
+<li>"$\mathcal{H}$ 是可逆的，逆变换就是 $-\mathcal{H}$。"</li>
+</ol>
+<details><summary>查看解答</summary>
+<div class="ans">
+<table>
+<tr><th>#</th><th>错在哪</th><th>正确说法</th></tr>
+<tr><td>1</td><td>混淆相移与延时</td><td>它把每个频率成分的<strong>相位</strong>移 $-90°$。只有单频信号才等价于延时 $T/4$；多频信号各成分需要的时移不同（第 4.5 节、图 4.2）。</td></tr>
+<tr><td>2</td><td>漏了 $\omega_0&gt;0$</td><td>一般式是 $\mathcal{H}\{\cos\omega_0t\}=\mathrm{sgn}(\omega_0)\sin(\omega_0t)$（题 4.2）。</td></tr>
+<tr><td>3</td><td>把"幅度谱不变"当成"信号不变"</td><td>幅度谱不变但<strong>相位谱变了</strong>，波形可以面目全非。信号的形状信息主要在相位里（第 4.5 节）。</td></tr>
+<tr><td>4</td><td>返回值理解错</td><td>返回的是<strong>解析信号</strong> $x+j\hat{x}$（复数）。要 $\hat{x}$ 须取 <code>.imag</code>（第 7.2.1 节，最高频 bug）。</td></tr>
+<tr><td>5</td><td>混淆全局与局部性质</td><td>频谱单边是<strong>全局</strong>性质；瞬时频率是<strong>局部</strong>性质，可以为负（第 6.6.2 节、题 6.7）。只有 $A^2$ 加权平均必为正。</td></tr>
+<tr><td>6</td><td>漏了 Bedrosian 条件</td><td>需要 $A(t)$ 与 $\cos\omega_ct$ <strong>频带分离</strong>（定理 5.1）。宽带调制时不成立（图 5.1）。</td></tr>
+<tr><td>7</td><td>漏了零均值前提</td><td>$\mathcal{H}$ 消灭直流，故在全空间上不可逆。$\mathcal{H}^{-1}=-\mathcal{H}$ 只在<strong>零均值子空间</strong>上成立（题 3.2）。</td></tr>
+</table>
+</div>
+</details>
+</div>
+
+<div class="prob">
+<span class="no">题 C.2 <span class="star">★</span></span>
+<p class="stem">一台设备的振动信号是 $x(t)=\big[1+0.2\cos(2\pi\cdot 5t)\big]\cos\big(2\pi\cdot500t+0.3\sin(2\pi\cdot 8t)\big)$。它同时含 AM 和 FM。设计一套处理流程，同时提取出 5 Hz 的幅度调制和 8 Hz 的频率调制。写出每一步及其依据。</p>
+<details><summary>查看解答</summary>
+<div class="ans">
+<p><strong>流程</strong>：</p>
+<ol>
+<li><strong>检查频带分离。</strong>AM 带宽 5 Hz，FM 调制指数 $\beta=0.3$（窄带调频），带宽约 $2(1+\beta)\times8\approx21$ Hz。总带宽 $\ll500$ Hz 的载波频率 → <strong>Bedrosian 条件满足</strong>（定理 5.1），可以放心用解析信号。</li>
+<li><strong>去直流。</strong>$x$ 本身零均值（载波调制），但实测数据总有传感器偏置，减均值是零成本保险（第 4.3.4 节）。</li>
+<li><strong>带通滤波到 $500\pm50$ Hz。</strong>目的不是"变成单分量"（它已经是了），而是<strong>抑制带外噪声</strong>，改善后续求导的信噪比。用 <code>filtfilt</code> 保证零相位。</li>
+<li><strong>求解析信号</strong> $z=\mathrm{hilbert}(x_b)$，用镜像延拓 + 丢两端 10%（第 7.5 节）。</li>
+<li><strong>提取 AM</strong>：$A(t)=|z(t)|$。理论上 $A(t)=1+0.2\cos(2\pi\cdot5t)$。<br>
+再对 $A(t)-\overline{A}$ 做 FFT，应在 5 Hz 处见到幅度 $0.2$ 的谱峰。</li>
+<li><strong>提取 FM</strong>：$\omega_i(t)=\frac{\operatorname{Im}\{\bar z\dot z\}}{|z|^2}$（微分公式，免解缠，第 6.3.1 节）。理论上</li>
+</ol>
+<p>$$f_i(t)=500+0.3\cdot 8\cos(2\pi\cdot8t)=500+2.4\cos(2\pi\cdot8t)\ \text{Hz}$$</p>
+<ol start="7">
+<li><strong>分离载波与调制</strong>：$f_i(t)$ 减去其均值 $500$ Hz，得到瞬时频率偏移。对它做 FFT，应在 8 Hz 处见到幅度 $2.4$ Hz 的谱峰。</li>
+</ol>
+<p><strong>代码骨架</strong>：</p>
+<pre><code>fs = <span class="num">10000</span>; t = np.arange(<span class="num">0</span>, <span class="num">2</span>, <span class="num">1</span>/fs)
+x = (<span class="num">1</span>+<span class="num">0.2</span>*np.cos(<span class="num">2</span>*np.pi*<span class="num">5</span>*t))*np.cos(<span class="num">2</span>*np.pi*<span class="num">500</span>*t + <span class="num">0.3</span>*np.sin(<span class="num">2</span>*np.pi*<span class="num">8</span>*t))
+
+b,a = butter(<span class="num">4</span>, [<span class="num">450</span>/(fs/<span class="num">2</span>), <span class="num">550</span>/(fs/<span class="num">2</span>)], <span class="str">'band'</span>)
+xb = filtfilt(b, a, x - x.mean())
+xe = np.concatenate([xb[::-<span class="num">1</span>], xb, xb[::-<span class="num">1</span>]])
+z  = hilbert(xe)[len(xb):<span class="num">2</span>*len(xb)]
+
+AM = np.<span class="fn">abs</span>(z)                                     <span class="cmt"># → 1 + 0.2cos(2π·5t)</span>
+dz = np.gradient(z)*fs
+FM = np.imag(np.conj(z)*dz)/np.<span class="fn">abs</span>(z)**<span class="num">2</span>/(<span class="num">2</span>*np.pi)  <span class="cmt"># → 500 + 2.4cos(2π·8t)</span>
+
+k = int(<span class="num">0.1</span>*len(AM)); s = slice(k, -k)              <span class="cmt"># 丢两端</span>
+<span class="fn">print</span>(<span class="str">"AM 调制深度 ≈"</span>, (AM[s].max()-AM[s].min())/<span class="num">2</span>)   <span class="cmt"># ≈ 0.2</span>
+<span class="fn">print</span>(<span class="str">"载波频率  ≈"</span>, FM[s].mean())                  <span class="cmt"># ≈ 500</span>
+<span class="fn">print</span>(<span class="str">"FM 频偏   ≈"</span>, (FM[s].max()-FM[s].min())/<span class="num">2</span>)   <span class="cmt"># ≈ 2.4</span>
+</code></pre>
+<p><strong>关键洞察</strong>：AM 信息在 $|z|$ 里，FM 信息在 $\arg z$ 里，<strong>两者由解析信号的模-相分解自动分离，互不干扰</strong>。这是解析信号最优雅的地方 —— 传统方法需要两套完全不同的检波器（包络检波器 + 鉴频器），而解析信号一次计算同时给出两者。</p>
+<p><strong>陷阱提醒</strong>：如果调制指数 $\beta$ 很大（比如 $\beta=10$，宽带 FM），FM 带宽会达到 $2(1+\beta)\times8=176$ Hz，虽然仍小于 500 Hz，但带通滤波器的选择就要小心 —— 切掉边带会同时损坏 AM 和 FM 的估计。</p>
+</div>
+</details>
+</div>
+
+<div class="prob">
+<span class="no">题 C.3 <span class="star">★</span></span>
+<p class="stem">证明：对任意实信号 $x\in L^2$（零均值），解析信号的能量是原信号的两倍，即 $\int|z|^2\mathrm{d}t=2\int x^2\mathrm{d}t$。并解释为什么定理 6.1 里正频率要"乘 2"。</p>
+<details><summary>查看解答</summary>
+<div class="ans">
+<p><strong>证明（时域，一行）</strong>：</p>
+<p>$$\int|z|^2\mathrm{d}t=\int\big(x^2+\hat{x}^2\big)\mathrm{d}t=\int x^2\mathrm{d}t+\underbrace{\int\hat{x}^2\mathrm{d}t}_{=\int x^2\ \text{(性质 5)}}=2\int x^2\mathrm{d}t$$</p>
+<p><strong>证明（频域，看得更清楚）</strong>：</p>
+<p>$$\int|z|^2\mathrm{d}t=\frac{1}{2\pi}\int_{-\infty}^{\infty}|Z|^2\mathrm{d}\omega=\frac{1}{2\pi}\int_0^{\infty}|2X(\omega)|^2\mathrm{d}\omega=\frac{4}{2\pi}\int_0^\infty|X|^2\mathrm{d}\omega$$</p>
+<p>而实信号的 $|X|^2$ 为偶函数，故 $\int_0^\infty|X|^2\mathrm{d}\omega=\frac{1}{2}\int_{-\infty}^\infty|X|^2\mathrm{d}\omega$，于是</p>
+<p>$$=\frac{4}{2\pi}\cdot\frac{1}{2}\int_{-\infty}^{\infty}|X|^2\mathrm{d}\omega=2\int x^2\mathrm{d}t\quad\checkmark$$</p>
+<p><strong>为什么正频率要乘 2</strong>：三种等价的说法。</p>
+<ol>
+<li><strong>为了 $\operatorname{Re}z=x$。</strong>实信号的能量一半在正频率、一半在负频率。删掉负半边，剩下的必须<strong>加倍</strong>才能在时域重建出完整的 $x$ 作为实部。若不乘 2，得到的是 $\frac{x+j\hat x}{2}$。</li>
+<li><strong>为了包络正确。</strong>不乘 2 时 $|z|=\frac{A}{2}$，包络会小一半。</li>
+<li><strong>信息守恒。</strong>实信号用两个自由度（$\pm\omega$ 的一对共轭系数）描述一个频率成分；解析信号用一个复系数描述同一成分。信息量不变，所以"删一半 + 剩下的加倍"是唯一保持一致性的归一化。</li>
+</ol>
+<p><strong>注意那个"2 倍能量"不是矛盾</strong>：$z$ 是复信号，$|z|^2=x^2+\hat x^2$ 本来就统计了两路实信号的能量。在通信里计算功率时，习惯用<strong>复包络</strong> $z e^{-j\omega_ct}$ 并约定功率为 $\frac{1}{2}\overline{|z|^2}$ —— 那个 $\frac{1}{2}$ 就是为了抵消这里的 2 倍。看到文献里的 $\frac{1}{2}$ 因子，回想这一题就明白了。</p>
+</div>
+</details>
+</div>
+
+<div class="warnbox">
+<strong>全书自测：如果下面五句你都能不看书解释清楚，说明这本读本的目标达到了。</strong>
+<ol style="margin:8px 0 0">
+<li>希尔伯特变换的时域式、频域式各是什么，为什么两者等价。</li>
+<li>为什么必须用柯西主值，以及为什么 $1/|t|$ 救不回来。</li>
+<li>解析信号为什么只含正频率，以及为什么正频率要乘 2。</li>
+<li>Bedrosian 条件说了什么，不满足时会发生什么。</li>
+<li>拿到一段实测数据要求包络谱，完整的七个步骤是什么，每一步防的是什么坑。</li>
+</ol>
+</div>
+
+<nav class="pager">
+  <a href="08-applications.html">← 第 8 章　工程应用全景</a>
+  <a href="10-cheatsheet.html">第 10 章　速查表 →</a>
+</nav>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>第8章 工程应用全景</title>
+<script>
+window.MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']],displayMath:[['$$','$$'],['\\[','\\]']]},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<style>
+:root{--paper:#fbfaf6;--ink:#20242c;--muted:#5d6472;--line:#e3dfd3;--accent:#1f6f8b;--accent2:#b4531f;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:Georgia,"Songti SC","Noto Serif SC","Source Han Serif SC","SimSun",serif;line-height:1.85;font-size:17px;-webkit-text-size-adjust:100%}
+.wrap{max-width:880px;margin:0 auto;padding:0 22px 90px}
+header.ch{border-bottom:3px double var(--line);padding:44px 0 24px;margin-bottom:34px}
+.kicker{font-family:ui-sans-serif,system-ui,sans-serif;letter-spacing:.2em;font-size:11.5px;color:var(--accent);text-transform:uppercase}
+h1{font-size:29px;margin:12px 0 8px;line-height:1.3}
+.sub{color:var(--muted);font-size:15.5px;margin:0}
+h2{font-size:22px;margin:50px 0 14px;padding-left:12px;border-left:5px solid var(--accent)}
+h3{font-size:18px;margin:30px 0 10px;color:var(--accent2)}
+p{margin:14px 0}
+.box{background:#fff;border:1px solid var(--line);border-radius:8px;padding:14px 18px;margin:22px 0}
+.tag{font-family:ui-sans-serif,system-ui,sans-serif;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;display:block;margin-bottom:6px}
+.def{border-left:5px solid #1f6f8b}.def .tag{color:#1f6f8b}
+.thm{border-left:5px solid #7a4fb5}.thm .tag{color:#6b3fa8}
+.ex{border-left:5px solid #2e8b57}.ex .tag{color:#24704a}
+.warn{border-left:5px solid #c0392b;background:#fff8f7}.warn .tag{color:#a5321f}
+.tip{border-left:5px solid #d99b16;background:#fffdf5}.tip .tag{color:#a8760a}
+a{color:var(--accent);text-underline-offset:3px}
+table{width:100%;border-collapse:collapse;margin:20px 0;font-size:15px;background:#fff}
+th,td{border:1px solid var(--line);padding:8px 11px;text-align:left;vertical-align:top}
+th{background:#f2efe6;font-family:ui-sans-serif,system-ui,sans-serif;font-size:13.5px}
+ol,ul{padding-left:1.5em}li{margin:7px 0}
+figure.demo{margin:26px 0;border:1px solid var(--line);background:#fff;border-radius:10px;padding:14px}
+canvas{width:100%;display:block;border-radius:4px}
+.ctrl{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;font-family:ui-sans-serif,system-ui,sans-serif;font-size:13px;margin-top:12px}
+.ctrl label{display:flex;align-items:center;gap:8px;flex:1 1 200px}
+input[type=range]{flex:1;min-width:80px;accent-color:var(--accent)}
+select{font-family:inherit;font-size:13px;padding:4px 8px;border:1px solid var(--line);border-radius:6px;background:#f8f6f0}
+figcaption{font-family:ui-sans-serif,system-ui,sans-serif;font-size:13px;color:var(--muted);margin-top:10px;line-height:1.65}
+nav.pager{display:flex;justify-content:space-between;gap:12px;margin-top:64px;border-top:1px solid var(--line);padding-top:18px;font-family:ui-sans-serif,system-ui,sans-serif;font-size:14px}
+nav.pager a{text-decoration:none}
+.q{background:#fff;border:1px dashed var(--line);border-left:5px solid #8a8f9a;border-radius:8px;padding:14px 18px;margin:22px 0}
+.q .tag{color:#6c717c}
+pre{background:#22262e;color:#e8e6e1;padding:14px 16px;border-radius:8px;overflow:auto;line-height:1.65;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13.5px;margin:18px 0}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:14.5px;background:#efece1;padding:1px 5px;border-radius:4px}
+pre code{background:none;padding:0;font-size:13.5px;color:inherit}
+.cmt{color:#8f9aa8}.kw{color:#c792ea}.str{color:#c3e88d}.num{color:#f78c6c}.fn{color:#82aaff}
+.field{font-family:ui-sans-serif,system-ui,sans-serif;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:#8a8f9a;font-weight:700}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="ch">
+  <div class="kicker">第 8 章</div>
+  <h1>工程应用全景</h1>
+  <p class="sub">九个领域，九种用法。每一节都遵循同样的结构：问题是什么 → 希尔伯特变换怎么切入 → 一段代码或一张图。</p>
+</header>
+
+<p>先给一张地图。希尔伯特变换的应用可以归到<strong>三条主线</strong>上，看清这三条线，任何新应用你都能自己归类：</p>
+
+<table>
+<tr><th>主线</th><th>用的是什么</th><th>本章小节</th></tr>
+<tr><td><strong>① 造单边谱</strong></td><td>解析信号只含正频率，可以搬频谱而不产生镜像</td><td>8.1 SSB、8.2 I/Q、8.6 音频</td></tr>
+<tr><td><strong>② 提瞬时属性</strong></td><td>包络、瞬时相位、瞬时频率</td><td>8.3 解调、8.4 故障诊断、8.5 地震、8.7 医学</td></tr>
+<tr><td><strong>③ 因果性约束</strong></td><td>实部与虚部（或增益与相位）互为希尔伯特变换</td><td>8.8 Kramers–Kronig、8.9 Bode 关系</td></tr>
+</table>
+
+<h2>8.1 通信：单边带调制（SSB）</h2>
+
+<p class="field">主线 ①</p>
+
+<h3>问题</h3>
+
+<p>普通调幅（AM）把基带信号 $m(t)$ 搬到载波上，得到 $m(t)\cos\omega_ct$。它的频谱在 $\pm\omega_c$ 两侧<strong>各有一个上边带和一个下边带</strong>，占据带宽 $2B$（$B$ 是 $m$ 的带宽）。但因为 $m$ 是实的，上下边带互为镜像 —— <strong>一半的频谱是冗余的，白白浪费了一半带宽和一半功率</strong>。</p>
+
+<h3>解法</h3>
+
+<p>只发一个边带。怎么做？用解析信号。设 $z_m=m+j\hat{m}$（只含正频率），把它搬到 $\omega_c$：</p>
+
+<p>$$z_m(t)\,e^{j\omega_ct}=\big[m(t)+j\hat{m}(t)\big]\big[\cos\omega_ct+j\sin\omega_ct\big]$$</p>
+
+<p>（这里把 $e^{j\omega_ct}$ 用欧拉公式展开成了 $\cos\omega_ct+j\sin\omega_ct$。）把两个括号<strong>逐项相乘</strong>，共四项，按实虚分开：</p>
+
+<p>$$=\underbrace{m\cos\omega_ct}_{\text{实}\times\text{实}}+\underbrace{j\,m\sin\omega_ct}_{\text{实}\times\text{虚}}+\underbrace{j\,\hat m\cos\omega_ct}_{\text{虚}\times\text{实}}+\underbrace{j^2\,\hat m\sin\omega_ct}_{\text{虚}\times\text{虚}}$$</p>
+
+<p>最后一项用 $j^2=-1$ 变成 $-\hat m\sin\omega_ct$，是<strong>实数</strong>。归并同类项：</p>
+
+<p>$$z_m(t)\,e^{j\omega_ct}=\underbrace{\Big[m(t)\cos\omega_ct-\hat{m}(t)\sin\omega_ct\Big]}_{\text{实部}}+j\underbrace{\Big[m(t)\sin\omega_ct+\hat{m}(t)\cos\omega_ct\Big]}_{\text{虚部}}$$</p>
+
+<p>取实部就得到一个可以真正发射出去的实信号（天线只能发实信号）：</p>
+
+<div class="box def">
+  <span class="tag">Hartley 调制器（SSB 生成公式）</span>
+  <p style="margin:6px 0 0">$$s_{\text{USB}}(t)=m(t)\cos(\omega_ct)-\hat{m}(t)\sin(\omega_ct)\qquad\text{（上边带）}$$</p>
+  <p>$$s_{\text{LSB}}(t)=m(t)\cos(\omega_ct)+\hat{m}(t)\sin(\omega_ct)\qquad\text{（下边带）}$$</p>
+  <p style="margin:6px 0 0">仅相差一个符号，就决定了留哪半个频谱。</p>
+</div>
+
+<p>为什么这样就只有一个边带？因为 $z_m$ 的频谱只在 $\omega&gt;0$，乘 $e^{j\omega_ct}$ 把它整体平移到 $\omega&gt;\omega_c$（频移定理，定理 2.2），所以搬过去的只有"上半边"。取实部会补上一个共轭镜像（在 $-\omega_c$ 附近），但那是实信号的必然对称，不额外占带宽。</p>
+
+<figure class="demo">
+  <canvas id="c1" height="330"></canvas>
+  <div class="ctrl">
+    <label>调制方式 <select id="sel1">
+      <option value="am">AM（双边带，浪费带宽）</option>
+      <option value="usb">SSB 上边带</option>
+      <option value="lsb">SSB 下边带</option>
+    </select></label>
+    <label>载波频率 <input id="s1" type="range" min="8" max="36" value="22"><span id="v1" style="min-width:28px;text-align:right">22</span></label>
+  </div>
+  <figcaption><strong>图 8.1</strong>　频谱搬移。上：基带信号 $m(t)$ 的频谱（不对称形状，便于看清哪半边被保留）。下：调制后信号的频谱。AM 在载波两侧各有完整的上下边带；SSB 只剩一侧，<strong>带宽减半</strong>。切换上下边带，观察频谱被"翻面"。</figcaption>
+</figure>
+
+<h3>代码</h3>
+
+<pre><code><span class="kw">import</span> numpy <span class="kw">as</span> np
+<span class="kw">from</span> scipy.signal <span class="kw">import</span> hilbert
+
+<span class="kw">def</span> <span class="fn">ssb_modulate</span>(m, fc, fs, sideband=<span class="str">'upper'</span>):
+    t  = np.arange(len(m)) / fs
+    zm = hilbert(m - m.mean())          <span class="cmt"># 解析信号 m + j*m_hat</span>
+    sgn = -<span class="num">1</span> <span class="kw">if</span> sideband == <span class="str">'upper'</span> <span class="kw">else</span> +<span class="num">1</span>
+    <span class="kw">return</span> zm.real*np.cos(<span class="num">2</span>*np.pi*fc*t) + sgn*zm.imag*np.sin(<span class="num">2</span>*np.pi*fc*t)
+    <span class="cmt"># 等价写法：np.real(zm * np.exp(1j*2*np.pi*fc*t))  ← 上边带</span>
+</code></pre>
+
+<div class="box tip">
+  <span class="tag">历史与现实</span>
+  <p style="margin:6px 0 0">SSB 是业余无线电（HAM）和早期长途电话的主力制式，因为带宽和功率效率都比 AM 高一倍。<strong>但实际硬件很少真用希尔伯特变换器</strong> —— 宽带 90° 相移器难做（第 3.7 节），所以模拟时代用"滤波法"（先生成双边带再用陡峭的晶体滤波器切掉一半），数字时代用 I/Q 直接合成（下一节）。希尔伯特变换在这里的价值主要是<strong>理论上说清 SSB 到底是什么</strong>：它就是解析信号的实部搬移。</p>
+</div>
+
+<h2>8.2 通信：I/Q 正交调制</h2>
+
+<p class="field">主线 ①</p>
+
+<p>现代所有的无线通信（WiFi、4G/5G、蓝牙、卫星）都建立在<strong>复基带</strong>表示上：</p>
+
+<p>$$s(t)=\operatorname{Re}\Big\{\underbrace{\big[I(t)+jQ(t)\big]}_{\text{复基带}}e^{j\omega_ct}\Big\}=I(t)\cos\omega_ct-Q(t)\sin\omega_ct$$</p>
+
+<p>$I$ 叫同相分量（In-phase），$Q$ 叫正交分量（Quadrature）。请对照 8.1 节的 SSB 公式 —— <strong>形式完全一样</strong>。区别只是：SSB 里 $Q=\hat{I}$ 被强制绑定（所以只能传一路信息），而 I/Q 调制里 $I$ 和 $Q$ 是<strong>两路独立的信息</strong>，于是同样带宽能传两倍数据。</p>
+
+<p>QAM、PSK、OFDM 全都是在复平面上安排 $I+jQ$ 的取值点（星座图）。而解析信号的理论保证了：<strong>只要 $\omega_c$ 大于基带带宽，接收端就能无失真地把 $I$ 和 $Q$ 分开</strong> —— 这正是 Bedrosian 条件（定理 5.1）的一个直接应用。</p>
+
+<table>
+<tr><th>概念</th><th>数学对象</th><th>本书位置</th></tr>
+<tr><td>复基带 / 基带等效</td><td>解析信号下移 $\omega_c$ 后的 $z(t)e^{-j\omega_ct}$</td><td>第 6.1 节</td></tr>
+<tr><td>星座图</td><td>复平面上 $z$ 的取值点</td><td>图 6.1 面板 ④</td></tr>
+<tr><td>I/Q 不平衡</td><td>相移偏离 90° 引起的镜像干扰</td><td>第 4.3 节</td></tr>
+<tr><td>镜像抑制比（IRR）</td><td>负频率残余能量与正频率能量之比</td><td>定理 6.1</td></tr>
+</table>
+
+<h2>8.3 包络检波与解调</h2>
+
+<p class="field">主线 ②</p>
+
+<p>这是第 1.1 节的问题，第 6.4 节已经给了完整答案，这里只补上工程对比：</p>
+
+<table>
+<tr><th>方法</th><th>原理</th><th>优点</th><th>缺点</th></tr>
+<tr><td>二极管整流 + 低通</td><td>$|x|$ 再平滑</td><td>几乎零成本，纯模拟</td><td>非线性失真；$A(t)&lt;0$ 时包络翻折；需选低通截止频率</td></tr>
+<tr><td>峰值保持</td><td>追踪局部极大</td><td>简单</td><td>只在每个载波周期更新一次，时间分辨率差</td></tr>
+<tr><td><strong>希尔伯特包络</strong></td><td>$\sqrt{x^2+\hat{x}^2}$</td><td><strong>线性、精确、每个采样点都有值</strong></td><td>需要计算量；须满足窄带条件</td></tr>
+<tr><td>平方 + 低通</td><td>$x^2=\frac{A^2}{2}(1+\cos2\omega_ct)$，滤掉 $2\omega_c$ 项</td><td>易实现</td><td>得到 $A^2$ 需开方；需低通</td></tr>
+</table>
+
+<p>顺便：<strong>调频（FM）解调</strong>也可以用同样的框架 —— FM 信号 $\cos\big(\omega_ct+k\int m\big)$ 的瞬时频率是 $\omega_c+km(t)$，所以求瞬时频率再减去 $\omega_c$ 就得到 $m(t)$。一个算子同时解决了 AM 和 FM 的解调。</p>
+
+<h2>8.4 机械故障诊断：包络谱（本章最有代表性的应用）</h2>
+
+<p class="field">主线 ②</p>
+
+<h3>问题</h3>
+
+<p>滚动轴承的滚道上出现一个小剥落（点蚀），每当滚珠滚过这个缺陷，就会产生一次微小的冲击。冲击的<strong>重复频率</strong>由轴承几何和转速决定，是判断"哪个零件坏了"的关键证据：</p>
+
+<table>
+<tr><th>特征频率</th><th>公式</th><th>指示</th></tr>
+<tr><td>BPFO（外圈）</td><td>$\dfrac{n}{2}f_r\left(1-\dfrac{d}{D}\cos\alpha\right)$</td><td>外圈滚道故障</td></tr>
+<tr><td>BPFI（内圈）</td><td>$\dfrac{n}{2}f_r\left(1+\dfrac{d}{D}\cos\alpha\right)$</td><td>内圈滚道故障</td></tr>
+<tr><td>BSF（滚珠）</td><td>$\dfrac{D}{2d}f_r\left[1-\left(\dfrac{d}{D}\cos\alpha\right)^2\right]$</td><td>滚珠自身故障</td></tr>
+<tr><td>FTF（保持架）</td><td>$\dfrac{1}{2}f_r\left(1-\dfrac{d}{D}\cos\alpha\right)$</td><td>保持架故障</td></tr>
+</table>
+
+<p style="font-size:15px;color:#5d6472">（$n$ 滚珠数，$f_r$ 转频，$d$ 滚珠直径，$D$ 节径，$\alpha$ 接触角。典型值：BPFO 约为转频的 3～8 倍。）</p>
+
+<p>麻烦在于：这些冲击的能量非常小（早期故障时可能只有整体振动的千分之一），而且<strong>它们在普通频谱里几乎看不见</strong>。原因是每次冲击都会激起轴承座结构的<strong>高频共振</strong>（几 kHz 到几十 kHz），能量被摊到了那个宽阔的共振峰里，故障频率本身（几十到几百 Hz）那一带反而被转频、齿轮啮合频率、电机噪声完全淹没。</p>
+
+<h3>解法：共振解调（包络分析）</h3>
+
+<p>关键洞察是：<strong>振动信号是一个"故障冲击序列"调制了"高频共振"的调幅信号</strong>。故障信息不在频率里，在<strong>包络</strong>里。所以：</p>
+
+<ol>
+  <li><strong>带通滤波</strong>到共振频带（比如 2–6 kHz），把低频的转频、齿频统统扔掉 —— 这一步同时满足了单分量和窄带条件（第 6.6 节）。</li>
+  <li><strong>希尔伯特变换求包络</strong> $A(t)=|z(t)|$。包络的起伏节奏就是冲击的重复节奏。</li>
+  <li><strong>对包络做 FFT</strong>，得到<strong>包络谱</strong>（envelope spectrum，也叫解调谱）。故障特征频率及其谐波会在这里清晰地立起来。</li>
+</ol>
+
+<figure class="demo">
+  <canvas id="c2" height="430"></canvas>
+  <div class="ctrl">
+    <label>故障严重度 <input id="s2" type="range" min="0" max="100" value="45"><span id="v2" style="min-width:34px;text-align:right">.45</span></label>
+    <label>噪声 <input id="s3" type="range" min="0" max="100" value="40"><span id="v3" style="min-width:34px;text-align:right">.40</span></label>
+    <label>BPFO (Hz) <input id="s4" type="range" min="40" max="160" value="87"><span id="v4" style="min-width:34px;text-align:right">87</span></label>
+  </div>
+  <figcaption><strong>图 8.2</strong>　轴承故障的包络谱分析（模拟数据，$f_s=20{,}000$ Hz）。① 原始振动波形：转频的大幅正弦 + 噪声，冲击藏在里面几乎看不出。② 原始信号的频谱：只能看到低频的转频/齿频和高频的共振包（灰色带），<strong>BPFO 处（红色虚线）什么也没有</strong>。③ 带通滤波（2–6 kHz）后的波形及其包络（红）：<strong>周期性冲击浮现出来了</strong>。④ 包络谱：BPFO 及其 2 倍、3 倍谐波形成清晰的谱峰序列 —— 这就是"外圈故障"的诊断证据。<strong>把故障严重度拖到 0</strong>，④ 中的峰列会消失；调节 BPFO 滑块，峰列会整体移动。</figcaption>
+</figure>
+
+<h3>代码</h3>
+
+<pre><code><span class="kw">import</span> numpy <span class="kw">as</span> np
+<span class="kw">from</span> scipy.signal <span class="kw">import</span> hilbert, butter, filtfilt, get_window
+
+<span class="kw">def</span> <span class="fn">envelope_spectrum</span>(x, fs, band=(<span class="num">2000</span>, <span class="num">6000</span>)):
+    <span class="str">"""轴承/齿轮故障诊断的标准流程。返回 (频率轴, 包络谱)。"""</span>
+    <span class="cmt"># ① 带通到共振频带 —— 抛弃低频干扰，满足窄带条件</span>
+    b, a = butter(<span class="num">4</span>, [band[<span class="num">0</span>]/(fs/<span class="num">2</span>), band[<span class="num">1</span>]/(fs/<span class="num">2</span>)], btype=<span class="str">'band'</span>)
+    xb = filtfilt(b, a, x - x.mean())
+
+    <span class="cmt"># ② 希尔伯特包络</span>
+    env = np.abs(hilbert(xb))
+
+    <span class="cmt"># ③ 包络去直流（！）后做 FFT —— 不去直流则 0 Hz 处一根巨峰压平其余</span>
+    env = env - env.mean()
+    n = len(env)
+    w = get_window(<span class="str">'hann'</span>, n)
+    spec = np.abs(np.fft.rfft(env * w)) * <span class="num">2</span> / w.sum()
+    freq = np.fft.rfftfreq(n, <span class="num">1</span>/fs)
+    <span class="kw">return</span> freq, spec
+
+<span class="cmt"># 诊断：在包络谱里找 BPFO / BPFI / BSF / FTF 及其谐波</span>
+freq, spec = envelope_spectrum(vib, fs=<span class="num">20000</span>)
+fr = <span class="num">29.95</span>                                  <span class="cmt"># 转频 (Hz)，从转速表或键相信号得到</span>
+BPFO = <span class="num">0.5</span>*<span class="num">9</span>*fr*(<span class="num">1</span> - <span class="num">0.235</span>*np.cos(np.deg2rad(<span class="num">0</span>)))   <span class="cmt"># n=9, d/D=0.235</span>
+<span class="kw">for</span> k <span class="kw">in</span> <span class="fn">range</span>(<span class="num">1</span>, <span class="num">5</span>):
+    i = np.argmin(<span class="fn">abs</span>(freq - k*BPFO))
+    <span class="fn">print</span>(<span class="str">f"{k}×BPFO = {k*BPFO:6.1f} Hz　幅值 = {spec[i]:.4f}"</span>)
+</code></pre>
+
+<div class="box tip">
+  <span class="tag">为什么这个应用值得单独花一节</span>
+  <p style="margin:6px 0 0">它把前七章的知识<strong>全部用上了</strong>：Bedrosian 条件（为什么要带通）、包络定义（第 6.3 节）、去直流（第 4.3.4 节，两次！信号和包络都要）、端点效应（第 7.5 节）、单分量要求（第 6.6.1 节）。这套流程从 1970 年代（SKF 的 SED 技术、Boeing 的 HFRT）用到今天，是工业界最成熟的希尔伯特变换应用。现代的改进版叫<strong>谱峭度（spectral kurtosis）</strong>—— 用于自动挑选最佳带通频带，省掉人工选带的经验活。</p>
+</div>
+
+<h2>8.5 地震勘探：瞬时属性</h2>
+
+<p class="field">主线 ②</p>
+
+<p>地震勘探中，反射地震记录 $x(t)$ 经处理后要解释成地下地质结构。1979 年 Taner 等人提出用解析信号计算"<strong>地震瞬时属性</strong>"，至今是标准解释工具：</p>
+
+<table>
+<tr><th>属性</th><th>定义</th><th>地质意义</th></tr>
+<tr><td>瞬时振幅（反射强度）</td><td>$A(t)=|z(t)|$</td><td>与声阻抗差、含气砂岩相关；用于识别储层</td></tr>
+<tr><td>瞬时相位</td><td>$\phi(t)=\arg z(t)$</td><td>对振幅不敏感，突出地层连续性与不整合面</td></tr>
+<tr><td>瞬时频率</td><td>$f_i=\dot{\phi}/2\pi$</td><td>低频异常常与含烃有关（"低频阴影"）</td></tr>
+<tr><td>加权平均频率</td><td>$A^2$ 加权的 $f_i$</td><td>比裸 $f_i$ 稳健（避开第 6.6.2 节的负频率问题）</td></tr>
+</table>
+
+<p>之所以有效，是因为地震道近似是"子波（wavelet）× 反射系数序列"的卷积，包络凸显了反射界面的位置和强度，而相位剥掉了振幅的影响，让弱反射的连续层也能看清。</p>
+
+<h2>8.6 音频处理：移相、频移与效果器</h2>
+
+<p class="field">主线 ①</p>
+
+<table>
+<tr><th>效果</th><th>做法</th><th>为什么需要希尔伯特变换</th></tr>
+<tr><td><strong>单边带频移</strong>（frequency shifter）</td><td>$y=\operatorname{Re}\{z(t)e^{j2\pi\Delta f t}\}$</td><td>把所有频率<strong>加上</strong>固定 $\Delta f$（而不是乘以倍数），产生非谐的金属音色。用实信号直接乘会同时产生上下两个边带，声音浑浊。</td></tr>
+<tr><td><strong>移相器</strong>（phaser）</td><td>级联全通滤波器</td><td>经典 phaser 其实用的是全通链，但"宽带 90° 相移"的思路来自希尔伯特变换</td></tr>
+<tr><td><strong>Dolby / 环绕声编码</strong></td><td>把声道做 90° 相移再混合</td><td>使混合后的声道能被解码器分离</td></tr>
+<tr><td><strong>包络跟随器</strong>（envelope follower）</td><td>$|z(t)|$</td><td>比整流+低通更精确、延时更低，用于自动哇音、压缩器侧链</td></tr>
+<tr><td><strong>音高检测</strong></td><td>逐谐波求瞬时频率</td><td>比零交叉法抗噪，比自相关法时间分辨率高</td></tr>
+</table>
+
+<pre><code><span class="cmt"># 单边带频移器：把整个频谱平移 +150 Hz（不是升高 150 音分！）</span>
+z = hilbert(audio)
+t = np.arange(len(audio)) / fs
+shifted = np.real(z * np.exp(<span class="num">1j</span>*<span class="num">2</span>*np.pi*<span class="num">150</span>*t))
+</code></pre>
+
+<h2>8.7 生物医学信号：相位同步</h2>
+
+<p class="field">主线 ②</p>
+
+<p>脑电（EEG）、脑磁（MEG）研究中一个核心问题是：两个脑区是否在"协同工作"？一个被广泛使用的量化指标是<strong>相位锁定值</strong>（PLV, Phase Locking Value）：</p>
+
+<p>$$\mathrm{PLV}=\left|\frac{1}{N}\sum_{n=1}^{N}e^{j\left[\phi_1(t_n)-\phi_2(t_n)\right]}\right|\in[0,1]$$</p>
+
+<p>其中 $\phi_1,\phi_2$ 是两路信号的<strong>瞬时相位</strong>，由希尔伯特变换求得。$\mathrm{PLV}=1$ 表示相位差恒定（完全同步），$\mathrm{PLV}=0$ 表示相位差随机（无同步）。</p>
+
+<pre><code><span class="kw">from</span> scipy.signal <span class="kw">import</span> hilbert, butter, filtfilt
+
+<span class="kw">def</span> <span class="fn">plv</span>(x1, x2, fs, band=(<span class="num">8</span>, <span class="num">12</span>)):          <span class="cmt"># 默认 alpha 频段</span>
+    b, a = butter(<span class="num">4</span>, [band[<span class="num">0</span>]/(fs/<span class="num">2</span>), band[<span class="num">1</span>]/(fs/<span class="num">2</span>)], btype=<span class="str">'band'</span>)
+    p1 = np.angle(hilbert(filtfilt(b, a, x1)))    <span class="cmt"># 必须先带通！</span>
+    p2 = np.angle(hilbert(filtfilt(b, a, x2)))
+    <span class="kw">return</span> np.<span class="fn">abs</span>(np.mean(np.exp(<span class="num">1j</span>*(p1 - p2))))
+</code></pre>
+
+<div class="box warn">
+  <span class="tag">这里的坑特别多</span>
+  <p style="margin:6px 0 0">PLV 的计算<strong>必须先窄带滤波</strong>（$\delta,\theta,\alpha,\beta,\gamma$ 中的某一个频段），否则瞬时相位没有意义（第 6.6.1 节）。文献里因为跳过这一步而得出虚假同步结论的例子不少。另外还要注意<strong>容积传导</strong>问题：两个电极可能只是记录了同一个源，PLV 高但并非真的功能连接 —— 这时要改用对零相位延迟不敏感的指标（如加权相位滞后指数 wPLI）。</p>
+</div>
+
+<p>其他生物医学应用：心电 R 波检测的包络增强、呼吸信号从心率变异中的包络提取、肌电（EMG）的激活强度估计、脉搏波传导时间的相位估计。</p>
+
+<h2>8.8 物理与材料：Kramers–Kronig 关系</h2>
+
+<p class="field">主线 ③</p>
+
+<p>这是希尔伯特变换最深刻的应用，它把<strong>因果性</strong>这个物理原理翻译成了数学约束。</p>
+
+<h3>论证</h3>
+
+<p>考虑一个线性响应系统（介质对光的响应、电路对电压的响应）。设复响应函数 $\chi(\omega)=\chi'(\omega)+j\chi''(\omega)$。因果性要求：时域响应 $\chi(t)$ 在 $t&lt;0$ 时为零（结果不能先于原因）。</p>
+
+<p>由 Titchmarsh 定理（定理 5.2），"时域单边（因果）"等价于"频域的实部与虚部互为希尔伯特变换"。写成式子就是</p>
+
+<p>$$\chi'(\omega)=\frac{1}{\pi}\,\mathrm{P}\!\!\int_{-\infty}^{\infty}\frac{\chi''(\omega')}{\omega'-\omega}\,\mathrm{d}\omega',\qquad
+\chi''(\omega)=-\frac{1}{\pi}\,\mathrm{P}\!\!\int_{-\infty}^{\infty}\frac{\chi'(\omega')}{\omega'-\omega}\,\mathrm{d}\omega'$$</p>
+
+<p>但物理实验只能测正频率（$\omega&lt;0$ 没有物理意义），所以教科书里的 K–K 关系总是写成 $\int_0^\infty$ 的形式。<strong>这一步"折叠"不是换个写法那么简单，它用掉了一个额外的物理条件</strong>，值得推一遍。</p>
+
+<div class="box thm">
+  <span class="tag">推导 · 把 $\int_{-\infty}^{\infty}$ 折成 $\int_0^{\infty}$</span>
+
+  <p style="margin:6px 0 0"><strong>第一步 · 找出 $\chi$ 在负频率上的对称性。</strong></p>
+  <p>时域响应函数 $\chi(t)$ 是<strong>实</strong>的（实的激励产生实的响应，这是物理要求）。由第 2.5.3 节的共轭对称性：</p>
+  <p>$$\chi(-\omega)=\overline{\chi(\omega)}$$</p>
+  <p>把它拆成实虚部，$\chi'(-\omega)+j\chi''(-\omega)=\chi'(\omega)-j\chi''(\omega)$，比较两边：</p>
+  <p>$$\boxed{\chi'(-\omega)=\chi'(\omega)\ \ (\text{偶})},\qquad \boxed{\chi''(-\omega)=-\chi''(\omega)\ \ (\text{奇})}$$</p>
+  <p>物理上这两句话是熟悉的：色散（折射率）对正负频率一样，吸收则要反号。<em>这就是那个额外条件。</em></p>
+
+  <p style="margin:14px 0 0"><strong>第二步 · 把积分区间对折。</strong>以第一式为例，把 $\int_{-\infty}^{\infty}$ 拆成 $\int_{-\infty}^{0}+\int_{0}^{\infty}$，并对前一半换元 $\omega'\to-\omega'$（换元后区间变回 $0\to\infty$）：</p>
+  <p>$$\int_{-\infty}^{0}\frac{\chi''(\omega')}{\omega'-\omega}\mathrm{d}\omega'
+  =\int_{0}^{\infty}\frac{\chi''(-\omega')}{-\omega'-\omega}\mathrm{d}\omega'
+  \overset{\chi''\text{奇}}{=}\int_{0}^{\infty}\frac{-\chi''(\omega')}{-(\omega'+\omega)}\mathrm{d}\omega'
+  =\int_{0}^{\infty}\frac{\chi''(\omega')}{\omega'+\omega}\mathrm{d}\omega'$$</p>
+
+  <p style="margin:14px 0 0"><strong>第三步 · 两半相加，通分。</strong></p>
+  <p>$$\chi'(\omega)=\frac{1}{\pi}\,\mathrm{P}\!\!\int_{0}^{\infty}\chi''(\omega')\left[\frac{1}{\omega'-\omega}+\frac{1}{\omega'+\omega}\right]\mathrm{d}\omega'$$</p>
+  <p>方括号里通分，分母是平方差 $(\omega'-\omega)(\omega'+\omega)=\omega'^2-\omega^2$，分子 $(\omega'+\omega)+(\omega'-\omega)=2\omega'$：</p>
+  <p>$$\frac{1}{\omega'-\omega}+\frac{1}{\omega'+\omega}=\frac{2\omega'}{\omega'^2-\omega^2}$$</p>
+  <p>代回即得第一条 K–K 关系。<strong>那个 $\frac{2}{\pi}$ 里的 $2$ 和分子上的 $\omega'$，都是这次通分的产物</strong> —— 不是凭空多出来的常数。</p>
+
+  <p style="margin:14px 0 0"><strong>第四步 · 第二条同理，只是对称性反过来。</strong>这次 $\chi'$ 是偶函数，换元后两项相减而不是相加：</p>
+  <p>$$\frac{1}{\omega'-\omega}-\frac{1}{\omega'+\omega}=\frac{(\omega'+\omega)-(\omega'-\omega)}{\omega'^2-\omega^2}=\frac{2\omega}{\omega'^2-\omega^2}$$</p>
+  <p>注意这回分子是 $2\omega$（不带撇），所以 $\omega$ 被提到了积分号外面 —— 这就是第二式为什么多了个前置因子 $\omega$。</p>
+</div>
+
+<div class="box thm">
+  <span class="tag">Kramers–Kronig 关系（1926–27）</span>
+  <p style="margin:6px 0 0">$$\chi'(\omega)=\frac{2}{\pi}\,\mathrm{P}\!\!\int_0^{\infty}\frac{\omega'\,\chi''(\omega')}{\omega'^2-\omega^2}\,\mathrm{d}\omega'$$</p>
+  <p>$$\chi''(\omega)=-\frac{2\omega}{\pi}\,\mathrm{P}\!\!\int_0^{\infty}\frac{\chi'(\omega')}{\omega'^2-\omega^2}\,\mathrm{d}\omega'$$</p>
+  <p style="margin:6px 0 0">式中的 $\mathrm{P}$ 不是装饰：被积函数在 $\omega'=\omega$ 处有一个 $\frac{1}{\omega'-\omega}$ 型的奇点，正是第 2.3 节那种"奇函数型奇性"，只有取主值才有意义。<strong>这也是为什么讲 K–K 关系绕不开柯西主值。</strong></p>
+</div>
+
+<h3>物理含义</h3>
+
+<p>在光学里，$\chi'$ 对应<strong>折射率</strong>（光的减速，色散），$\chi''$ 对应<strong>吸收系数</strong>（光的衰减）。K–K 关系说：</p>
+
+<p style="text-align:center;font-size:19px;margin:24px 0"><strong>一种材料"吸收多少光"和"让光走多慢"不是两件独立的事。</strong></p>
+
+<p>只要你测出了<strong>全频段</strong>的吸收谱，折射率谱就被唯一确定了，反之亦然。这在实验上极其有用 —— 比如椭偏仪、反射谱、电化学阻抗谱（EIS）都靠它把不易测的那一半推算出来，或者用它<strong>检验测量数据的自洽性</strong>（若两者不满足 K–K 关系，说明数据有系统误差或系统非线性）。</p>
+
+<p>回头看第 3 章例 3.4：$\frac{1}{1+t^2}$（洛伦兹吸收线型）和 $\frac{t}{1+t^2}$（色散线型）恰好是一对希尔伯特变换 —— 那就是 K–K 关系最简单的具体实例。它们必须成对出现，因为一个单独的吸收峰在物理上是不可能的。</p>
+
+<h2>8.9 控制与电路：Bode 增益-相位关系</h2>
+
+<p class="field">主线 ③</p>
+
+<p>同样的道理用在控制系统上。对<strong>最小相位</strong>系统（无右半平面零极点），$\ln|H(j\omega)|$ 与 $\arg H(j\omega)$ 构成一对希尔伯特变换：</p>
+
+<p>$$\arg H(j\omega_0)=\frac{2\omega_0}{\pi}\,\mathrm{P}\!\!\int_0^{\infty}\frac{\ln|H(j\omega)|-\ln|H(j\omega_0)|}{\omega^2-\omega_0^2}\,\mathrm{d}\omega$$</p>
+
+<p><strong>这个式子是怎么和上一节连上的？</strong>关键在"取对数"这一步，值得说清楚。</p>
+
+<ol>
+  <li><strong>先造一个新的"响应函数"。</strong>令 $L(\omega)=\ln H(j\omega)$。由复对数的定义，
+  $$L(\omega)=\ln\big|H(j\omega)\big|+j\arg H(j\omega)$$
+  也就是说，<strong>取对数把"增益"和"相位"变成了同一个复函数的实部与虚部</strong> —— 正好是上一节 K–K 关系需要的形式。这一步是全部技巧所在。</li>
+  <li><strong>再问 $L$ 是否满足因果性条件。</strong>$H$ 因果保证它在右半平面解析；要让 $\ln H$ 也解析，还必须保证 $H$ 在右半平面<em>没有零点</em>（否则 $\ln 0=-\infty$）。这正是"<strong>最小相位</strong>"这个前提的来源 —— 它不是额外的技术假设，而是取对数这一步必须付的门票。</li>
+  <li><strong>套用 K–K，再折成正频率。</strong>对 $L$ 用上一节的推导（$\ln|H|$ 偶、$\arg H$ 奇），就得到上面的式子。那个 $\ln|H(j\omega_0)|$ 的减项是为了让被积函数在奇点 $\omega=\omega_0$ 处相消得更干净（否则主值收敛得很勉强），属于技术性处理，不改变结论。</li>
+</ol>
+
+<p><strong>从公式读出"斜率 × 90°"这条口诀。</strong>核函数 $\frac{1}{\omega^2-\omega_0^2}$ 在 $\omega=\omega_0$ 附近取值最大、离得远就迅速衰减，所以积分主要由 $\omega_0$ <em>附近</em>的增益曲线贡献。若在这一带增益是一条直线（在对数-对数坐标下），即 $\ln|H|=-k\ln\omega+\text{const}$，把它代进去算出的结果是</p>
+
+<p>$$\arg H(j\omega_0)\approx-k\cdot\frac{\pi}{2}$$</p>
+
+<p>其中 $k$ 是以"每十倍频 $\times20$ dB"为单位的斜率。于是有了工程上人人会背的那句：</p>
+
+<p style="text-align:center"><strong>相位 ≈ 斜率 × 90°</strong>　（$-20$ dB/dec ↔ $-90°$；$-40$ dB/dec ↔ $-180°$；$-60$ dB/dec ↔ $-270°$）</p>
+
+<p>后果非常实际：<strong>你不能独立地设计幅频特性和相频特性。</strong>想让增益在某段频率下降得很陡（比如 $-60$ dB/十倍频），相位就必然会滑到 $-270°$ 附近 —— 那已经越过了 $-180°$ 的稳定边界，系统会振荡。这就是控制工程中著名的"<strong>幅频陡度换相位裕度</strong>"的取舍，它不是设计技巧的局限，而是<strong>因果性的数学后果</strong>：想绕过它，只能放弃最小相位（引入右半平面零点），而那会带来逆响应和带宽上限等更糟的问题。</p>
+
+<p>顺带回看第 4.7 节的那个论断：我们给希尔伯特变换器开的规格书是"$|H|\equiv1$（增益完全平坦，斜率 $0$）而相位 $=\mp90°$"。按这条口诀，斜率 $0$ 应当对应相位 $0$ —— 规格书自相矛盾。<strong>所以理想希尔伯特变换器必然非因果，这里给出的是第二个独立的证明。</strong></p>
+
+<p>Bode 还由此导出了"面积公式"（Bode 积分定理）：反馈系统的灵敏度函数满足一个守恒律，在某些频段压低干扰，必然在别的频段被抬高 —— <strong>"水床效应"</strong>。</p>
+
+<h2>8.10 其他应用速览</h2>
+
+<table>
+<tr><th>领域</th><th>用法</th><th>用的主线</th></tr>
+<tr><td><strong>电力系统</strong></td><td>从三相电压求瞬时频率，用于孤岛检测、次同步振荡监测</td><td>②</td></tr>
+<tr><td><strong>雷达 / 声呐</strong></td><td>脉冲压缩（chirp 匹配滤波）、包络检测、多普勒估计</td><td>①②</td></tr>
+<tr><td><strong>图像处理</strong></td><td>2 维推广：<strong>单演信号</strong>（monogenic signal，用 Riesz 变换代替希尔伯特变换），得到局部幅度/相位/方向；<strong>相位一致性</strong>（phase congruency）做边缘检测，对光照变化不敏感</td><td>②</td></tr>
+<tr><td><strong>光纤 / 光通信</strong></td><td>相干接收机的 I/Q 检测、单边带光调制</td><td>①</td></tr>
+<tr><td><strong>结构健康监测</strong></td><td>自由衰减响应的包络求阻尼比（对数衰减法）、模态参数识别</td><td>②</td></tr>
+<tr><td><strong>语音</strong></td><td>基频跟踪、共振峰包络、AM-FM 语音模型</td><td>②</td></tr>
+<tr><td><strong>金融时间序列</strong></td><td>HHT 分解周期成分（有争议，须谨慎）</td><td>②</td></tr>
+<tr><td><strong>量子力学 / 散射理论</strong></td><td>色散关系、光学定理、S 矩阵的解析性</td><td>③</td></tr>
+</table>
+
+<div class="box tip">
+  <span class="tag">高维推广</span>
+  <p style="margin:6px 0 0">希尔伯特变换是一维的。到了图像（二维）没有"正负频率"的自然划分，直接推广不唯一。工程上常用的两条路：<strong>(1) 部分希尔伯特变换</strong>，沿某个方向做一维变换；<strong>(2) Riesz 变换</strong>，一个旋转协变的向量值算子，由它构造的<strong>单演信号</strong>是解析信号的正确二维类比，给出局部幅度、局部相位和局部方向三个量。想深入图像分析的话，这是下一步要读的东西。</p>
+</div>
+
+<h2>8.11 本章要点</h2>
+
+<table>
+<tr><th>主线</th><th>核心工具</th><th>代表应用</th><th>关键前提</th></tr>
+<tr><td>① 单边谱</td><td>$Z(\omega)=2X(\omega)u(\omega)$</td><td>SSB、I/Q 调制、音频频移</td><td>载波频率 &gt; 基带带宽</td></tr>
+<tr><td>② 瞬时属性</td><td>$A=|z|$，$\omega_i=\dot\phi$</td><td>包络检波、轴承诊断、地震属性、EEG 同步</td><td><strong>单分量 + 窄带</strong>（Bedrosian）</td></tr>
+<tr><td>③ 因果性</td><td>实部 ⟷ 虚部互为 $\mathcal{H}$</td><td>Kramers–Kronig、Bode 增益-相位</td><td>系统线性 + 因果 + 稳定</td></tr>
+</table>
+
+<p>如果只带走一条实用知识，请带走<strong>包络谱</strong>（第 8.4 节）：带通 → 希尔伯特包络 → FFT。这套三步流程能从看似纯噪声的振动信号里挖出故障证据，是希尔伯特变换"从数学到生产力"最漂亮的一次跨越。</p>
+
+<div class="q">
+  <span class="tag">本章练习</span>
+  <ol style="margin:6px 0 0">
+    <li>设 $m(t)=\cos(2\pi\cdot 1000t)$，$f_c=100$ kHz。写出上边带和下边带 SSB 信号的表达式，并分别指出其频谱中谱线的位置。</li>
+    <li>证明 $s_{\text{USB}}(t)=\operatorname{Re}\{z_m(t)e^{j\omega_ct}\}$ 与 8.1 节的展开式等价。</li>
+    <li>某轴承 $n=9$ 个滚珠，$d/D=0.24$，接触角 $\alpha=0$，转速 1780 r/min。计算 BPFO、BPFI、BSF、FTF。若包络谱在 106 Hz 及其 2、3 倍处有峰，是哪个零件故障？</li>
+    <li>做包络谱时，为什么"包络本身也要去直流"？如果不去，包络谱会是什么样子？</li>
+    <li>设两路 EEG 信号的相位差恒为 $\pi/3$。计算它们的 PLV。若相位差在 $[0,2\pi)$ 上均匀随机，PLV 是多少？</li>
+    <li>用 K–K 关系解释：为什么一种完全透明（所有频率都不吸收）的材料，其折射率必须是常数？</li>
+    <li>某最小相位系统在 $\omega_0$ 附近的增益斜率为 $-40$ dB/十倍频。粗略估计该处的相位。它离 $-180°$ 稳定边界还有多少裕度？</li>
+    <li><strong>*</strong>（编程）复现图 8.2：生成一段"冲击序列 × 指数衰减高频共振 + 转频正弦 + 白噪声"的模拟振动信号，用 8.4 节的代码求包络谱，验证 BPFO 峰能被检出。再逐步加大噪声，找出该方法失效的信噪比门限。</li>
+    <li><strong>*</strong>（编程）实现单边带频移器，对一段语音做 $+200$ Hz 频移，听一听为什么它听起来"不像变调"而像"变成了金属声"。（因为谐波关系 $f,2f,3f$ 变成了 $f{+}\Delta,2f{+}\Delta,3f{+}\Delta$，不再是整数倍。）</li>
+  </ol>
+  <p style="margin:10px 0 0;font-size:14.5px;color:#6c717c">完整解答见<a href="09-exercises.html">第 9 章习题册</a>。</p>
+</div>
+
+<nav class="pager">
+  <a href="07-discrete.html">← 第 7 章　在计算机上怎么算</a>
+  <a href="09-exercises.html">第 9 章　习题册 →</a>
+</nav>
+
+</div>
+
+<script>
+function fft(re,im){const n=re.length;
+  for(let i=1,j=0;i<n;i++){let bit=n>>1;for(;j&bit;bit>>=1)j^=bit;j^=bit;
+    if(i<j){let t=re[i];re[i]=re[j];re[j]=t;t=im[i];im[i]=im[j];im[j]=t;}}
+  for(let len=2;len<=n;len<<=1){const ang=-2*Math.PI/len,half=len>>1;
+    for(let i=0;i<n;i+=len)for(let k=0;k<half;k++){
+      const wr=Math.cos(ang*k),wi=Math.sin(ang*k),ur=re[i+k],ui=im[i+k],
+            ar=re[i+k+half],ai=im[i+k+half],vr=ar*wr-ai*wi,vi=ar*wi+ai*wr;
+      re[i+k]=ur+vr;im[i+k]=ui+vi;re[i+k+half]=ur-vr;im[i+k+half]=ui-vi;}}}
+function ifft(re,im){const n=re.length;for(let i=0;i<n;i++)im[i]=-im[i];fft(re,im);
+  for(let i=0;i<n;i++){re[i]/=n;im[i]=-im[i]/n;}}
+function analytic(x){const n=x.length,re=Float64Array.from(x),im=new Float64Array(n);
+  fft(re,im);const h=new Float64Array(n);h[0]=1;
+  if(n%2===0){h[n/2]=1;for(let i=1;i<n/2;i++)h[i]=2;}else{for(let i=1;i<=(n-1)/2;i++)h[i]=2;}
+  for(let i=0;i<n;i++){re[i]*=h[i];im[i]*=h[i];}ifft(re,im);return{re:re,im:im};}
+function mag(x){const n=x.length,re=Float64Array.from(x),im=new Float64Array(n);
+  fft(re,im);const m=new Float64Array(n/2);
+  for(let k=0;k<n/2;k++)m[k]=Math.hypot(re[k],im[k])*2/n;return m;}
+function setupHiDPI(cv){
+  const dpr=window.devicePixelRatio||1;
+  if(!cv.dataset.baseH){cv.dataset.baseH=cv.getAttribute('height')||cv.clientHeight||300;}
+  const h=parseInt(cv.dataset.baseH,10);
+  const w=cv.clientWidth||cv.parentElement.clientWidth;
+  cv.style.height=h+'px';
+  const bw=Math.round(w*dpr),bh=Math.round(h*dpr);
+  if(cv.width!==bw||cv.height!==bh){cv.width=bw;cv.height=bh;}
+  const g=cv.getContext('2d');g.setTransform(dpr,0,0,dpr,0,0);
+  return {g:g,W:w,H:h};
+}
+function poly(g,pts,color,width,dash){if(!pts.length)return;g.save();g.beginPath();
+  if(dash)g.setLineDash(dash);
+  for(let i=0;i<pts.length;i++){i?g.lineTo(pts[i][0],pts[i][1]):g.moveTo(pts[i][0],pts[i][1]);}
+  g.strokeStyle=color;g.lineWidth=width||1.6;g.lineJoin='round';g.stroke();g.restore();}
+function axis(g,x0,y0,x1,y1){poly(g,[[x0,y0],[x1,y1]],'#c9c4b6',1);}
+
+/* ===== 图 8.1 SSB 频谱 ===== */
+(function(){
+  const cv=document.getElementById('c1'),sel=document.getElementById('sel1'),
+        s=document.getElementById('s1'),v=document.getElementById('v1');
+  const N=2048;
+  function draw(){
+    const {g,W,H}=setupHiDPI(cv);
+    const fc=+s.value, mode=sel.value; v.textContent=fc;
+    // 基带：不对称谱形（三根不等高谱线 + 形状）
+    const m=new Float64Array(N);
+    const comps=[[2,1.0],[4,0.72],[6,0.45],[8,0.22]];
+    for(let i=0;i<N;i++){const t=i/N;let s0=0;
+      for(const c of comps)s0+=c[1]*Math.cos(2*Math.PI*c[0]*t+c[0]*0.5);
+      m[i]=s0;}
+    const zm=analytic(m);
+    const y=new Float64Array(N);
+    for(let i=0;i<N;i++){const t=i/N;
+      const c=Math.cos(2*Math.PI*fc*t), sn=Math.sin(2*Math.PI*fc*t);
+      if(mode==='am') y[i]=m[i]*c;
+      else if(mode==='usb') y[i]=m[i]*c-zm.im[i]*sn;
+      else y[i]=m[i]*c+zm.im[i]*sn;}
+    const M1=mag(m), M2=mag(y);
+    let mx1=1e-9,mx2=1e-9;
+    for(let k=0;k<50;k++)mx1=Math.max(mx1,M1[k]);
+    for(let k=0;k<64;k++)mx2=Math.max(mx2,M2[k]);
+    g.clearRect(0,0,W,H);
+    const padL=14,padR=14,w=W-padL-padR;
+    const KMAX=52, X=k=>padL+w*k/KMAX;
+    const r1=H*0.33, a1=H*0.20, r2=H*0.90, a2=H*0.26;
+    g.font='12px ui-sans-serif,system-ui,sans-serif';
+    // 上：基带谱
+    axis(g,padL,r1,W-padR,r1);
+    for(let k=0;k<KMAX;k++){ if(M1[k]<mx1*0.012)continue;
+      g.strokeStyle='#6b6f79';g.lineWidth=2.4;
+      g.beginPath();g.moveTo(X(k),r1);g.lineTo(X(k),r1-a1*M1[k]/mx1);g.stroke();}
+    g.fillStyle='#5d6472';g.fillText('基带 m(t) 的频谱（形状递减，便于分辨上下边带）',padL+2,r1-a1-8);
+    g.fillText('0',padL-3,r1+16);
+    // 下：调制后
+    axis(g,padL,r2,W-padR,r2);
+    const cl = mode==='am'?'#6b3fa8':(mode==='usb'?'#1f6f8b':'#b4531f');
+    for(let k=0;k<KMAX;k++){ if(M2[k]<mx2*0.012)continue;
+      g.strokeStyle=cl;g.lineWidth=2.4;
+      g.beginPath();g.moveTo(X(k),r2);g.lineTo(X(k),r2-a2*M2[k]/mx2);g.stroke();}
+    // 载波位置标记
+    g.strokeStyle='#c0392b';g.setLineDash([4,3]);g.lineWidth=1.2;
+    g.beginPath();g.moveTo(X(fc),r2+6);g.lineTo(X(fc),r2-a2-6);g.stroke();g.setLineDash([]);
+    g.fillStyle='#c0392b';g.fillText('f_c',X(fc)-6,r2+17);
+    g.fillStyle=cl;
+    const nm = mode==='am'?'AM：上下边带都在，带宽 = 2B':
+               (mode==='usb'?'SSB-USB：只保留 f_c 以上，带宽 = B':'SSB-LSB：只保留 f_c 以下，带宽 = B');
+    g.fillText(nm,padL+2,r2-a2-8);
+    g.fillStyle='#5d6472';g.fillText('频率 →',W-padR-44,r2+17);
+  }
+  sel.addEventListener('change',draw);s.addEventListener('input',draw);
+  window.addEventListener('resize',draw);draw();
+})();
+
+/* ===== 图 8.2 轴承包络谱 ===== */
+(function(){
+  const cv=document.getElementById('c2');
+  const s2=document.getElementById('s2'),v2=document.getElementById('v2');
+  const s3=document.getElementById('s3'),v3=document.getElementById('v3');
+  const s4=document.getElementById('s4'),v4=document.getElementById('v4');
+  const N=4096, FS=20000;
+  let seed=987654321;
+  function rnd(){seed=(seed*1103515245+12345)&0x7fffffff;
+    let u=seed/0x7fffffff;seed=(seed*1103515245+12345)&0x7fffffff;
+    let u2=seed/0x7fffffff;
+    return Math.sqrt(-2*Math.log(u+1e-12))*Math.cos(2*Math.PI*u2);}
+  /* 简易 Butterworth 带通（两级双二阶级联，前后向滤波近似零相位） */
+  function bandpass(x,lo,hi){
+    const n=x.length;
+    // 用 FFT 域理想带通（教学用途足够，且零相位）
+    const re=Float64Array.from(x), im=new Float64Array(n);
+    fft(re,im);
+    for(let k=0;k<n;k++){
+      const f=(k<=n/2? k : k-n)*FS/n;
+      const af=Math.abs(f);
+      let w=0;
+      if(af>=lo&&af<=hi)w=1;
+      else if(af>lo*0.7&&af<lo)w=0.5-0.5*Math.cos(Math.PI*(af-lo*0.7)/(lo*0.3));
+      else if(af>hi&&af<hi*1.2)w=0.5+0.5*Math.cos(Math.PI*(af-hi)/(hi*0.2));
+      re[k]*=w;im[k]*=w;
+    }
+    ifft(re,im); return re;
+  }
+  function draw(){
+    const {g,W,H}=setupHiDPI(cv);
+    const sev=(+s2.value)/100, nz=(+s3.value)/100, bpfo=+s4.value;
+    v2.textContent=sev.toFixed(2);v3.textContent=nz.toFixed(2);v4.textContent=bpfo;
+    seed=987654321;
+    const x=new Float64Array(N);
+    const fr=29.95, fres=3800, dec=900;   // 转频、共振频率、衰减率
+    const T=1/bpfo;
+    for(let i=0;i<N;i++){
+      const t=i/FS;
+      // 转频及其谐波（大幅低频干扰）
+      let s0=1.0*Math.sin(2*Math.PI*fr*t)+0.45*Math.sin(2*Math.PI*2*fr*t+1.1)
+             +0.30*Math.sin(2*Math.PI*3*fr*t+0.3)+0.55*Math.sin(2*Math.PI*9*fr*t+2.0);
+      // 故障冲击：周期 T，激起衰减共振
+      const k0=Math.floor(t/T);
+      for(let k=Math.max(0,k0-2);k<=k0+1;k++){
+        const dt=t-(k*T+0.01*T*Math.sin(k)); // 轻微随机滑移（抖动为周期的 1%）
+        if(dt>=0&&dt<0.004)
+          s0+=sev*1.15*Math.exp(-dec*dt)*Math.sin(2*Math.PI*fres*dt);
+      }
+      s0+=nz*0.55*rnd();
+      x[i]=s0;
+    }
+    let mean=0;for(let i=0;i<N;i++)mean+=x[i];mean/=N;
+    for(let i=0;i<N;i++)x[i]-=mean;
+    // 带通 + 包络
+    const xb=bandpass(x,2000,6000);
+    const zb=analytic(xb);
+    const env=new Float64Array(N);
+    for(let i=0;i<N;i++)env[i]=Math.hypot(zb.re[i],zb.im[i]);
+    let em=0;for(let i=0;i<N;i++)em+=env[i];em/=N;
+    const env0=new Float64Array(N);
+    for(let i=0;i<N;i++)env0[i]=(env[i]-em)*(0.5-0.5*Math.cos(2*Math.PI*i/(N-1)));
+    const SP=mag(x), SE=mag(env0);
+    g.clearRect(0,0,W,H);
+    const padL=14,padR=14,w=W-padL-padR;
+    g.font='11.5px ui-sans-serif,system-ui,sans-serif';
+    const rows=[H*0.135,H*0.375,H*0.625,H*0.925];
+    const amps=[H*0.075,H*0.085,H*0.075,H*0.105];
+    // ① 原始波形
+    axis(g,padL,rows[0],W-padR,rows[0]);
+    let mx=1e-9;for(let i=0;i<N;i++)mx=Math.max(mx,Math.abs(x[i]));
+    const p1=[];for(let i=0;i<N;i++)p1.push([padL+w*i/(N-1),rows[0]-amps[0]*x[i]/mx]);
+    poly(g,p1,'#6b6f79',0.9);
+    g.fillStyle='#5d6472';g.fillText('① 原始振动 x(t)（冲击被淹没）',padL+2,rows[0]-amps[0]-7);
+    // ② 原始频谱（0~8000 Hz）
+    const KM=Math.round(8000/FS*N);
+    axis(g,padL,rows[1],W-padR,rows[1]);
+    let sm=1e-9;for(let k=1;k<KM;k++)sm=Math.max(sm,SP[k]);
+    // 共振带阴影
+    const k1=Math.round(2000/FS*N),k2=Math.round(6000/FS*N);
+    g.fillStyle='rgba(120,125,135,.13)';
+    g.fillRect(padL+w*k1/KM,rows[1]-amps[1],w*(k2-k1)/KM,amps[1]);
+    for(let k=1;k<KM;k++){const X=padL+w*k/KM;
+      g.strokeStyle='#8a8f9a';g.lineWidth=0.8;
+      g.beginPath();g.moveTo(X,rows[1]);g.lineTo(X,rows[1]-amps[1]*SP[k]/sm);g.stroke();}
+    // BPFO 标记
+    for(let h=1;h<=3;h++){const kk=h*bpfo/FS*N;
+      if(kk<KM){g.strokeStyle='rgba(192,57,43,.55)';g.setLineDash([3,3]);g.lineWidth=1;
+      g.beginPath();g.moveTo(padL+w*kk/KM,rows[1]);g.lineTo(padL+w*kk/KM,rows[1]-amps[1]);g.stroke();g.setLineDash([]);}}
+    g.fillStyle='#5d6472';g.fillText('② x(t) 的频谱（0–8 kHz）　灰带 = 结构共振区　红虚线 = BPFO 谐波位置（看不见峰）',padL+2,rows[1]-amps[1]-7);
+    // ③ 带通后 + 包络
+    axis(g,padL,rows[2],W-padR,rows[2]);
+    let bm=1e-9;for(let i=0;i<N;i++)bm=Math.max(bm,Math.abs(xb[i]));
+    const p3=[],p3e=[];
+    for(let i=0;i<N;i++){p3.push([padL+w*i/(N-1),rows[2]-amps[2]*xb[i]/bm]);
+      p3e.push([padL+w*i/(N-1),rows[2]-amps[2]*env[i]/bm]);}
+    poly(g,p3,'#9aa2ad',0.9); poly(g,p3e,'#c0392b',1.5);
+    g.fillStyle='#c0392b';g.fillText('③ 带通 2–6 kHz 后的波形与包络（周期性冲击浮现）',padL+2,rows[2]-amps[2]-7);
+    // ④ 包络谱（0~600 Hz）
+    const KE=Math.round(600/FS*N);
+    axis(g,padL,rows[3],W-padR,rows[3]);
+    let em2=1e-9;for(let k=2;k<KE;k++)em2=Math.max(em2,SE[k]);
+    for(let k=2;k<KE;k++){const X=padL+w*k/KE;
+      g.strokeStyle='#1f6f8b';g.lineWidth=1.1;
+      g.beginPath();g.moveTo(X,rows[3]);g.lineTo(X,rows[3]-amps[3]*SE[k]/em2);g.stroke();}
+    for(let h=1;h<=4;h++){const f=h*bpfo;
+      if(f<600){const X=padL+w*(f/FS*N)/KE;
+      g.strokeStyle='rgba(192,57,43,.7)';g.setLineDash([4,3]);g.lineWidth=1.2;
+      g.beginPath();g.moveTo(X,rows[3]+4);g.lineTo(X,rows[3]-amps[3]);g.stroke();g.setLineDash([]);
+      g.fillStyle='#c0392b';g.font='10.5px ui-sans-serif,system-ui,sans-serif';
+      g.fillText(h+'×',X-6,rows[3]+15);}}
+    g.font='11.5px ui-sans-serif,system-ui,sans-serif';
+    g.fillStyle='#1f6f8b';
+    g.fillText('④ 包络谱（0–600 Hz）　红虚线 = BPFO = '+bpfo+' Hz 及谐波',padL+2,rows[3]-amps[3]-7);
+    g.fillStyle='#5d6472';g.font='10.5px ui-sans-serif,system-ui,sans-serif';
+    g.fillText('0',padL-2,H-2);g.fillText('600 Hz',W-padR-34,H-2);
+  }
+  s2.addEventListener('input',draw);s3.addEventListener('input',draw);s4.addEventListener('input',draw);
+  window.addEventListener('resize',draw);draw();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>第7章 在计算机上怎么算</title>
+<script>
+window.MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']],displayMath:[['$$','$$'],['\\[','\\]']]},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<style>
+:root{--paper:#fbfaf6;--ink:#20242c;--muted:#5d6472;--line:#e3dfd3;--accent:#1f6f8b;--accent2:#b4531f;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:Georgia,"Songti SC","Noto Serif SC","Source Han Serif SC","SimSun",serif;line-height:1.85;font-size:17px;-webkit-text-size-adjust:100%}
+.wrap{max-width:880px;margin:0 auto;padding:0 22px 90px}
+header.ch{border-bottom:3px double var(--line);padding:44px 0 24px;margin-bottom:34px}
+.kicker{font-family:ui-sans-serif,system-ui,sans-serif;letter-spacing:.2em;font-size:11.5px;color:var(--accent);text-transform:uppercase}
+h1{font-size:29px;margin:12px 0 8px;line-height:1.3}
+.sub{color:var(--muted);font-size:15.5px;margin:0}
+h2{font-size:22px;margin:46px 0 14px;padding-left:12px;border-left:5px solid var(--accent)}
+h3{font-size:18px;margin:30px 0 10px;color:var(--accent2)}
+p{margin:14px 0}
+.box{background:#fff;border:1px solid var(--line);border-radius:8px;padding:14px 18px;margin:22px 0}
+.tag{font-family:ui-sans-serif,system-ui,sans-serif;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;display:block;margin-bottom:6px}
+.def{border-left:5px solid #1f6f8b}.def .tag{color:#1f6f8b}
+.thm{border-left:5px solid #7a4fb5}.thm .tag{color:#6b3fa8}
+.ex{border-left:5px solid #2e8b57}.ex .tag{color:#24704a}
+.warn{border-left:5px solid #c0392b;background:#fff8f7}.warn .tag{color:#a5321f}
+.tip{border-left:5px solid #d99b16;background:#fffdf5}.tip .tag{color:#a8760a}
+a{color:var(--accent);text-underline-offset:3px}
+table{width:100%;border-collapse:collapse;margin:20px 0;font-size:15px;background:#fff}
+th,td{border:1px solid var(--line);padding:8px 11px;text-align:left;vertical-align:top}
+th{background:#f2efe6;font-family:ui-sans-serif,system-ui,sans-serif;font-size:13.5px}
+ol,ul{padding-left:1.5em}li{margin:7px 0}
+figure.demo{margin:26px 0;border:1px solid var(--line);background:#fff;border-radius:10px;padding:14px}
+canvas{width:100%;display:block;border-radius:4px}
+.ctrl{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;font-family:ui-sans-serif,system-ui,sans-serif;font-size:13px;margin-top:12px}
+.ctrl label{display:flex;align-items:center;gap:8px;flex:1 1 200px}
+input[type=range]{flex:1;min-width:80px;accent-color:var(--accent)}
+select{font-family:inherit;font-size:13px;padding:4px 8px;border:1px solid var(--line);border-radius:6px;background:#f8f6f0}
+figcaption{font-family:ui-sans-serif,system-ui,sans-serif;font-size:13px;color:var(--muted);margin-top:10px;line-height:1.65}
+nav.pager{display:flex;justify-content:space-between;gap:12px;margin-top:64px;border-top:1px solid var(--line);padding-top:18px;font-family:ui-sans-serif,system-ui,sans-serif;font-size:14px}
+nav.pager a{text-decoration:none}
+.q{background:#fff;border:1px dashed var(--line);border-left:5px solid #8a8f9a;border-radius:8px;padding:14px 18px;margin:22px 0}
+.q .tag{color:#6c717c}
+pre{background:#22262e;color:#e8e6e1;padding:14px 16px;border-radius:8px;overflow:auto;line-height:1.65;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13.5px;margin:18px 0}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:14.5px;background:#efece1;padding:1px 5px;border-radius:4px}
+pre code{background:none;padding:0;font-size:13.5px;color:inherit}
+.cmt{color:#8f9aa8}
+.kw{color:#c792ea}.str{color:#c3e88d}.num{color:#f78c6c}.fn{color:#82aaff}
+.pitfall{background:#fff;border:1px solid var(--line);border-left:5px solid #c0392b;border-radius:8px;padding:12px 18px;margin:16px 0}
+.pitfall h4{margin:2px 0 6px;font-size:16.5px;color:#a5321f;font-family:ui-sans-serif,system-ui,sans-serif}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="ch">
+  <div class="kicker">第 7 章</div>
+  <h1>在计算机上怎么算</h1>
+  <p class="sub">从理想积分式到能跑的代码。两条路线（FFT 与 FIR）、完整代码、以及七个会让你的结果悄悄出错的坑。</p>
+</header>
+
+<h2>7.1 问题的转化</h2>
+
+<p>实际数据总是<strong>离散采样</strong>的：$x[n]=x(nT_s)$，$n=0,1,\dots,N-1$，采样频率 $f_s=1/T_s$。离散时间信号的频率范围被限制在 $\omega\in(-\pi,\pi]$（数字角频率，对应 $-f_s/2$ 到 $f_s/2$）。所以我们要的频率响应是</p>
+
+<p>$$H(e^{j\omega})=-j\,\mathrm{sgn}(\omega),\qquad -\pi&lt;\omega\le\pi$$</p>
+
+<p>对它做离散时间傅里叶逆变换，得到理想离散冲激响应：</p>
+
+<div class="box def">
+  <span class="tag">离散希尔伯特变换器的理想冲激响应</span>
+  <p style="margin:6px 0 0">$$h[n]=\frac{1}{2\pi}\int_{-\pi}^{\pi}\!\!-j\,\mathrm{sgn}(\omega)\,e^{j\omega n}\,\mathrm{d}\omega=\frac{1-\cos(\pi n)}{\pi n}=\begin{cases}\dfrac{2}{\pi n},&n\ \text{为奇数}\\[6pt]0,&n\ \text{为偶数（含}\,n=0\,\text{）}\end{cases}$$</p>
+</div>
+
+<p>这个积分不难，但每一步都值得写清楚 —— 后面 FIR 设计的所有系数都从它来。</p>
+
+<div class="box thm">
+  <span class="tag">推导 · 从 $H(e^{j\omega})=-j\,\mathrm{sgn}(\omega)$ 到 $h[n]$</span>
+
+  <p style="margin:6px 0 0"><strong>第一步 · 写出逆变换式，并按 $\mathrm{sgn}$ 的分段把积分断开。</strong></p>
+  <p>离散时间傅里叶逆变换的定义是 $h[n]=\frac{1}{2\pi}\int_{-\pi}^{\pi}H(e^{j\omega})e^{j\omega n}\,\mathrm{d}\omega$。代入 $H=-j\,\mathrm{sgn}(\omega)$。因为 $\mathrm{sgn}(\omega)$ 在 $\omega&gt;0$ 上等于 $+1$、在 $\omega&lt;0$ 上等于 $-1$，不是一个统一的表达式，所以要在 $\omega=0$ 处把积分区间断成两段：</p>
+  <p>$$h[n]=\frac{-j}{2\pi}\left[\int_{0}^{\pi}(+1)\,e^{j\omega n}\,\mathrm{d}\omega+\int_{-\pi}^{0}(-1)\,e^{j\omega n}\,\mathrm{d}\omega\right]
+  =\frac{-j}{2\pi}\left[\int_{0}^{\pi}e^{j\omega n}\,\mathrm{d}\omega-\int_{-\pi}^{0}e^{j\omega n}\,\mathrm{d}\omega\right]$$</p>
+
+  <p style="margin:14px 0 0"><strong>第二步 · 分别算这两个基本积分（先设 $n\neq0$）。</strong></p>
+  <p>$e^{j\omega n}$ 关于 $\omega$ 的原函数是 $\dfrac{e^{j\omega n}}{jn}$（求导验证：$\frac{\mathrm{d}}{\mathrm{d}\omega}\frac{e^{j\omega n}}{jn}=\frac{jn\,e^{j\omega n}}{jn}=e^{j\omega n}$ ✓）。逐个代上下限：</p>
+  <p>$$\int_{0}^{\pi}e^{j\omega n}\,\mathrm{d}\omega=\left[\frac{e^{j\omega n}}{jn}\right]_{0}^{\pi}=\frac{e^{j\pi n}-1}{jn}$$</p>
+  <p>$$\int_{-\pi}^{0}e^{j\omega n}\,\mathrm{d}\omega=\left[\frac{e^{j\omega n}}{jn}\right]_{-\pi}^{0}=\frac{1-e^{-j\pi n}}{jn}$$</p>
+
+  <p style="margin:14px 0 0"><strong>第三步 · 相减，并用欧拉公式把两个复指数并成余弦。</strong></p>
+  <p>$$\int_{0}^{\pi}-\int_{-\pi}^{0}=\frac{e^{j\pi n}-1}{jn}-\frac{1-e^{-j\pi n}}{jn}=\frac{\big(e^{j\pi n}-1\big)-\big(1-e^{-j\pi n}\big)}{jn}=\frac{e^{j\pi n}+e^{-j\pi n}-2}{jn}$$</p>
+  <p>由欧拉反公式 $e^{j\theta}+e^{-j\theta}=2\cos\theta$（第 2.1.2 节），分子等于 $2\cos(\pi n)-2$，于是</p>
+  <p>$$\int_{0}^{\pi}-\int_{-\pi}^{0}=\frac{2\big(\cos\pi n-1\big)}{jn}$$</p>
+
+  <p style="margin:14px 0 0"><strong>第四步 · 乘回前面的 $\frac{-j}{2\pi}$。</strong></p>
+  <p>注意 $\dfrac{-j}{j}=-1$，两个虚数单位约掉，结果自动变成实数（本该如此：$h[n]$ 是实滤波器的系数）：</p>
+  <p>$$h[n]=\frac{-j}{2\pi}\cdot\frac{2\big(\cos\pi n-1\big)}{jn}=\frac{-\big(\cos\pi n-1\big)}{\pi n}=\boxed{\frac{1-\cos(\pi n)}{\pi n}}$$</p>
+
+  <p style="margin:14px 0 0"><strong>第五步 · 化成分段形式。</strong></p>
+  <p>对整数 $n$ 有 $\cos(\pi n)=(-1)^n$，于是分子只有两种取值：</p>
+  <ul style="margin:6px 0 0">
+    <li>$n$ 为<strong>偶数</strong>：$\cos\pi n=+1$，分子 $1-1=0$，故 $h[n]=0$。</li>
+    <li>$n$ 为<strong>奇数</strong>：$\cos\pi n=-1$，分子 $1-(-1)=2$，故 $h[n]=\dfrac{2}{\pi n}$。</li>
+  </ul>
+
+  <p style="margin:14px 0 0"><strong>补上 $n=0$ 这一点。</strong>第二步里除以了 $n$，所以 $n=0$ 必须单独算。直接回到第一步，此时 $e^{j\omega\cdot 0}=1$，两个积分都只是区间长度：</p>
+  <p>$$h[0]=\frac{-j}{2\pi}\left[\int_0^\pi 1\,\mathrm{d}\omega-\int_{-\pi}^0 1\,\mathrm{d}\omega\right]=\frac{-j}{2\pi}\big[\pi-\pi\big]=0$$</p>
+  <p>和"偶数位置为零"的规律一致。（也可以对 $\frac{1-\cos\pi n}{\pi n}$ 取 $n\to0$ 的极限：分子 $1-\cos\pi n\approx\frac{(\pi n)^2}{2}$，整体 $\approx\frac{\pi n}{2}\to0$，同样得 $0$。）</p>
+
+  <p style="margin:14px 0 0"><strong>这一步的关键直觉</strong>：$h[0]=0$ 说明"当前这一个采样点对输出毫无贡献"，输出完全由<em>周围</em>样本的左右差构成。这就是第 3.2 节"测量左右不对称性"在离散世界里的写照 —— 一个信号在某点的 90° 相移，跟它在那一点的值无关。</p>
+</div>
+
+<p>这个序列有三个特征，完全对应连续情形（第 3.3 节）：<strong>奇对称</strong>（$h[-n]=-h[n]$）、<strong>双边无限长</strong>（非因果）、<strong>$1/n$ 慢衰减</strong>。另外还多了一条有趣的：<strong>偶数位置全为零</strong>，这意味着实际滤波时只需一半的乘法，是个免费的效率红利。</p>
+
+<h2>7.2 路线一：FFT 法（首选）</h2>
+
+<p>第 6.2 节已经给出了原理。这里写成可以直接照抄的步骤。</p>
+
+<div class="box def">
+  <span class="tag">算法 7.1 · FFT 法求解析信号</span>
+  <p style="margin:6px 0 0">输入实序列 $x[0..N-1]$，输出复序列 $z[0..N-1]$：</p>
+  <ol style="margin:6px 0 0">
+    <li><strong>去直流</strong>：$x[n]\leftarrow x[n]-\bar{x}$。（可选但强烈建议）</li>
+    <li><strong>FFT</strong>：$X[k]=\mathrm{FFT}(x)$，$k=0,\dots,N-1$。</li>
+    <li><strong>构造单边化权重</strong> $h[k]$：
+      <ul style="margin:4px 0">
+        <li>$h[0]=1$（直流保持）</li>
+        <li>$h[k]=2$，$1\le k&lt;N/2$（正频率翻倍）</li>
+        <li>$h[N/2]=1$（$N$ 为偶数时的奈奎斯特点，保持）</li>
+        <li>$h[k]=0$，$k&gt;N/2$（负频率置零）</li>
+      </ul>
+    </li>
+    <li><strong>加权</strong>：$Z[k]=h[k]\,X[k]$。</li>
+    <li><strong>IFFT</strong>：$z[n]=\mathrm{IFFT}(Z)$。</li>
+  </ol>
+  <p style="margin:6px 0 0">则 $\operatorname{Re}z[n]=x[n]$（应当如此，可用来自检），$\operatorname{Im}z[n]=\hat{x}[n]$。</p>
+</div>
+
+<p>复杂度 $O(N\log N)$，是"整段数据一次性处理"的最优方案。</p>
+
+<h3>7.2.1 Python 代码</h3>
+
+<pre><code><span class="kw">import</span> numpy <span class="kw">as</span> np
+<span class="kw">from</span> scipy.signal <span class="kw">import</span> hilbert
+
+<span class="cmt"># ---------- 方式 A：直接用 SciPy（推荐） ----------</span>
+z = hilbert(x)            <span class="cmt"># 注意！返回的是【解析信号】 x + j*H{x}</span>
+xh = np.imag(z)           <span class="cmt"># 这才是希尔伯特变换</span>
+env = np.abs(z)           <span class="cmt"># 瞬时幅度（包络）</span>
+phi = np.unwrap(np.angle(z))
+fi = np.gradient(phi) * fs / (<span class="num">2</span>*np.pi)   <span class="cmt"># 瞬时频率 (Hz)</span>
+
+<span class="cmt"># ---------- 方式 B：自己实现，看清每一步 ----------</span>
+<span class="kw">def</span> <span class="fn">analytic_fft</span>(x):
+    x = np.asarray(x, dtype=float)
+    x = x - x.mean()                <span class="cmt"># 步骤 1：去直流</span>
+    N = len(x)
+    X = np.fft.fft(x)               <span class="cmt"># 步骤 2</span>
+    h = np.zeros(N)                 <span class="cmt"># 步骤 3</span>
+    <span class="kw">if</span> N % <span class="num">2</span> == <span class="num">0</span>:
+        h[<span class="num">0</span>] = h[N//<span class="num">2</span>] = <span class="num">1</span>
+        h[<span class="num">1</span>:N//<span class="num">2</span>] = <span class="num">2</span>
+    <span class="kw">else</span>:
+        h[<span class="num">0</span>] = <span class="num">1</span>
+        h[<span class="num">1</span>:(N+<span class="num">1</span>)//<span class="num">2</span>] = <span class="num">2</span>
+    <span class="kw">return</span> np.fft.ifft(X * h)       <span class="cmt"># 步骤 4、5</span>
+
+<span class="cmt"># 自检：实部应当还原原信号（去直流后）</span>
+z2 = analytic_fft(x)
+<span class="kw">assert</span> np.allclose(z2.real, x - x.mean(), atol=<span class="num">1e-10</span>)
+</code></pre>
+
+<h3>7.2.2 MATLAB 代码</h3>
+
+<pre><code><span class="cmt">% MATLAB / Octave —— hilbert() 同样返回解析信号</span>
+z   = hilbert(x);            <span class="cmt">% 解析信号</span>
+xh  = imag(z);               <span class="cmt">% 希尔伯特变换</span>
+env = abs(z);                <span class="cmt">% 包络</span>
+phi = unwrap(angle(z));
+fi  = [diff(phi); phi(end)-phi(end-1)] * fs / (2*pi);   <span class="cmt">% 瞬时频率</span>
+</code></pre>
+
+<div class="box warn">
+  <span class="tag">最常见的一个错误</span>
+  <p style="margin:6px 0 0">MATLAB 和 SciPy 的 <code>hilbert()</code> <strong>都不返回希尔伯特变换</strong>，它们返回<strong>解析信号</strong>。忘了取虚部而直接把 <code>hilbert(x)</code> 当成 $\hat{x}$ 用，是初学者最高频的 bug。函数名是历史遗留，改不了了。</p>
+  <p style="margin:6px 0 0">记忆办法：<code>hilbert(x)</code> 的结果<strong>是复数</strong>。如果你拿到一个复数却当实数用，一定错了。</p>
+</div>
+
+<h2>7.3 路线二：FIR 滤波器（实时场合）</h2>
+
+<p>FFT 法必须等整段数据到齐，做不了实时处理。实时系统的办法是用有限长的 FIR 滤波器逼近理想的 $h[n]$。</p>
+
+<h3>7.3.1 设计思路：截断 + 加窗 + 延时</h3>
+
+<ol>
+  <li><strong>截断</strong>：只保留 $|n|\le M$ 的那些系数，共 $N=2M+1$ 个。</li>
+  <li><strong>加窗</strong>：直接截断会造成吉布斯振荡，所以乘一个平滑窗（Hamming、Kaiser、Blackman）：$h_w[n]=h[n]\cdot w[n]$。</li>
+  <li><strong>平移</strong>：把 $n\in[-M,M]$ 平移到 $n\in[0,2M]$，使滤波器变得因果。代价是引入<strong>群延时 $M$ 个采样</strong>。</li>
+</ol>
+
+<div class="box tip">
+  <span class="tag">配对延时：必须记住的一步</span>
+  <p style="margin:6px 0 0">FIR 希尔伯特变换器输出的 $\hat{x}$ 比输入晚了 $M$ 个采样。所以在构造解析信号 $z=x+j\hat{x}$ 时，<strong>必须把原信号 $x$ 也延时 $M$ 个采样</strong>，否则实部和虚部对不齐，包络和相位全错：</p>
+  <pre style="margin:8px 0 0"><code>xh = lfilter(h_fir, 1, x)      <span class="cmt"># 已经延时了 M</span>
+xd = np.concatenate([np.zeros(M), x])[:len(x)]   <span class="cmt"># 原信号也延时 M</span>
+z  = xd + 1j*xh                <span class="cmt"># 现在才对齐</span></code></pre>
+  <p style="margin:6px 0 0">这个坑非常隐蔽：不对齐时包络看起来"差不多"，但相位和瞬时频率会有系统性偏差。</p>
+</div>
+
+<h3>7.3.2 两种类型：奇数长还是偶数长</h3>
+
+<p>FIR 滤波器按对称性分四类，希尔伯特变换器需要<strong>反对称</strong>（$h[n]=-h[N-1-n]$），因此只能是 Type III 或 Type IV：</p>
+
+<table>
+<tr><th>类型</th><th>长度 $N$</th><th>零点位置</th><th>延时</th><th>评价</th></tr>
+<tr><td>Type III</td><td>奇数</td><td>$\omega=0$ <strong>和</strong> $\omega=\pi$</td><td>整数个采样</td><td>直流和奈奎斯特都失真，通带较窄</td></tr>
+<tr><td>Type IV</td><td>偶数</td><td>仅 $\omega=0$</td><td>半个采样（非整数）</td><td>通带更宽，但延时是半采样，对齐麻烦</td></tr>
+</table>
+
+<p>表里这两行"零点位置"不用死记，两行算式就能推出来。设滤波器长 $N$、反对称 $h[n]=-h[N-1-n]$，其频率响应按定义是 $H(e^{j\omega})=\sum_{n=0}^{N-1}h[n]e^{-j\omega n}$。</p>
+
+<div class="box thm">
+  <span class="tag">推导 · 为什么零点必然落在 $\omega=0$，以及 Type III 为什么在 $\omega=\pi$ 也为零</span>
+
+  <p style="margin:6px 0 0"><strong>在 $\omega=0$ 处（对两种类型都成立）。</strong>代入 $\omega=0$，所有 $e^{-j\cdot 0\cdot n}=1$，求和退化成系数直接相加：</p>
+  <p>$$H(e^{j0})=\sum_{n=0}^{N-1}h[n]$$</p>
+  <p>把求和项按 $n$ 与 $N-1-n$ <strong>两两配对</strong>（首尾对折）。由反对称性，每一对的和是</p>
+  <p>$$h[n]+h[N-1-n]=h[n]+\big(-h[n]\big)=0$$</p>
+  <p>若 $N$ 为奇数，还剩一个与自己配对的中心项 $n=M=\frac{N-1}{2}$，它满足 $h[M]=-h[M]$，两边移项得 $2h[M]=0$，即 $h[M]=0$。所以无论怎么配，总和都是零：</p>
+  <p>$$H(e^{j0})=0$$</p>
+  <p>物理上这就是"直流被消灭"（第 4.3.4 节）在有限长滤波器上的必然体现 —— 反对称的系数加起来一定是零，设计者没有任何余地。</p>
+
+  <p style="margin:14px 0 0"><strong>在 $\omega=\pi$ 处（这里两种类型分道扬镳）。</strong>代入 $\omega=\pi$，用 $e^{-j\pi n}=\big(e^{-j\pi}\big)^{n}=(-1)^{n}$：</p>
+  <p>$$H(e^{j\pi})=\sum_{n=0}^{N-1}h[n](-1)^{n}$$</p>
+  <p>还是把 $n$ 与 $N-1-n$ 配对，看这一对贡献多少（第二项用了 $h[N-1-n]=-h[n]$）：</p>
+  <p>$$h[n](-1)^{n}+h[N-1-n](-1)^{N-1-n}=h[n](-1)^{n}-h[n](-1)^{N-1-n}$$</p>
+  <p>能不能抵消，全看 $(-1)^{N-1-n}$ 和 $(-1)^{n}$ 是否相等，而这取决于 $N-1$ 的奇偶。先记一个小事实：$(-1)^{-n}=(-1)^{n}$，因为 $(-1)^n$ 只取 $\pm1$，倒数等于自身。于是 $(-1)^{N-1-n}=(-1)^{N-1}\cdot(-1)^{-n}=(-1)^{N-1}\cdot(-1)^{n}$。</p>
+  <ul style="margin:6px 0 0">
+    <li><strong>Type III（$N$ 奇数 ⟹ $N-1$ 偶数 ⟹ $(-1)^{N-1}=+1$）</strong>：$(-1)^{N-1-n}=(-1)^{n}$，配对项变成 $h[n](-1)^n-h[n](-1)^n=0$。<strong>每一对都抵消，所以 $H(e^{j\pi})=0$</strong> —— 奈奎斯特频率处也被强制为零。</li>
+    <li><strong>Type IV（$N$ 偶数 ⟹ $N-1$ 奇数 ⟹ $(-1)^{N-1}=-1$）</strong>：$(-1)^{N-1-n}=-(-1)^{n}$，配对项变成 $h[n](-1)^n+h[n](-1)^n=2h[n](-1)^n$，一般不为零。<strong>所以 Type IV 在 $\omega=\pi$ 处不为零</strong>，通带可以一直用到奈奎斯特附近。</li>
+  </ul>
+</div>
+
+<p>于是两种类型的取舍就很清楚了：<strong>Type III 通带两头都掉</strong>，但群延时 $M=\frac{N-1}{2}$ 是整数个采样，对齐方便；<strong>Type IV 只掉低频一头</strong>，通带更宽，代价是群延时 $\frac{N-1}{2}$ 为半个采样的非整数值，要和原信号对齐还得再加一个分数延时滤波器。实践中 Type III 更常用，代价是必须避开直流和奈奎斯特附近的频率。</p>
+
+<h3>7.3.3 代码</h3>
+
+<pre><code><span class="kw">import</span> numpy <span class="kw">as</span> np
+<span class="kw">from</span> scipy.signal <span class="kw">import</span> lfilter, remez, freqz
+
+<span class="cmt"># ---- 方法 1：窗函数法（简单直观） ----</span>
+<span class="kw">from</span> scipy.signal <span class="kw">import</span> get_window
+
+<span class="kw">def</span> <span class="fn">hilbert_fir</span>(M=<span class="num">64</span>, window=<span class="str">'hamming'</span>):
+    <span class="str">"""返回长度 2M+1 的 Type III 希尔伯特变换器，群延时 M 个采样。"""</span>
+    n = np.arange(-M, M+<span class="num">1</span>)
+    h = np.zeros(<span class="num">2</span>*M+<span class="num">1</span>)
+    odd = n % <span class="num">2</span> != <span class="num">0</span>                 <span class="cmt"># 偶数位置留 0（含 n=0）</span>
+    h[odd] = <span class="num">2.0</span> / (np.pi * n[odd])
+    h *= get_window(window, <span class="num">2</span>*M+<span class="num">1</span>)   <span class="cmt"># 加窗，抑制吉布斯振荡</span>
+    <span class="kw">return</span> h
+
+<span class="cmt"># ---- 方法 2：等波纹最优法（工程首选，阻带更平） ----</span>
+<span class="cmt"># 通带 0.03~0.47 (归一化到 fs)，避开直流与奈奎斯特</span>
+h_opt = remez(<span class="num">65</span>, [<span class="num">0.03</span>, <span class="num">0.47</span>], [<span class="num">1</span>], type=<span class="str">'hilbert'</span>, fs=<span class="num">1.0</span>)
+
+<span class="cmt"># ---- 使用（注意配对延时！） ----</span>
+M  = <span class="num">32</span>
+h  = hilbert_fir(M)
+xh = lfilter(h, <span class="num">1.0</span>, x)                              <span class="cmt"># 输出已延时 M</span>
+xd = np.concatenate([np.zeros(M), x])[:len(x)]        <span class="cmt"># 输入同步延时 M</span>
+z  = xd + <span class="num">1j</span>*xh
+env = np.abs(z)
+</code></pre>
+
+<h3>7.3.4 阶数怎么选</h3>
+
+<p>下面的交互图可以直接回答这个问题。拖动阶数，看幅度响应在什么频率范围内足够接近 1。至于相位，你会看到一件意外的事 —— 第三个面板<strong>无论怎么拖都是一条平直的零线</strong>。那不是图没画出来，而是一个值得单独讲的结论，图下方紧接着解释。</p>
+
+<figure class="demo">
+  <canvas id="c1" height="380"></canvas>
+  <div class="ctrl">
+    <label>半长 $M$（阶数 $=2M$）<input id="s1" type="range" min="2" max="80" value="16"><span id="v1" style="min-width:56px;text-align:right">16</span></label>
+    <label>窗函数 <select id="sel1">
+      <option value="rect">矩形（直接截断）</option>
+      <option value="hamming" selected>Hamming</option>
+      <option value="blackman">Blackman</option>
+      <option value="hann">Hann</option>
+    </select></label>
+  </div>
+  <figcaption><strong>图 7.1</strong>　FIR 希尔伯特变换器的实际性能。上：冲激响应 $h_w[n]$（注意偶数位置全为零、整体奇对称）。中：幅度响应 $|H(e^{j\omega})|$，理想值为 1（虚线）。下：相位误差（相对 $-90°$，单位度）。<strong>要看的四件事：</strong>① 直流附近幅度必然掉到 0，奈奎斯特附近也掉（Type III）；② 增大 $M$ 使可用通带变宽、波纹变小；③ 矩形窗有明显的吉布斯波纹，换成 Hamming 立刻平滑，但过渡带变宽 —— 这是滤波器设计里永恒的取舍；④ <strong>最下面那条线恒等于零，怎么拖都不动</strong> —— 截断和加窗<em>只败坏幅度，不败坏相位</em>。这不是巧合，理由见下。</figcaption>
+</figure>
+
+<div class="box thm">
+  <span class="tag">为什么相位误差恒等于零</span>
+
+  <p style="margin:6px 0 0">这是本章最值得记住的一个"免费午餐"：<strong>你怎么截断、怎么加窗，都不可能把相位弄错。</strong>下面推一遍。</p>
+
+  <p style="margin:14px 0 0"><strong>第一步 · 写出频率响应，用零相位（居中）下标。</strong></p>
+  <p>把系数按 $n=-M,\dots,M$ 居中编号（即先不管因果化那步平移，平移的影响放到第五步单独说）。按定义</p>
+  <p>$$H(e^{j\omega})=\sum_{n=-M}^{M}h[n]\,e^{-j\omega n}$$</p>
+
+  <p style="margin:14px 0 0"><strong>第二步 · 把 $n$ 与 $-n$ 配对。</strong>这是全部关键。$n=0$ 项为零（$h[0]=0$，第 7.1 节），其余项两两配对，用奇对称 $h[-n]=-h[n]$：</p>
+  <p>$$H(e^{j\omega})=\sum_{n=1}^{M}\Big(h[n]e^{-j\omega n}+h[-n]e^{+j\omega n}\Big)=\sum_{n=1}^{M}h[n]\Big(e^{-j\omega n}-e^{+j\omega n}\Big)$$</p>
+
+  <p style="margin:14px 0 0"><strong>第三步 · 括号里用欧拉反公式。</strong>由 $e^{j\theta}-e^{-j\theta}=2j\sin\theta$（第 2.1.2 节），注意这里是<em>反过来</em>的顺序，所以多一个负号：</p>
+  <p>$$e^{-j\omega n}-e^{+j\omega n}=-\big(e^{+j\omega n}-e^{-j\omega n}\big)=-2j\sin(\omega n)$$</p>
+  <p>代回：</p>
+  <p>$$H(e^{j\omega})=-j\underbrace{\left[\,2\sum_{n=1}^{M}h[n]\sin(\omega n)\right]}_{\text{记作}\ A(\omega)}=-j\,A(\omega)$$</p>
+
+  <p style="margin:14px 0 0"><strong>第四步 · 看清 $A(\omega)$ 的身份。</strong>$h[n]$ 是实数、$\sin(\omega n)$ 是实数，所以 <strong>$A(\omega)$ 是一个纯实数函数</strong>，虚部一点没有。于是 $H$ 只能落在虚轴上：</p>
+  <p>$$\arg H(e^{j\omega})=\begin{cases}-\dfrac{\pi}{2}=-90°,&A(\omega)&gt;0\\[6pt]+\dfrac{\pi}{2}=+90°,&A(\omega)&lt;0\end{cases}$$</p>
+  <p>没有第三种可能。相位<strong>要么精确是 $-90°$，要么精确是 $+90°$，绝不会是 $-89.3°$ 这种"接近但不等于"的值</strong>。通带内 $A&gt;0$，所以那里恒为 $-90°$，误差精确为零。</p>
+
+  <p style="margin:14px 0 0"><strong>第五步 · 说明截断和加窗为什么动摇不了这个结论。</strong>整个推导只用了一个前提：<strong>$h[n]$ 实且奇对称</strong>。而</p>
+  <ul style="margin:6px 0 0">
+    <li><strong>截断</strong>：把 $|n|&gt;M$ 的系数丢掉，是对称地丢（$+n$ 和 $-n$ 同时丢），奇对称保持；</li>
+    <li><strong>加窗</strong>：Hamming/Hann/Blackman 这些窗都是<em>偶对称</em>的（$w[-n]=w[n]$），于是
+    $$h_w[-n]=h[-n]\,w[-n]=-h[n]\cdot w[n]=-h_w[n]$$
+    奇对称仍然保持；</li>
+    <li><strong>因果化平移</strong>：把下标从 $[-M,M]$ 挪到 $[0,2M]$，频域乘一个 $e^{-j\omega M}$，这是<em>线性相位</em>，对应纯粹的 $M$ 个采样延时，不是失真。</li>
+  </ul>
+  <p>三种操作都不破坏前提，所以 $H=-j\,A(\omega)$ 这个结构纹丝不动。它们能改变的只有 $A(\omega)$ 的<strong>数值大小</strong> —— 那就是幅度响应 $|H|=|A(\omega)|$，也正是中间那个面板里波动的东西。</p>
+
+  <p style="margin:14px 0 0"><strong>这一步的关键直觉</strong>：设计一个 FIR 希尔伯特变换器时，你其实只在跟<em>一个</em>实函数 $A(\omega)$ 打交道，目标是让它尽量接近常数 $1$。相位不在设计变量里 —— 它已经被"奇对称"这个结构性约束焊死了。<strong>误差的表现形式是"这个频率成分被削弱了"，而不是"被转错了角度"。</strong>对照第 4.3.3 节：奇对称的时域系数 ⟺ 纯虚的频率响应 ⟺ 相位是 $\omega$ 的奇函数，这三句话是同一件事，而合法实系统恰好要求相位为奇函数 —— 结构与合法性在这里合二为一。</p>
+
+  <p style="margin:14px 0 0"><strong>一个必须配上的警告</strong>：上面说的"相位零误差"是<em>滤波器本身</em>的性质，前提是你已经正确扣掉了那 $M$ 个采样的群延时。如果忘了给原信号配对延时（第 7.3.1 节的坑，以及 7.7 节坑 5），$x$ 与 $\hat x$ 之间就会多出一个 $e^{-j\omega M}$ 的相对相位，误差正比于 $\omega$ —— 这时相位是实实在在错的，而且错得很隐蔽（包络看起来"差不多"，瞬时频率却系统性偏移）。<strong>所以本图告诉你的是"滤波器不会坑你"，不是"你不会坑自己"。</strong></p>
+</div>
+
+<div class="box tip">
+  <span class="tag">经验法则</span>
+  <p style="margin:6px 0 0">若关心的最低频率是 $f_{\min}$（Hz），采样率 $f_s$，则 FIR 半长大致需要</p>
+  <p>$$M\ \gtrsim\ \frac{f_s}{2f_{\min}}\times(3\sim5)$$</p>
+  <p style="margin:6px 0 0">例：$f_s=10\ \text{kHz}$，想处理到 $50\ \text{Hz}$ 的低频，则 $M\gtrsim 300\sim500$，阶数上千。</p>
+</div>
+
+<p><strong>这条法则不是凭空来的</strong>，它可以从"滤波器必须看得见一个完整周期"这个朴素想法推出来。分三步。</p>
+
+<p><strong>第一步 · 把要求翻译成"滤波器要多长时间的记忆"。</strong>希尔伯特变换要对频率 $f_{\min}$ 的成分做出准确的 $90°$ 相移，也就是要把它<em>挪动四分之一周期</em>。一个只能看到 $\pm M$ 个采样的 FIR 滤波器，如果它的记忆窗口还不到四分之一周期，它根本"看不出"这个低频分量正在往哪边走 —— 在它的视野里那就是一条几乎平直的线。所以最低限度是</p>
+<p>$$\underbrace{\frac{M}{f_s}}_{\text{单侧记忆时长（秒）}}\ \gtrsim\ \underbrace{\frac{1}{4f_{\min}}}_{\text{四分之一周期}}\qquad\Longrightarrow\qquad M\gtrsim\frac{f_s}{4f_{\min}}$$</p>
+
+<p><strong>第二步 · 认识到"刚好看得见"远远不够。</strong>上面得到的是绝对下限，此时滤波器只是勉强分辨出方向，幅度和相位误差都很大。真正决定精度的是<strong>截断误差</strong>：理想核 $h[n]=\frac{2}{\pi n}$ 按 $1/n$ 慢衰减（第 7.1 节），被丢掉的那条尾巴的能量大致正比于 $\sum_{|n|&gt;M}\frac{1}{n^2}\sim\frac{1}{M}$。<strong>误差按 $1/M$ 减小，而不是指数减小</strong> —— 想把误差再降一半，滤波器就得再长一倍。所以要在上面的下限外再乘一个"安全倍数"。</p>
+
+<p><strong>第三步 · 定出那个倍数。</strong>工程上通常要求通带内幅度误差 $&lt;1\%$、相位误差 $&lt;1°$，实测下来需要把第一步的下限再放大一个量级左右。把第一步的 $\frac{f_s}{4f_{\min}}$ 改写成 $\frac{f_s}{2f_{\min}}\times\frac12$，再乘上 $6\sim10$ 倍的安全系数，就凑成了常用的写法</p>
+<p>$$M\ \gtrsim\ \frac{f_s}{2f_{\min}}\times(3\sim5)$$</p>
+<p>其中"$3$"对应"看趋势就行"的粗放场合，"$5$"对应需要定量精度的场合。这个倍数本身是经验值（和窗函数、允许波纹有关），但<strong>$\frac{f_s}{f_{\min}}$ 这个主导因子是硬道理</strong>：它就是"每个最低频周期占多少个采样点"。</p>
+
+<div class="box tip">
+  <span class="tag">从这条法则能读出什么</span>
+  <p style="margin:6px 0 0">真正决定滤波器长度的不是绝对频率，而是<strong>相对带宽</strong> $f_{\max}/f_{\min}$。式子里 $f_{\min}$ 在分母上，所以：</p>
+  <ul style="margin:6px 0 0">
+    <li>把 $f_{\min}$ 从 $200$ Hz 降到 $20$ Hz，$M$ 就要涨 $10$ 倍，延时也涨 $10$ 倍；</li>
+    <li>而把 $f_{\max}$ 提高一倍，$M$ 几乎不变（法则里根本没有 $f_{\max}$）。</li>
+  </ul>
+  <p style="margin:6px 0 0"><strong>所以低频端才是成本中心。</strong>这就引出工程上的标准对策：先把信号整体搬到中频（乘一个复指数 $e^{-j2\pi f_0t}$，即第 7.4 节的下变频），让 $f_{\min}$ 和 $f_{\max}$ 的比值缩小，再用一个短得多的滤波器处理。宁可多一次混频，也不要一个上千阶的宽带 $90°$ 相移器。</p>
+</div>
+
+<h2>7.4 路线三：不做希尔伯特变换（I/Q 正交下变频）</h2>
+
+<p>如果已知载波频率 $f_c$（通信系统中总是已知的），有一条更简单的路：直接<strong>乘上复载波再低通</strong>。</p>
+
+<p>$$z_{\text{baseband}}(t)=\mathrm{LPF}\Big\{x(t)\cdot 2e^{-j2\pi f_ct}\Big\}$$</p>
+
+<p><strong>为什么行得通？</strong>把这个乘法老实展开一遍就清楚了。设 $x(t)=A(t)\cos(2\pi f_ct+\theta)$，为了少写字母记 $\varphi(t)=2\pi f_ct+\theta$。</p>
+
+<p><strong>第一步 · 用欧拉反公式把余弦拆成两个复指数</strong>（第 2.1.2 节）。这样做的理由是：复指数在相乘时指数直接相加，比三角恒等式好算得多。</p>
+<p>$$x(t)=A(t)\cdot\frac{e^{j\varphi}+e^{-j\varphi}}{2}=\frac{A(t)}{2}\Big(e^{j(2\pi f_ct+\theta)}+e^{-j(2\pi f_ct+\theta)}\Big)$$</p>
+
+<p><strong>第二步 · 乘上 $2e^{-j2\pi f_ct}$，逐项相乘。</strong>前面的 $2$ 正好抵掉欧拉展开带来的 $\frac{1}{2}$：</p>
+<p>$$x(t)\cdot 2e^{-j2\pi f_ct}=\underbrace{A(t)\,e^{j(2\pi f_ct+\theta)}\,e^{-j2\pi f_ct}}_{\text{第一项}}+\underbrace{A(t)\,e^{-j(2\pi f_ct+\theta)}\,e^{-j2\pi f_ct}}_{\text{第二项}}$$</p>
+
+<p><strong>第三步 · 逐项看指数上发生了什么。</strong>复指数相乘就是指数相加：</p>
+<ul>
+  <li><strong>第一项</strong>：$j(2\pi f_ct+\theta)+(-j2\pi f_ct)=j\theta$。含 $t$ 的部分<em>精确抵消</em>了，只剩一个常数相位。这一项等于 $A(t)e^{j\theta}$，它的频率内容就是 $A(t)$ 自己的带宽 —— 在 $0$ 附近的低频。</li>
+  <li><strong>第二项</strong>：$-j(2\pi f_ct+\theta)+(-j2\pi f_ct)=-j(4\pi f_ct+\theta)$。两个同号的载波相位叠加，频率<em>翻倍</em>，这一项等于 $A(t)e^{-j(2\pi\cdot 2f_c\,t+\theta)}$，跑到了 $-2f_c$ 处（离基带 $2f_c$ 之远，下面就简称"$2f_c$ 处的高频项"）—— 高频。</li>
+</ul>
+
+<p>合起来：</p>
+<p>$$x(t)\cdot 2e^{-j2\pi f_ct}=\underbrace{A(t)e^{j\theta}}_{\text{基带，要的}}\;+\;\underbrace{A(t)e^{-j(4\pi f_ct+\theta)}}_{\text{在}\,2f_c\,\text{处，不要的}}$$</p>
+
+<p><strong>第四步 · 低通滤波。</strong>两项在频率轴上离得很远（一个在 $0$ 附近、一个在 $2f_c$ 附近），所以一个截止频率介于两者之间的低通滤波器就能把后者干净地扔掉，剩下</p>
+<p>$$z_{\text{baseband}}(t)=A(t)e^{j\theta}$$</p>
+<p>取模得包络 $A(t)$，取辐角得相位 $\theta$ —— 和解析信号给出的东西完全一样。</p>
+
+<p><strong>这一步的关键直觉</strong>：希尔伯特变换是"不问频率、对所有频率一律转 90°"，所以必须用一个宽带相移器；而 I/Q 下变频是"已经知道载波在哪，干脆把整个频谱搬到零频"，搬过去之后剩下的活只是低通。<em>用已知信息换硬件复杂度</em>，这就是它便宜的原因：实数硬件上它就是两路乘法器（分别乘 $\cos 2\pi f_ct$ 和 $-\sin 2\pi f_ct$，对应复指数的实部与虚部）加两个低通滤波器，而低通滤波器比"在整个宽频带上都精确保持 90°"的相移器好设计太多了。</p>
+
+<p><strong>代价也要说清楚</strong>：它要求你<em>事先知道</em> $f_c$。若 $f_c$ 估偏了 $\Delta f$，第一项的指数就不再抵消干净，变成 $A(t)e^{j(2\pi\Delta f\,t+\theta)}$ —— 包络 $|A(t)|$ 仍然对，但相位会以 $\Delta f$ 的速率漂移，算出的瞬时频率整体偏移 $\Delta f$。这就是通信接收机里必须做载波同步（锁相环、频偏估计）的原因。</p>
+
+<table>
+<tr><th>方案</th><th>需要知道 $f_c$？</th><th>实时？</th><th>硬件成本</th><th>典型场合</th></tr>
+<tr><td>FFT 法</td><td>不需要</td><td>否</td><td>—（软件）</td><td>离线数据分析、科研</td></tr>
+<tr><td>FIR 希尔伯特器</td><td>不需要</td><td>是（有延时）</td><td>中～高（阶数高）</td><td>宽带、载波未知</td></tr>
+<tr><td>I/Q 下变频</td><td><strong>需要</strong></td><td>是</td><td>低</td><td>所有现代通信收发机</td></tr>
+</table>
+
+<h2>7.5 端点效应</h2>
+
+<p>FFT 法有一个内在缺陷：FFT 隐含假设信号是<strong>周期</strong>的（循环卷积）。如果数据段的首尾数值差很大，等效于在接缝处引入了一个跳变，而希尔伯特变换对跳变极其敏感（例 3.3 中对数发散），于是<strong>数据两端会出现虚假的振荡</strong>。</p>
+
+<figure class="demo">
+  <canvas id="c2" height="330"></canvas>
+  <div class="ctrl">
+    <label>处理方式 <select id="sel2">
+      <option value="none">直接 FFT（有端点效应）</option>
+      <option value="taper">两端加余弦锥窗</option>
+      <option value="mirror">镜像延拓后处理</option>
+    </select></label>
+    <label>首尾不匹配程度 <input id="s2" type="range" min="0" max="100" value="70"><span id="v2" style="min-width:34px;text-align:right">.70</span></label>
+  </div>
+  <figcaption><strong>图 7.2</strong>　端点效应与三种对策。上：输入信号（灰色区域是"受污染"的边缘区，约 5%～10% 的长度）。下：算出的包络。"直接 FFT"时两端的包络会出现明显的隆起或凹陷；加锥窗能压住振荡但会把端点数据本身削掉；镜像延拓效果通常最好但会消耗 2 倍内存。<strong>实用建议：多采一些数据，然后把两端各 10% 的结果扔掉。</strong></figcaption>
+</figure>
+
+<h2>7.6 完整的实用流程</h2>
+
+<pre><code><span class="kw">import</span> numpy <span class="kw">as</span> np
+<span class="kw">from</span> scipy.signal <span class="kw">import</span> hilbert, butter, filtfilt, get_window
+
+<span class="kw">def</span> <span class="fn">envelope_and_freq</span>(x, fs, band=<span class="kw">None</span>, trim=<span class="num">0.08</span>):
+    <span class="str">"""
+    稳健地求包络与瞬时频率。
+    x    : 实信号
+    fs   : 采样率 (Hz)
+    band : (f_lo, f_hi) 带通范围，用于把信号变成单分量；None 则跳过
+    trim : 两端各丢弃的比例，抑制端点效应
+    """</span>
+    x = np.asarray(x, float)
+    x = x - x.mean()                            <span class="cmt"># ① 去直流（第 4.3.4 节）</span>
+
+    <span class="kw">if</span> band <span class="kw">is</span> <span class="kw">not</span> <span class="kw">None</span>:                       <span class="cmt"># ② 带通 → 单分量（第 6.6.1 节）</span>
+        b, a = butter(<span class="num">4</span>, [band[<span class="num">0</span>]/(fs/<span class="num">2</span>), band[<span class="num">1</span>]/(fs/<span class="num">2</span>)], btype=<span class="str">'band'</span>)
+        x = filtfilt(b, a, x)                   <span class="cmt">#    filtfilt 零相位，不引入延时</span>
+
+    n = len(x)                                  <span class="cmt"># ③ 镜像延拓压制端点效应</span>
+    xe = np.concatenate([x[::-<span class="num">1</span>], x, x[::-<span class="num">1</span>]])
+
+    z = hilbert(xe)[n:<span class="num">2</span>*n]                      <span class="cmt"># ④ 解析信号，取中段</span>
+
+    amp = np.abs(z)                             <span class="cmt"># ⑤ 瞬时幅度</span>
+    dz = np.gradient(z) * fs                    <span class="cmt"># ⑥ 瞬时频率（微分公式，免解缠）</span>
+    fi = np.imag(np.conj(z)*dz) / (np.abs(z)**<span class="num">2</span> + <span class="num">1e-20</span>) / (<span class="num">2</span>*np.pi)
+
+    k = int(n*trim)                             <span class="cmt"># ⑦ 丢弃两端</span>
+    sl = slice(k, n-k) <span class="kw">if</span> k &gt; <span class="num">0</span> <span class="kw">else</span> slice(<span class="kw">None</span>)
+    <span class="kw">return</span> amp[sl], fi[sl], np.arange(n)[sl]/fs
+
+
+<span class="cmt"># ------------------ 用法示例：包络谱（轴承诊断，第 8.4 节） ------------------</span>
+amp, fi, t = envelope_and_freq(vib, fs=<span class="num">25600</span>, band=(<span class="num">2000</span>, <span class="num">6000</span>))
+amp = amp - amp.mean()                          <span class="cmt"># 包络也要去直流！</span>
+spec = np.abs(np.fft.rfft(amp * get_window(<span class="str">'hann'</span>, len(amp))))
+freq = np.fft.rfftfreq(len(amp), <span class="num">1</span>/<span class="num">25600</span>)
+<span class="cmt"># 在 freq 里找故障特征频率（BPFO/BPFI/BSF）的谱峰</span>
+</code></pre>
+
+<h2>7.7 七个坑（逐条对照检查）</h2>
+
+<div class="pitfall">
+<h4>坑 1　把 <code>hilbert(x)</code> 当成 $\hat{x}$</h4>
+<p style="margin:4px 0 0">它返回的是解析信号（复数）。要 $\hat{x}$ 必须取 <code>.imag</code>。<strong>自检</strong>：结果是复数就说明还没取虚部。</p>
+</div>
+
+<div class="pitfall">
+<h4>坑 2　忘记去直流</h4>
+<p style="margin:4px 0 0">直流分量在 $\mathcal{H}$ 下被消灭，但它<strong>留在解析信号的实部里</strong>，于是 $|z|=\sqrt{(x_{\text{AC}}+\bar x)^2+\hat x^2}$ 被偏置污染，包络整体抬高、瞬时相位失真。<strong>永远先减均值。</strong></p>
+</div>
+
+<div class="pitfall">
+<h4>坑 3　端点效应</h4>
+<p style="margin:4px 0 0">数据两端 5%～10% 的结果不可信（第 7.5 节）。对策：多采数据 + 丢两端，或镜像延拓。做包络谱时端点振荡会在频谱里造成宽带底噪，掩盖真实的故障峰。</p>
+</div>
+
+<div class="pitfall">
+<h4>坑 4　对多分量信号求瞬时频率</h4>
+<p style="margin:4px 0 0">见第 6.6.1 节。必须先带通或 EMD 分解。判断方法：看频谱有几个显著峰。</p>
+</div>
+
+<div class="pitfall">
+<h4>坑 5　FIR 滤波未做配对延时</h4>
+<p style="margin:4px 0 0">见第 7.3.1 节的提示框。$x$ 和 $\hat{x}$ 必须时间对齐，否则相位有系统误差。用 <code>filtfilt</code> 做带通预滤波时也要注意：它是零相位的，和 <code>lfilter</code> 混用会引入相对延时。</p>
+</div>
+
+<div class="pitfall">
+<h4>坑 6　采样率太低（欠采样）</h4>
+<p style="margin:4px 0 0">有<strong>两个</strong>互相独立的理由要求高采样率，很多文献只提第一个：</p>
+<p style="margin:6px 0 0"><strong>(a) 相位解缠。</strong>瞬时相位每个采样点的增量应远小于 $\pi$，否则解缠会解错方向。这条要求每周期 $\gtrsim$ 8 点。</p>
+<p style="margin:6px 0 0"><strong>(b) 数值求导的 $\mathrm{sinc}$ 失真。</strong>中心差分使瞬时频率被系统性低估 $\mathrm{sinc}(\omega_i\Delta t)$ 倍（第 6.6.3 节）：</p>
+<table style="margin:8px 0 0">
+<tr><th>每周期采样点</th><th>4</th><th>6</th><th>8</th><th>10</th><th>16</th><th>20</th><th>32</th></tr>
+<tr><td>频率低估量</td><td>36.3%</td><td>17.3%</td><td><strong>10.0%</strong></td><td>6.5%</td><td>2.6%</td><td>1.6%</td><td>0.6%</td></tr>
+</table>
+<p style="margin:6px 0 0">注意：满足 (a) 的 8 点/周期，在 (b) 上仍有 <strong>10% 的误差</strong>。所以若要<strong>定量</strong>使用瞬时频率（而不只是看趋势），应做到每周期 <strong>20 点以上</strong>（$f_s&gt;20f_{\max}$），或按第 6.6.3 节反解修正。奈奎斯特的 $2f_{\max}$ 在这里远远不够。</p>
+</div>
+
+<div class="pitfall">
+<h4>坑 7　奈奎斯特点与奇偶长度处理错</h4>
+<p style="margin:4px 0 0">算法 7.1 步骤 3 里，$N$ 为偶数时 $h[N/2]$ 必须是 1 而不是 2 或 0，$N$ 为奇数时没有奈奎斯特点。写错会导致 $\operatorname{Re}z\neq x$ —— 所以<strong>一定要加那句 <code>assert</code> 自检</strong>。</p>
+</div>
+
+<h2>7.8 三种方案的选择流程</h2>
+
+<table>
+<tr><th>你的情况</th><th>推荐方案</th></tr>
+<tr><td>离线分析一段录好的数据</td><td>FFT 法（<code>scipy.signal.hilbert</code>）+ 镜像延拓 + 丢两端</td></tr>
+<tr><td>实时处理，载波频率已知</td><td>I/Q 下变频（最便宜）</td></tr>
+<tr><td>实时处理，载波频率未知或宽带</td><td>FIR Type III + 配对延时（用 <code>remez(..., type='hilbert')</code>）</td></tr>
+<tr><td>信号含多个频率成分</td><td>先带通/EMD 分解，再对每个分量用上面任一方案</td></tr>
+<tr><td>只要包络，精度要求不高</td><td>整流 + 低通（传统包络检波，最省算力）</td></tr>
+</table>
+
+<h2>7.9 本章要点</h2>
+
+<table>
+<tr><th>要点</th><th>内容</th></tr>
+<tr><td>离散冲激响应</td><td>$h[n]=\frac{2}{\pi n}$（$n$ 奇），$0$（$n$ 偶）；奇对称、非因果、$1/n$ 衰减</td></tr>
+<tr><td>FFT 法</td><td>FFT → 正频 ×2、负频 ×0（直流与奈奎斯特 ×1）→ IFFT；$O(N\log N)$</td></tr>
+<tr><td>FIR 法</td><td>截断 + 加窗 + 延时 $M$；Type III 在 $\omega=0,\pi$ 处必为零；<strong>务必配对延时</strong></td></tr>
+<tr><td>I/Q 法</td><td>乘复载波 + 低通；需已知 $f_c$，但硬件最省</td></tr>
+<tr><td>必做的预处理</td><td>去直流、带通到单分量、镜像延拓、丢弃两端 10%</td></tr>
+<tr><td>采样率</td><td>解缠需每周期 $\ge$ 8 点；<strong>定量</strong>用瞬时频率需 $\ge$ 20 点（否则 $\mathrm{sinc}$ 低估）</td></tr>
+<tr><td>自检</td><td>$\operatorname{Re}z$ 应等于去直流后的 $x$</td></tr>
+</table>
+
+<div class="q">
+  <span class="tag">本章练习</span>
+  <ol style="margin:6px 0 0">
+    <li>推导 7.1 节的 $h[n]=\frac{1-\cos\pi n}{\pi n}$。（提示：把 $\int_{-\pi}^{\pi}$ 拆成正负两段）</li>
+    <li>验证 $h[n]$ 的奇对称性 $h[-n]=-h[n]$，并解释为什么 $h[0]=0$。</li>
+    <li>算法 7.1 中，若把 $h[N/2]$ 错写成 2，$\operatorname{Re}z[n]$ 会变成什么？（试着用 $N=8$ 手算一个简单例子，或直接编程验证）</li>
+    <li>某系统 $f_s=48\ \text{kHz}$，需要在 $200\ \text{Hz}\sim20\ \text{kHz}$ 内实现 90° 相移。用 7.3.4 节的经验法则估计 FIR 半长 $M$ 与群延时（毫秒）。</li>
+    <li>为什么 Type III FIR（奇数长、反对称）在 $\omega=0$ <strong>与</strong> $\omega=\pi$ 处响应均为零？（提示：分别写出 $H(e^{j0})=\sum h[n]$ 与 $H(e^{j\pi})=\sum h[n](-1)^n$，把 $n$ 与 $N-1-n$ 配对，利用反对称性）</li>
+    <li><strong>*</strong>（编程）生成 $f_s=1000$ Hz、时长 2 s 的信号 $x=(1+0.5\sin 2\pi\cdot3t)\cos(2\pi\cdot 100t)$。分别用 (a) FFT 法、(b) $M=16$ 的 FIR、(c) $M=128$ 的 FIR 求包络，画出三者与真值 $1+0.5\sin2\pi\cdot3t$ 的误差曲线。</li>
+    <li><strong>*</strong>（编程）复现图 7.2：构造一段首尾不匹配的信号，比较"直接 FFT"、"加锥窗"、"镜像延拓"三种处理的端点误差，量化"应该丢弃百分之几"。</li>
+  </ol>
+  <p style="margin:10px 0 0;font-size:14.5px;color:#6c717c">完整解答见<a href="09-exercises.html">第 9 章习题册</a>。</p>
+</div>
+
+<nav class="pager">
+  <a href="06-analytic.html">← 第 6 章　解析信号与瞬时频率</a>
+  <a href="08-applications.html">第 8 章　工程应用全景 →</a>
+</nav>
+
+</div>
+
+<script>
+function fft(re,im){const n=re.length;
+  for(let i=1,j=0;i<n;i++){let bit=n>>1;for(;j&bit;bit>>=1)j^=bit;j^=bit;
+    if(i<j){let t=re[i];re[i]=re[j];re[j]=t;t=im[i];im[i]=im[j];im[j]=t;}}
+  for(let len=2;len<=n;len<<=1){const ang=-2*Math.PI/len,half=len>>1;
+    for(let i=0;i<n;i+=len)for(let k=0;k<half;k++){
+      const wr=Math.cos(ang*k),wi=Math.sin(ang*k),ur=re[i+k],ui=im[i+k],
+            ar=re[i+k+half],ai=im[i+k+half],vr=ar*wr-ai*wi,vi=ar*wi+ai*wr;
+      re[i+k]=ur+vr;im[i+k]=ui+vi;re[i+k+half]=ur-vr;im[i+k+half]=ui-vi;}}}
+function ifft(re,im){const n=re.length;for(let i=0;i<n;i++)im[i]=-im[i];fft(re,im);
+  for(let i=0;i<n;i++){re[i]/=n;im[i]=-im[i]/n;}}
+function analytic(x){const n=x.length,re=Float64Array.from(x),im=new Float64Array(n);
+  fft(re,im);const h=new Float64Array(n);h[0]=1;
+  if(n%2===0){h[n/2]=1;for(let i=1;i<n/2;i++)h[i]=2;}else{for(let i=1;i<=(n-1)/2;i++)h[i]=2;}
+  for(let i=0;i<n;i++){re[i]*=h[i];im[i]*=h[i];}ifft(re,im);return{re:re,im:im};}
+function setupHiDPI(cv){
+  const dpr=window.devicePixelRatio||1;
+  if(!cv.dataset.baseH){cv.dataset.baseH=cv.getAttribute('height')||cv.clientHeight||300;}
+  const h=parseInt(cv.dataset.baseH,10);
+  const w=cv.clientWidth||cv.parentElement.clientWidth;
+  cv.style.height=h+'px';
+  const bw=Math.round(w*dpr),bh=Math.round(h*dpr);
+  if(cv.width!==bw||cv.height!==bh){cv.width=bw;cv.height=bh;}
+  const g=cv.getContext('2d');g.setTransform(dpr,0,0,dpr,0,0);
+  return {g:g,W:w,H:h};
+}
+function poly(g,pts,color,width,dash){if(!pts.length)return;g.save();g.beginPath();
+  if(dash)g.setLineDash(dash);
+  for(let i=0;i<pts.length;i++){i?g.lineTo(pts[i][0],pts[i][1]):g.moveTo(pts[i][0],pts[i][1]);}
+  g.strokeStyle=color;g.lineWidth=width||1.6;g.lineJoin='round';g.stroke();g.restore();}
+function axis(g,x0,y0,x1,y1){poly(g,[[x0,y0],[x1,y1]],'#c9c4b6',1);}
+
+/* ===== 图 7.1 FIR 频响 ===== */
+(function(){
+  const cv=document.getElementById('c1'),s=document.getElementById('s1'),
+        v=document.getElementById('v1'),sel=document.getElementById('sel1');
+  function win(k,N,type){
+    const a=2*Math.PI*k/(N-1);
+    if(type==='rect')return 1;
+    if(type==='hamming')return 0.54-0.46*Math.cos(a);
+    if(type==='hann')return 0.5-0.5*Math.cos(a);
+    return 0.42-0.5*Math.cos(a)+0.08*Math.cos(2*a);
+  }
+  function draw(){
+    const {g,W,H}=setupHiDPI(cv);
+    const M=+s.value, N=2*M+1, type=sel.value;
+    v.textContent=M+' (N='+N+')';
+    const h=new Float64Array(N);
+    for(let k=0;k<N;k++){const n=k-M;
+      h[k]=(n!==0 && (n%2!==0))? (2/(Math.PI*n))*win(k,N,type) : 0;}
+    // DTFT
+    const P=400, mag=new Float64Array(P), pha=new Float64Array(P);
+    for(let p=0;p<P;p++){
+      const om=Math.PI*(p+0.5)/P;
+      let rr=0,ii=0;
+      for(let k=0;k<N;k++){const n=k-M; rr+=h[k]*Math.cos(-om*n); ii+=h[k]*Math.sin(-om*n);}
+      mag[p]=Math.hypot(rr,ii);
+      let ph=Math.atan2(ii,rr)*180/Math.PI;   // 理想应为 -90
+      let e=ph+90; while(e>180)e-=360; while(e<-180)e+=360;
+      pha[p]=e;
+    }
+    g.clearRect(0,0,W,H);
+    const padL=44,padR=14,w=W-padL-padR;
+    g.font='11.5px ui-sans-serif,system-ui,sans-serif';
+    // ① 冲激响应
+    const r0=H*0.17, a0=H*0.115;
+    axis(g,padL,r0,W-padR,r0);
+    let hm=1e-9; for(let k=0;k<N;k++)hm=Math.max(hm,Math.abs(h[k]));
+    for(let k=0;k<N;k++){
+      const X=padL+w*k/(N-1);
+      const Y=r0-a0*h[k]/hm;
+      g.strokeStyle=h[k]===0?'#e3dfd3':'#1f6f8b';g.lineWidth=h[k]===0?1:1.5;
+      g.beginPath();g.moveTo(X,r0);g.lineTo(X,Y);g.stroke();
+      if(h[k]!==0&&N<70){g.fillStyle='#1f6f8b';g.beginPath();g.arc(X,Y,2,0,6.3);g.fill();}
+    }
+    g.fillStyle='#5d6472';g.fillText('① 冲激响应 h_w[n]（偶数位置为 0）',padL,r0-a0-8);
+    // ② 幅度
+    const r1=H*0.52, a1=H*0.13;
+    axis(g,padL,r1+a1,W-padR,r1+a1);
+    g.strokeStyle='#eee9dc';g.lineWidth=1;
+    g.beginPath();g.moveTo(padL,r1+a1-a1*2*1.0/1.25);g.lineTo(W-padR,r1+a1-a1*2*1.0/1.25);g.stroke();
+    g.strokeStyle='#c0392b';g.setLineDash([5,3]);g.lineWidth=1.2;
+    g.beginPath();g.moveTo(padL,r1+a1-a1*2/1.25);g.lineTo(W-padR,r1+a1-a1*2/1.25);g.stroke();g.setLineDash([]);
+    const pm=[];for(let p=0;p<P;p++)pm.push([padL+w*p/(P-1),r1+a1-a1*2*Math.min(mag[p],1.25)/1.25]);
+    poly(g,pm,'#1f6f8b',1.7);
+    g.fillStyle='#5d6472';
+    g.fillText('1.0',padL-30,r1+a1-a1*2/1.25+4);g.fillText('0',padL-14,r1+a1+4);
+    g.fillStyle='#1f6f8b';g.fillText('② |H(e^jω)|　理想 = 1',padL,r1-a1-8);
+    // ③ 相位误差
+    const r2=H*0.86, a2=H*0.085;
+    axis(g,padL,r2,W-padR,r2);
+    const pp=[];for(let p=0;p<P;p++)pp.push([padL+w*p/(P-1),r2-a2*Math.max(-1,Math.min(1,pha[p]/10))]);
+    poly(g,pp,'#b4531f',1.6);
+    g.fillStyle='#5d6472';
+    g.fillText('+10°',padL-34,r2-a2+4);g.fillText('0°',padL-22,r2+4);g.fillText('−10°',padL-34,r2+a2+4);
+    g.fillStyle='#b4531f';g.fillText('③ 相位误差（相对 −90°）',padL,r2-a2-8);
+    // x 轴刻度
+    g.fillStyle='#5d6472';
+    g.fillText('0',padL-4,H-4);g.fillText('ω = π (奈奎斯特)',W-padR-92,H-4);
+    g.fillText('fs/4',padL+w/2-12,H-4);
+    // 可用通带估计
+    let lo=-1,hi=-1;
+    for(let p=0;p<P;p++){if(Math.abs(mag[p]-1)<0.01&&Math.abs(pha[p])<1){if(lo<0)lo=p;hi=p;}}
+    g.font='bold 12px ui-sans-serif,system-ui,sans-serif';
+    if(lo>=0){
+      const f0=(lo+0.5)/P*0.5, f1=(hi+0.5)/P*0.5;
+      g.fillStyle='#24704a';
+      g.fillText('可用通带（误差<1%）约 '+f0.toFixed(3)+' fs ~ '+f1.toFixed(3)+' fs',padL,H*0.36);
+      g.fillStyle='rgba(46,139,87,.13)';
+      g.fillRect(padL+w*lo/P, r1-a1, w*(hi-lo)/P, 2*a1);
+    }else{
+      g.fillStyle='#a5321f';g.fillText('阶数太低：没有误差<1% 的通带',padL,H*0.36);
+    }
+  }
+  s.addEventListener('input',draw);sel.addEventListener('change',draw);
+  window.addEventListener('resize',draw);draw();
+})();
+
+/* ===== 图 7.2 端点效应 ===== */
+(function(){
+  const cv=document.getElementById('c2'),sel=document.getElementById('sel2'),
+        s=document.getElementById('s2'),v=document.getElementById('v2');
+  const N=1024;
+  function draw(){
+    const {g,W,H}=setupHiDPI(cv);
+    const mis=(+s.value)/100, mode=sel.value;
+    v.textContent=mis.toFixed(2);
+    // 非整数周期 + 直流斜坡 → 首尾不匹配
+    const x=new Float64Array(N);
+    for(let i=0;i<N;i++){const t=i/N;
+      x[i]=(1+0.35*Math.sin(2*Math.PI*2.3*t))*Math.cos(2*Math.PI*17.37*t)+mis*1.1*t;}
+    let mean=0;for(let i=0;i<N;i++)mean+=x[i];mean/=N;
+    for(let i=0;i<N;i++)x[i]-=mean;
+    let proc=Float64Array.from(x);
+    if(mode==='taper'){
+      const L=Math.round(N*0.06);
+      for(let i=0;i<L;i++){const wf=0.5-0.5*Math.cos(Math.PI*i/L);
+        proc[i]*=wf; proc[N-1-i]*=wf;}
+    }
+    let z;
+    if(mode==='mirror'){
+      const M=3*N, ext=new Float64Array(M);
+      for(let i=0;i<N;i++){ext[i]=x[N-1-i];ext[N+i]=x[i];ext[2*N+i]=x[N-1-i];}
+      // pad to power of 2
+      let P=1;while(P<M)P<<=1;
+      const buf=new Float64Array(P);
+      for(let i=0;i<M;i++)buf[i]=ext[i];
+      const zz=analytic(buf);
+      z={re:new Float64Array(N),im:new Float64Array(N)};
+      for(let i=0;i<N;i++){z.re[i]=zz.re[N+i];z.im[i]=zz.im[N+i];}
+    }else{
+      z=analytic(proc);
+    }
+    const env=new Float64Array(N);
+    for(let i=0;i<N;i++)env[i]=Math.hypot(z.re[i],z.im[i]);
+    let mx=1e-6,em=1e-6;
+    for(let i=0;i<N;i++){mx=Math.max(mx,Math.abs(x[i]));em=Math.max(em,env[i]);}
+    g.clearRect(0,0,W,H);
+    const padL=12,padR=12,w=W-padL-padR, X=i=>padL+w*i/(N-1);
+    const r1=H*0.26,a1=H*0.17,r2=H*0.76,a2=H*0.15;
+    // 污染区
+    const edge=Math.round(N*0.08);
+    g.fillStyle='rgba(192,57,43,.08)';
+    g.fillRect(padL,H*0.06,w*edge/N,H*0.88);
+    g.fillRect(padL+w*(N-edge)/N,H*0.06,w*edge/N,H*0.88);
+    // 上：信号
+    axis(g,padL,r1,W-padR,r1);
+    const p1=[];for(let i=0;i<N;i++)p1.push([X(i),r1-a1*x[i]/mx]);
+    poly(g,p1,'#6b6f79',1.2);
+    g.font='12px ui-sans-serif,system-ui,sans-serif';
+    g.fillStyle='#5d6472';g.fillText('输入 x[n]（红色带 = 两端各 8%，结果不可信）',padL+2,r1-a1-8);
+    // 下：包络
+    axis(g,padL,r2,W-padR,r2);
+    const p2=[],pt=[];
+    for(let i=0;i<N;i++){const t=i/N;
+      p2.push([X(i),r2-a2*env[i]/em]);
+      pt.push([X(i),r2-a2*(1+0.35*Math.sin(2*Math.PI*2.3*t))/em]);}
+    poly(g,pt,'#20242c',1.6,[6,4]);
+    poly(g,p2,'#c0392b',1.6);
+    g.fillStyle='#c0392b';g.fillText('算出的包络',padL+2,r2-a2-8);
+    g.fillStyle='#20242c';g.fillText('理论包络',padL+80,r2-a2-8);
+    // 误差统计
+    let e1=0,e2=0,c1=0,c2=0;
+    for(let i=0;i<N;i++){const t=i/N;
+      const tru=1+0.35*Math.sin(2*Math.PI*2.3*t);
+      const d=Math.abs(env[i]-tru);
+      if(i<edge||i>=N-edge){e1+=d;c1++;}else{e2+=d;c2++;}}
+    g.font='bold 12px ui-sans-serif,system-ui,sans-serif';
+    g.fillStyle='#a5321f';
+    g.fillText('两端区平均误差 = '+(e1/c1).toFixed(4),padL+2,H*0.50);
+    g.fillStyle='#24704a';
+    g.fillText('中间区平均误差 = '+(e2/c2).toFixed(4),padL+190,H*0.50);
+  }
+  sel.addEventListener('change',draw);s.addEventListener('input',draw);
+  window.addEventListener('resize',draw);draw();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>第3章 定义：时域的样子</title>
+<script>
+window.MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']],displayMath:[['$$','$$'],['\\[','\\]']]},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<style>
+:root{--paper:#fbfaf6;--ink:#20242c;--muted:#5d6472;--line:#e3dfd3;--accent:#1f6f8b;--accent2:#b4531f;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:Georgia,"Songti SC","Noto Serif SC","Source Han Serif SC","SimSun",serif;line-height:1.85;font-size:17px;-webkit-text-size-adjust:100%}
+.wrap{max-width:880px;margin:0 auto;padding:0 22px 90px}
+header.ch{border-bottom:3px double var(--line);padding:44px 0 24px;margin-bottom:34px}
+.kicker{font-family:ui-sans-serif,system-ui,sans-serif;letter-spacing:.2em;font-size:11.5px;color:var(--accent);text-transform:uppercase}
+h1{font-size:29px;margin:12px 0 8px;line-height:1.3}
+.sub{color:var(--muted);font-size:15.5px;margin:0}
+h2{font-size:22px;margin:46px 0 14px;padding-left:12px;border-left:5px solid var(--accent)}
+h3{font-size:18px;margin:30px 0 10px;color:var(--accent2)}
+p{margin:14px 0}
+.box{background:#fff;border:1px solid var(--line);border-radius:8px;padding:14px 18px;margin:22px 0}
+.tag{font-family:ui-sans-serif,system-ui,sans-serif;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;display:block;margin-bottom:6px}
+.def{border-left:5px solid #1f6f8b}.def .tag{color:#1f6f8b}
+.thm{border-left:5px solid #7a4fb5}.thm .tag{color:#6b3fa8}
+.ex{border-left:5px solid #2e8b57}.ex .tag{color:#24704a}
+.warn{border-left:5px solid #c0392b;background:#fff8f7}.warn .tag{color:#a5321f}
+.tip{border-left:5px solid #d99b16;background:#fffdf5}.tip .tag{color:#a8760a}
+a{color:var(--accent);text-underline-offset:3px}
+table{width:100%;border-collapse:collapse;margin:20px 0;font-size:15px;background:#fff}
+th,td{border:1px solid var(--line);padding:8px 11px;text-align:left;vertical-align:top}
+th{background:#f2efe6;font-family:ui-sans-serif,system-ui,sans-serif;font-size:13.5px}
+ol,ul{padding-left:1.5em}li{margin:7px 0}
+figure.demo{margin:26px 0;border:1px solid var(--line);background:#fff;border-radius:10px;padding:14px}
+canvas{width:100%;display:block;border-radius:4px}
+.ctrl{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;font-family:ui-sans-serif,system-ui,sans-serif;font-size:13px;margin-top:12px}
+.ctrl label{display:flex;align-items:center;gap:8px;flex:1 1 210px}
+input[type=range]{flex:1;min-width:90px;accent-color:var(--accent)}
+select{font-family:inherit;font-size:13px;padding:4px 8px;border:1px solid var(--line);border-radius:6px;background:#f8f6f0}
+figcaption{font-family:ui-sans-serif,system-ui,sans-serif;font-size:13px;color:var(--muted);margin-top:10px;line-height:1.65}
+nav.pager{display:flex;justify-content:space-between;gap:12px;margin-top:64px;border-top:1px solid var(--line);padding-top:18px;font-family:ui-sans-serif,system-ui,sans-serif;font-size:14px}
+nav.pager a{text-decoration:none}
+.q{background:#fff;border:1px dashed var(--line);border-left:5px solid #8a8f9a;border-radius:8px;padding:14px 18px;margin:22px 0}
+.q .tag{color:#6c717c}
+.steps{counter-reset:st;list-style:none;padding-left:0}
+.steps>li{counter-increment:st;position:relative;padding-left:40px;margin:16px 0}
+.steps>li::before{content:counter(st);position:absolute;left:0;top:2px;width:26px;height:26px;border-radius:50%;background:var(--accent);color:#fff;font-family:ui-sans-serif,system-ui,sans-serif;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="ch">
+  <div class="kicker">第 3 章</div>
+  <h1>定义：时域的样子</h1>
+  <p class="sub">正式定义、核函数的形状、四个完整手算例子，以及一张常用变换对表。这一章要动笔算。</p>
+</header>
+
+<h2>3.1 正式定义</h2>
+
+<div class="box def">
+  <span class="tag">定义 3.1 · 希尔伯特变换</span>
+  <p style="margin:6px 0 0">实信号 $x(t)$ 的希尔伯特变换定义为</p>
+  <p>$$\hat{x}(t)=\mathcal{H}\{x\}(t)=\frac{1}{\pi}\,\mathrm{P}\!\!\int_{-\infty}^{+\infty}\frac{x(\tau)}{t-\tau}\,\mathrm{d}\tau$$</p>
+  <p style="margin:6px 0 0">其中 $\mathrm{P}$ 表示柯西主值（定义 2.1）。等价地，它是 $x(t)$ 与<strong>核函数</strong></p>
+  <p>$$h(t)=\frac{1}{\pi t}$$</p>
+  <p style="margin:6px 0 0">的卷积：$\hat{x}=h*x$。</p>
+</div>
+
+<p>验证这个"等价地"很简单：按卷积定义（定义 2.2），</p>
+
+<p>$$(h*x)(t)=\int h(t-\tau)x(\tau)\,\mathrm{d}\tau=\int\frac{1}{\pi(t-\tau)}x(\tau)\,\mathrm{d}\tau=\frac{1}{\pi}\int\frac{x(\tau)}{t-\tau}\,\mathrm{d}\tau$$</p>
+
+<p>正是定义式。所以希尔伯特变换就是一个 LTI 系统，它的冲激响应是 $\frac{1}{\pi t}$。</p>
+
+<h3>3.1.1 三种常见的等价写法</h3>
+
+<p>文献里你会见到下面三种形式，它们完全等价，只是换了积分变量：</p>
+
+<table>
+<tr><th>写法</th><th>表达式</th><th>适用场合</th></tr>
+<tr><td>标准式</td><td>$\dfrac{1}{\pi}\mathrm{P}\!\int_{-\infty}^{\infty}\dfrac{x(\tau)}{t-\tau}\mathrm{d}\tau$</td><td>定义、查表</td></tr>
+<tr><td>卷积式</td><td>$\dfrac{1}{\pi}\mathrm{P}\!\int_{-\infty}^{\infty}\dfrac{x(t-u)}{u}\mathrm{d}u$</td><td>手算（换元 $u=t-\tau$）</td></tr>
+<tr><td>对称差式</td><td>$\dfrac{1}{\pi}\displaystyle\int_{0}^{\infty}\dfrac{x(t-u)-x(t+u)}{u}\mathrm{d}u$</td><td>数值计算、理论证明（无奇点）</td></tr>
+</table>
+
+<div class="box warn">
+  <span class="tag">符号约定的坑</span>
+  <p style="margin:6px 0 0">有些教材把定义写成 $\frac{1}{\pi}\mathrm{P}\!\int\frac{x(\tau)}{\tau-t}\mathrm{d}\tau$（分母正负颠倒），这样得到的结果<strong>与本书相差一个负号</strong>：那种约定下 $\mathcal{H}\{\cos\}=-\sin$。本书采用工程界与 MATLAB / SciPy 一致的约定，即</p>
+  <p style="margin:6px 0 0">$$\mathcal{H}\{\cos\omega_0 t\}=+\sin\omega_0 t\qquad(\omega_0&gt;0)$$</p>
+  <p style="margin:6px 0 0">查阅任何公式前，<strong>先用 $\cos\to\sin$ 这条测试题验证约定</strong>，这是最省事的办法。</p>
+</div>
+
+<h2>3.2 为什么必须取主值</h2>
+
+<p>第 2.3 节已经铺好了路，这里把逻辑收束一下。核函数 $\frac{1}{\pi t}$ 有两个"病":</p>
+
+<ol>
+  <li><strong>在 $t=0$ 处发散</strong>，且 $\int_{0}^{1}\frac{\mathrm{d}t}{t}=\infty$，不可积。</li>
+  <li><strong>在 $t\to\pm\infty$ 时衰减太慢</strong>，$\int_1^\infty\frac{\mathrm{d}t}{t}=\infty$，也不可积。</li>
+</ol>
+
+<p>所以 $\frac{1}{\pi t}\notin L^1$，它甚至不是一个"正常"的冲激响应。救命的是它的<strong>奇性</strong>：$\frac{1}{\pi t}$ 是奇函数，两端的无穷大在对称截断下相消。主值就是把这个相消写进定义。第 2.3.4 节的"对称差式"把这一点做到了极致 —— 那个写法里根本没有奇点。</p>
+
+<div class="box tip">
+  <span class="tag">物理解读</span>
+  <p style="margin:6px 0 0">看对称差式 $\frac{1}{\pi}\int_0^\infty\frac{x(t-u)-x(t+u)}{u}\mathrm{d}u$：它把"$t$ 之前 $u$ 秒"和"$t$ 之后 $u$ 秒"的信号<strong>相减</strong>，再按 $1/u$ 加权求和。所以希尔伯特变换本质上在<strong>测量信号关于当前时刻的左右不对称性</strong>：</p>
+  <ul style="margin:6px 0 0">
+    <li>信号在 $t$ 附近左右对称（比如 $\cos$ 的峰顶）⟹ 差为零 ⟹ $\hat{x}(t)=0$。</li>
+    <li>信号在 $t$ 附近上升最快（$\cos$ 的零点）⟹ 左右差最大 ⟹ $|\hat{x}(t)|$ 最大。</li>
+  </ul>
+  <p style="margin:6px 0 0">你现在就能预测：$\mathcal{H}\{\cos\}$ 在 $\cos$ 的峰值处为零、在零点处取极值 —— 这正是 $\sin$ 的样子（差个符号看方向）。3.4 节会严格算出来。</p>
+</div>
+
+<h2>3.3 核函数长什么样</h2>
+
+<p>$\frac{1}{\pi t}$ 是一条双曲线，在原点两侧分别趋于 $\mp\infty$。它有三个值得注意的特点，每一个都有工程后果：</p>
+
+<table>
+<tr><th>特点</th><th>数学表现</th><th>工程后果</th></tr>
+<tr><td><strong>奇函数</strong></td><td>$h(-t)=-h(t)$</td><td>输出测量"左右差异"；偶信号的变换是奇的，反之亦然</td></tr>
+<tr><td><strong>非因果</strong></td><td>$t&lt;0$ 时 $h(t)\neq0$</td><td>算 $\hat{x}(t)$ 要用到 $t$ 之后的输入，无法严格实时实现</td></tr>
+<tr><td><strong>无限长且衰减慢</strong></td><td>$h(t)\sim 1/t$，非 $L^1$</td><td>截断会带来明显误差；实际用 FFT 整段处理或长 FIR 逼近（第 7 章）</td></tr>
+</table>
+
+<p>"衰减慢"这件事值得再说一句。比较几种常见核：高斯核衰减是 $e^{-t^2}$（极快），指数核是 $e^{-|t|}$（快），而希尔伯特核只有 $1/t$（极慢）。这意味着<strong>遥远时刻的样本对当前输出仍有不可忽略的贡献</strong>。第 7 章会看到，这正是 FIR 希尔伯特变换器需要很高阶数、以及 FFT 法必须处理端点效应的根源。</p>
+
+<h2>3.4 手算例题</h2>
+
+<p>下面四个例子按难度递增，请拿笔跟着算一遍。它们覆盖了后面所有章节会用到的技巧。</p>
+
+<div class="box ex">
+  <span class="tag">例 3.1 · 冲激函数</span>
+  <p style="margin:6px 0 0">求 $\mathcal{H}\{\delta\}(t)$。</p>
+  <p><strong>解</strong>　直接用卷积的单位元性质：</p>
+  <p>$$\mathcal{H}\{\delta\}=h*\delta=h(t)=\frac{1}{\pi t}$$</p>
+  <p style="margin:6px 0 0"><strong>含义</strong>：希尔伯特变换器的冲激响应就是核函数本身。一个瞬间的脉冲，经过它以后被"抹开"成一条双曲线，从负无穷延伸到正无穷 —— 这是非因果性最直白的画面。</p>
+</div>
+
+<div class="box ex">
+  <span class="tag">例 3.2 · 余弦（最重要的一题）</span>
+  <p style="margin:6px 0 0">设 $\omega_0&gt;0$，求 $\mathcal{H}\{\cos\omega_0 t\}$。</p>
+  <p><strong>解</strong>　用卷积式，换元 $u=t-\tau$：</p>
+  <p>$$\hat{x}(t)=\frac{1}{\pi}\,\mathrm{P}\!\!\int_{-\infty}^{\infty}\frac{\cos\big(\omega_0(t-u)\big)}{u}\,\mathrm{d}u$$</p>
+  <p>把余弦用和角公式展开，$\cos(\omega_0t-\omega_0u)=\cos\omega_0t\cos\omega_0u+\sin\omega_0t\sin\omega_0u$：</p>
+  <p>$$\hat{x}(t)=\frac{\cos\omega_0t}{\pi}\underbrace{\mathrm{P}\!\!\int_{-\infty}^{\infty}\frac{\cos\omega_0u}{u}\mathrm{d}u}_{=\,I_1}+\frac{\sin\omega_0t}{\pi}\underbrace{\int_{-\infty}^{\infty}\frac{\sin\omega_0u}{u}\mathrm{d}u}_{=\,I_2}$$</p>
+  <p><strong>算 $I_1$</strong>：被积函数 $\frac{\cos\omega_0u}{u}$ 是<strong>奇函数</strong>（偶除以奇），在对称区间上取主值必为零。所以 $I_1=0$。</p>
+  <p><strong>算 $I_2$</strong>：被积函数 $\frac{\sin\omega_0u}{u}$ 是偶函数，且在 $u=0$ 处极限为 $\omega_0$（<em>没有奇点</em>，所以这一项连主值都不用取，是普通收敛积分）。它就是<strong>狄利克雷积分</strong>：</p>
+  <p>$$\int_{-\infty}^{\infty}\frac{\sin\omega_0u}{u}\mathrm{d}u=\pi\,\mathrm{sgn}(\omega_0)=\pi\quad(\omega_0&gt;0)$$</p>
+  <p>这个值不是背下来的，紧接本例的补证框会把它从头推一遍（这是全书唯一需要额外技巧的积分，推完以后不会再出现）。</p>
+  <p>代回：</p>
+  <p>$$\hat{x}(t)=0+\frac{\sin\omega_0t}{\pi}\cdot\pi=\boxed{\sin(\omega_0 t)}$$</p>
+  <p style="margin:6px 0 0"><strong>同理</strong>（留作练习，或用 $\mathcal{H}^2=-I$ 直接得到）：</p>
+  <p>$$\mathcal{H}\{\sin\omega_0t\}=-\cos\omega_0 t\qquad(\omega_0&gt;0)$$</p>
+</div>
+
+<div class="box thm">
+  <span class="tag">补证 · 狄利克雷积分是怎么来的</span>
+
+  <p style="margin:6px 0 0">要证：$\displaystyle\int_{-\infty}^{\infty}\frac{\sin\omega_0u}{u}\,\mathrm{d}u=\pi\,\mathrm{sgn}(\omega_0)$。</p>
+
+  <p style="margin:14px 0 0"><strong>第一步 · 先说明结果与 $\omega_0$ 的大小无关，只与符号有关。</strong></p>
+  <p>设 $\omega_0&gt;0$，换元 $v=\omega_0u$，则 $u=\dfrac{v}{\omega_0}$、$\mathrm{d}u=\dfrac{\mathrm{d}v}{\omega_0}$；因为 $\omega_0&gt;0$，积分上下限不翻转：</p>
+  <p>$$\int_{-\infty}^{\infty}\frac{\sin\omega_0u}{u}\,\mathrm{d}u
+  =\int_{-\infty}^{\infty}\frac{\sin v}{\,v/\omega_0\,}\cdot\frac{\mathrm{d}v}{\omega_0}
+  =\int_{-\infty}^{\infty}\frac{\sin v}{v}\,\mathrm{d}v$$</p>
+  <p>分子上的 $\omega_0$（来自 $1/u=\omega_0/v$）和分母上的 $\omega_0$（来自 $\mathrm{d}u$）互相约掉了。所以无论频率是 1 rad/s 还是 1000 rad/s，这个积分都是同一个数，记作 $S$。</p>
+  <p>再看 $\omega_0&lt;0$：$\sin$ 是奇函数，$\sin(\omega_0u)=-\sin(|\omega_0|u)$，整个积分反号，得 $-S$。两种情形合并写成 $S\cdot\mathrm{sgn}(\omega_0)$。<em>于是剩下的任务只是算出 $S$。</em></p>
+
+  <p style="margin:14px 0 0"><strong>第二步 · 引入一个带参数的辅助函数。</strong></p>
+  <p>$\frac{\sin v}{v}$ 没有初等原函数，硬积不行。标准对策是<strong>先塞一个衰减因子 $e^{-sv}$ 进去，把积分变成参数 $s$ 的函数；对 $s$ 求导会让被积函数变简单；最后再让 $s\to0$ 回到原题</strong>。由于被积函数是偶函数，先折成半轴：</p>
+  <p>$$S=2\int_{0}^{\infty}\frac{\sin v}{v}\,\mathrm{d}v,\qquad\text{定义}\quad F(s)=\int_{0}^{\infty}e^{-sv}\,\frac{\sin v}{v}\,\mathrm{d}v\quad(s\ge 0)$$</p>
+  <p>取 $s=0$ 时 $e^{0}=1$，所以 $F(0)=\int_0^\infty\frac{\sin v}{v}\mathrm{d}v$，恰是我们要的 $S$ 的一半。</p>
+
+  <p style="margin:14px 0 0"><strong>第三步 · 对参数求导，把碍事的 $\frac{1}{v}$ 消掉。</strong></p>
+  <p>关键在于 $\dfrac{\partial}{\partial s}e^{-sv}=-v\,e^{-sv}$，这个多出来的 $-v$ 正好和分母的 $\frac{1}{v}$ 约掉：</p>
+  <p>$$F'(s)=\int_{0}^{\infty}(-v)\,e^{-sv}\,\frac{\sin v}{v}\,\mathrm{d}v=-\int_{0}^{\infty}e^{-sv}\sin v\,\mathrm{d}v$$</p>
+  <p>右边是"指数乘正弦"的标准积分，两次分部积分即得 $\int_0^\infty e^{-sv}\sin v\,\mathrm{d}v=\dfrac{1}{1+s^2}$。所以</p>
+  <p>$$F'(s)=-\frac{1}{1+s^2}$$</p>
+  <p>两边对 $s$ 积分，$\int\frac{\mathrm{d}s}{1+s^2}=\arctan s$，故</p>
+  <p>$$F(s)=C-\arctan s\qquad(C\ \text{是待定常数})$$</p>
+
+  <p style="margin:14px 0 0"><strong>第四步 · 用边界条件定出常数 $C$。</strong></p>
+  <p>让 $s\to+\infty$：因子 $e^{-sv}$ 把被积函数整体压到零，所以 $F(+\infty)=0$；同时 $\arctan(+\infty)=\frac{\pi}{2}$。代入上式：</p>
+  <p>$$0=C-\frac{\pi}{2}\qquad\Longrightarrow\qquad C=\frac{\pi}{2}$$</p>
+  <p>于是 $F(s)=\dfrac{\pi}{2}-\arctan s$，取 $s=0$（$\arctan 0=0$）得 $F(0)=\dfrac{\pi}{2}$。</p>
+
+  <p style="margin:14px 0 0"><strong>第五步 · 合起来。</strong></p>
+  <p>$$S=2F(0)=2\cdot\frac{\pi}{2}=\pi\qquad\Longrightarrow\qquad \boxed{\int_{-\infty}^{\infty}\frac{\sin\omega_0u}{u}\,\mathrm{d}u=\pi\,\mathrm{sgn}(\omega_0)}$$</p>
+
+  <p style="margin:14px 0 0"><strong>这一步的关键直觉</strong>：$\frac{\sin v}{v}$ 的图像是一串正负交替、幅度按 $1/v$ 衰减的波瓣。它不绝对收敛（$\int_0^\infty\frac{|\sin v|}{v}\mathrm{d}v=\infty$），但正波瓣和负波瓣依次相消，净面积收敛到有限值 $\pi$。这和主值积分"靠相消才有意义"是同一种精神 —— 本章两处收敛性都建立在<strong>对称相消</strong>上。</p>
+</div>
+
+<div class="box tip">
+  <span class="tag">对照检验 · 例 3.2 的结果对不对</span>
+  <p style="margin:6px 0 0">结论 $\mathcal{H}\{\cos\omega_0t\}=\sin\omega_0t$ 可以用 3.2 节的物理直觉当场核一遍。那里说：希尔伯特变换测的是信号在当前时刻的<strong>左右不对称性</strong>。代三个特殊时刻：</p>
+  <table>
+    <tr><th>时刻</th><th>$\cos\omega_0t$ 在此处的形状</th><th>直觉预测 $\hat{x}$</th><th>公式给出的 $\sin\omega_0t$</th></tr>
+    <tr><td>$\omega_0t=0$</td><td>峰顶，左右完全对称</td><td>$0$</td><td>$\sin 0=0$　✓</td></tr>
+    <tr><td>$\omega_0t=\pi/2$</td><td>过零点，下降最快，左右差最大</td><td>取极值</td><td>$\sin\frac{\pi}{2}=1$　✓（极大）</td></tr>
+    <tr><td>$\omega_0t=\pi$</td><td>谷底，左右又对称了</td><td>$0$</td><td>$\sin\pi=0$　✓</td></tr>
+  </table>
+  <p style="margin:6px 0 0">三个点全对上了 —— 算出来的结果和物理图像自洽，才敢用。再顺手用第 1 章的正交性检查一次：</p>
+  <p>$$\int_0^T\cos(\omega_0t)\sin(\omega_0t)\,\mathrm{d}t=\frac{1}{2}\int_0^T\sin(2\omega_0t)\,\mathrm{d}t=0\qquad\Big(T=\tfrac{2\pi}{\omega_0}\ \text{内正好两个整周期}\Big)$$</p>
+  <p style="margin:6px 0 0">$x$ 与 $\hat x$ 确实正交，符合性质 6（第 5.5 节）。</p>
+</div>
+
+<div class="box tip">
+  <span class="tag">记忆口诀</span>
+  <p style="margin:6px 0 0">$$\cos\ \longrightarrow\ \sin\ \longrightarrow\ -\cos\ \longrightarrow\ -\sin\ \longrightarrow\ \cos$$</p>
+  <p style="margin:6px 0 0">每做一次希尔伯特变换就往右走一步，四步回到原点。这和"乘 $-j$ 四次回到 1"是同一件事。<strong>注意 $\omega_0&gt;0$ 这个前提</strong>：若 $\omega_0&lt;0$，结果全部反号，因为 $\cos(\omega_0t)=\cos(|\omega_0|t)$ 但 $\sin(\omega_0t)=-\sin(|\omega_0|t)$。</p>
+</div>
+
+<div class="box ex">
+  <span class="tag">例 3.3 · 矩形脉冲</span>
+  <p style="margin:6px 0 0">设 $x(t)=1$ 当 $|t|&lt;T$，否则为 $0$。求 $\hat{x}(t)$。</p>
+  <p><strong>解</strong>　直接用标准式，积分只在 $[-T,T]$ 上有贡献：</p>
+  <p>$$\hat{x}(t)=\frac{1}{\pi}\,\mathrm{P}\!\!\int_{-T}^{T}\frac{\mathrm{d}\tau}{t-\tau}$$</p>
+  <p><strong>先确认原函数。</strong>令 $w=t-\tau$，则 $\dfrac{\mathrm{d}w}{\mathrm{d}\tau}=-1$，由链式法则</p>
+  <p>$$\frac{\mathrm{d}}{\mathrm{d}\tau}\Big(-\ln|t-\tau|\Big)=-\frac{1}{w}\cdot\frac{\mathrm{d}w}{\mathrm{d}\tau}=-\frac{1}{w}\cdot(-1)=\frac{1}{t-\tau}\quad\checkmark$$</p>
+  <p>所以 $-\ln|t-\tau|$ 确实是被积函数关于 $\tau$ 的原函数。</p>
+  <p><strong>但不能直接把上下限代进去。</strong>当 $|t|&lt;T$ 时，奇点 $\tau=t$ 落在积分区间<em>内部</em>，必须按柯西主值的定义（定义 2.1），在奇点两侧各挖掉宽 $\epsilon$ 的一小段，算完再让 $\epsilon\to0^+$：</p>
+  <p>$$\hat{x}(t)=\frac{1}{\pi}\lim_{\epsilon\to0^+}\left[\int_{-T}^{t-\epsilon}\frac{\mathrm{d}\tau}{t-\tau}+\int_{t+\epsilon}^{T}\frac{\mathrm{d}\tau}{t-\tau}\right]$$</p>
+  <p><strong>左段</strong>（$\tau$ 从 $-T$ 到 $t-\epsilon$），代入原函数：</p>
+  <p>$$\Big[-\ln|t-\tau|\Big]_{\tau=-T}^{\tau=t-\epsilon}=-\ln\underbrace{\big|t-(t-\epsilon)\big|}_{=\,\epsilon}\;+\;\ln|t-(-T)|=-\ln\epsilon+\ln|t+T|$$</p>
+  <p><strong>右段</strong>（$\tau$ 从 $t+\epsilon$ 到 $T$）：</p>
+  <p>$$\Big[-\ln|t-\tau|\Big]_{\tau=t+\epsilon}^{\tau=T}=-\ln|t-T|\;+\;\ln\underbrace{\big|t-(t+\epsilon)\big|}_{=\,\epsilon}=-\ln|t-T|+\ln\epsilon$$</p>
+  <p>两段相加，<strong>$-\ln\epsilon$ 与 $+\ln\epsilon$ 精确抵消</strong> —— 这正是"两侧同速靠近奇点"换来的好处（第 2.3.2 节）。剩下的部分与 $\epsilon$ 无关，极限可以直接取：</p>
+  <p>$$\hat{x}(t)=\frac{1}{\pi}\Big(\ln|t+T|-\ln|t-T|\Big)$$</p>
+  <p>形式上看，结果和"直接把上下限代进原函数"一模一样 —— 但这是主值定义送的礼物，不是理所当然。若奇性不是奇函数型（例如核为 $\frac{1}{(t-\tau)^2}$，原函数含 $\frac{1}{\epsilon}$），两侧就不会抵消，那样硬代上下限会得到错误答案。</p>
+  <p>$$\boxed{\hat{x}(t)=\frac{1}{\pi}\ln\left|\frac{t+T}{t-T}\right|}$$</p>
+  <p style="margin:6px 0 0"><strong>讨论</strong>　这个结果很有启发性：</p>
+  <ul style="margin:6px 0 0">
+    <li>在 $t=\pm T$（脉冲的两个跳变处）结果是 $\pm\infty$ —— <strong>希尔伯特变换在跳变点发散</strong>。这符合 3.2 节的直觉：跳变处左右最不对称。</li>
+    <li>在 $t=0$（脉冲正中）结果是 $\frac{1}{\pi}\ln 1=0$ —— 因为那里左右完美对称。</li>
+    <li>$t\to\pm\infty$ 时 $\hat{x}\to0$，但衰减很慢（约 $\frac{2T}{\pi t}$）。原信号是<strong>有限支撑</strong>的（只在 $[-T,T]$ 非零），变换后却<strong>拖到无穷远</strong>。这不是偶然：Titchmarsh 定理（第 5.10 节）说，除了零函数，一个信号和它的希尔伯特变换不可能同时是有限支撑的。</li>
+  </ul>
+</div>
+
+<div class="box ex">
+  <span class="tag">例 3.4 · 洛伦兹型（柯西对）</span>
+  <p style="margin:6px 0 0">求 $\mathcal{H}\left\{\dfrac{1}{1+t^2}\right\}$。</p>
+  <p><strong>解</strong>　这题用时域积分很麻烦，改用频域（第 4 章会证明这条规则，这里先借用）：</p>
+  <p>$$\hat{X}(\omega)=-j\,\mathrm{sgn}(\omega)\,X(\omega)$$</p>
+  <p>查表得 $X(\omega)=\mathcal{F}\left\{\frac{1}{1+t^2}\right\}=\pi e^{-|\omega|}$，于是 $\hat{X}(\omega)=-j\pi\,\mathrm{sgn}(\omega)e^{-|\omega|}$。做逆变换：</p>
+  <p>$$\hat{x}(t)=\frac{1}{2\pi}\int_{-\infty}^{\infty}\!\!\!-j\pi\,\mathrm{sgn}(\omega)e^{-|\omega|}e^{j\omega t}\mathrm{d}\omega=\frac{-j}{2}\left[\int_0^\infty\! e^{-\omega(1-jt)}\mathrm{d}\omega-\int_{-\infty}^0\! e^{\omega(1+jt)}\mathrm{d}\omega\right]$$</p>
+  <p>两个积分都是基本的：$\int_0^\infty e^{-\omega(1-jt)}\mathrm{d}\omega=\frac{1}{1-jt}$，$\int_{-\infty}^{0}e^{\omega(1+jt)}\mathrm{d}\omega=\frac{1}{1+jt}$。</p>
+  <p>把方括号里两项通分。分母用平方差公式 $(1-jt)(1+jt)=1-(jt)^2=1+t^2$（这里用了 $j^2=-1$），分子 $(1+jt)-(1-jt)=2jt$：</p>
+  <p>$$\frac{1}{1-jt}-\frac{1}{1+jt}=\frac{(1+jt)-(1-jt)}{(1-jt)(1+jt)}=\frac{2jt}{1+t^2}$$</p>
+  <p>再乘上前面的 $\frac{-j}{2}$，注意 $(-j)\cdot j=-j^2=+1$：</p>
+  <p>$$\hat{x}(t)=\frac{-j}{2}\cdot\frac{2jt}{1+t^2}=\frac{(-j)\cdot j\,t}{1+t^2}=\boxed{\frac{t}{1+t^2}}$$</p>
+  <p style="margin:6px 0 0"><strong>为什么这一对很重要</strong>　$\frac{1}{1+t^2}+j\frac{t}{1+t^2}=\frac{1+jt}{1+t^2}=\frac{j}{t+j}$，这恰好是复函数 $\frac{j}{z+j}$ 在实轴上的取值，而它在<strong>整个上半平面解析</strong>（唯一的极点 $z=-j$ 落在下半平面）。这是第 1.6 节"第三副面孔"的第一个具体例子。在光谱学里，$\frac{1}{1+t^2}$ 是吸收线型（洛伦兹线型），$\frac{t}{1+t^2}$ 是对应的色散线型 —— 两者必须成对出现，正是 Kramers–Kronig 关系（第 8.8 节）。</p>
+</div>
+
+<h2>3.5 交互：亲手看一看</h2>
+
+<p>下面这个工具用 FFT 实时计算希尔伯特变换（算法见第 7 章）。换换波形，特别注意：</p>
+
+<ul>
+  <li><strong>方波</strong>：跳变处 $\hat{x}$ 出现尖峰（对应例 3.3 的对数发散）。</li>
+  <li><strong>正弦</strong>：$\hat{x}$ 就是把它整体挪了四分之一周期。</li>
+  <li><strong>矩形脉冲</strong>：原信号有限支撑，变换后拖出长尾。</li>
+  <li><strong>双频合成</strong>：两个频率各自被移了 90°，但因为周期不同，<em>波形整体看起来不像"平移"</em> —— 这是理解"相移≠延时"最有说服力的例子。</li>
+</ul>
+
+<figure class="demo">
+  <canvas id="c1" height="330"></canvas>
+  <div class="ctrl">
+    <label>输入波形 <select id="sel1">
+      <option value="sin">正弦</option>
+      <option value="square">方波</option>
+      <option value="pulse">矩形脉冲</option>
+      <option value="two">双频合成（1:7）</option>
+      <option value="gauss">高斯脉冲</option>
+      <option value="lorentz">洛伦兹 1/(1+t²)</option>
+      <option value="tri">三角波</option>
+    </select></label>
+    <label>频率/宽度 <input id="s1" type="range" min="2" max="30" value="6"><span id="v1" style="min-width:34px;text-align:right">6</span></label>
+  </div>
+  <figcaption><strong>图 3.1</strong>　上：输入 $x(t)$。中：它的希尔伯特变换 $\hat{x}(t)$。下：把两者叠在一起，并画出 $\sqrt{x^2+\hat{x}^2}$（虚线，即包络，第 6 章主题）。数据由本页 JavaScript 实时用 FFT 算出，$N=1024$。</figcaption>
+</figure>
+
+<h2>3.6 常用希尔伯特变换对</h2>
+
+<p>下表是手算与查阅的主力工具。所有条目均假定 $\omega_0&gt;0,\ a&gt;0,\ T&gt;0$，约定同定义 3.1。</p>
+
+<table>
+<tr><th>$x(t)$</th><th>$\hat{x}(t)=\mathcal{H}\{x\}(t)$</th><th>备注</th></tr>
+<tr><td>$\cos(\omega_0 t)$</td><td>$\sin(\omega_0 t)$</td><td>例 3.2</td></tr>
+<tr><td>$\sin(\omega_0 t)$</td><td>$-\cos(\omega_0 t)$</td><td></td></tr>
+<tr><td>$\cos(\omega_0t+\varphi)$</td><td>$\sin(\omega_0t+\varphi)$</td><td>初相不受影响</td></tr>
+<tr><td>$e^{j\omega_0 t}$</td><td>$-j\,e^{j\omega_0 t}$</td><td>复指数是 $\mathcal{H}$ 的特征函数，特征值 $-j$</td></tr>
+<tr><td>$\delta(t)$</td><td>$\dfrac{1}{\pi t}$</td><td>例 3.1</td></tr>
+<tr><td>$\dfrac{1}{\pi t}$</td><td>$-\delta(t)$</td><td>由 $\mathcal{H}^2=-I$</td></tr>
+<tr><td>常数 $c$</td><td>$0$</td><td><strong>直流被消灭</strong>，这是不可逆的</td></tr>
+<tr><td>$\dfrac{1}{1+t^2}$</td><td>$\dfrac{t}{1+t^2}$</td><td>例 3.4，柯西/洛伦兹对</td></tr>
+<tr><td>$\dfrac{t}{1+t^2}$</td><td>$-\dfrac{1}{1+t^2}$</td><td></td></tr>
+<tr><td>$\dfrac{a}{a^2+t^2}$</td><td>$\dfrac{t}{a^2+t^2}$</td><td>上式的尺度推广</td></tr>
+<tr><td>$\mathrm{rect}_T(t)$</td><td>$\dfrac{1}{\pi}\ln\left\lvert\dfrac{t+T}{t-T}\right\rvert$</td><td>例 3.3</td></tr>
+<tr><td>$\dfrac{\sin(\omega_0 t)}{\pi t}$</td><td>$\dfrac{1-\cos(\omega_0 t)}{\pi t}$</td><td>sinc 的变换</td></tr>
+<tr><td>$\dfrac{\sin^2 t}{t^2}$</td><td>$\dfrac{2t-\sin 2t}{2t^2}$</td><td></td></tr>
+<tr><td>$e^{-t^2}$</td><td>$\dfrac{2}{\sqrt{\pi}}\,e^{-t^2}\!\!\displaystyle\int_0^{t}\!e^{u^2}\mathrm{d}u$</td><td>道森函数 $\mathrm{Daw}(t)$ 的 $\frac{2}{\sqrt\pi}$ 倍，无初等表达</td></tr>
+<tr><td>$\mathrm{sgn}(t)$</td><td>$\dfrac{2}{\pi}\ln|t|$</td><td>符号函数（广义意义下，可差一个常数）</td></tr>
+<tr><td>$\dfrac{1}{t^2+a^2}$ 型有理式</td><td>部分分式 + 上表逐项</td><td>一般有理函数的通用做法</td></tr>
+</table>
+
+<div class="box tip">
+  <span class="tag">查表技巧</span>
+  <p style="margin:6px 0 0">遇到表里没有的 $x(t)$，试三条路：<br>
+  <strong>(1)</strong> 能否分解成表中项的线性组合？$\mathcal{H}$ 是线性的。<br>
+  <strong>(2)</strong> 能否先做傅里叶变换，乘 $-j\,\mathrm{sgn}(\omega)$，再逆变换？（例 3.4 的路子，通常最省力）<br>
+  <strong>(3)</strong> 若 $x=A(t)\cos\omega_0t$ 且 $A$ 慢变，用 Bedrosian 定理（第 5.9 节）直接写 $\hat{x}=A(t)\sin\omega_0t$。</p>
+</div>
+
+<h2>3.7 一个必须面对的现实：它不能实时实现</h2>
+
+<p>第 1.4 节埋下的伏笔，这里正式说清楚。因果系统的定义是：$t&lt;0$ 时 $h(t)=0$。而希尔伯特核 $\frac{1}{\pi t}$ 在整条负半轴上都不为零，而且模还挺大。这意味着：</p>
+
+<p>$$\hat{x}(t_0)\ \text{的计算需要用到}\ x(\tau),\ \tau&gt;t_0\ \text{（未来的输入）}$$</p>
+
+<p>工程上有三条出路，每条都要付代价：</p>
+
+<ol class="steps">
+  <li><strong>整段离线处理（FFT 法）。</strong>先把整段信号录下来，一次性变换。代价：不能实时，且有端点效应。这是 MATLAB 的 <code>hilbert()</code> 和 SciPy 的 <code>scipy.signal.hilbert()</code> 采用的办法。</li>
+  <li><strong>加延时的 FIR 逼近。</strong>设计一个长度 $N$ 的 FIR 滤波器，逼近"延时 $\frac{N-1}{2}$ 个采样 + 90° 相移"。代价：固定群延时，且在直流与奈奎斯特频率附近必然失真。实时系统的标准做法。</li>
+  <li><strong>正交下变频（I/Q 解调）。</strong>干脆不做希尔伯特变换，而是用两路混频器乘 $\cos\omega_ct$ 和 $-\sin\omega_ct$，再各自低通。代价：需要已知载波频率。这是所有现代通信硬件的做法（第 8.1 节）。</li>
+</ol>
+
+<p>细节都在第 7 章。现在只要记住这个判断：<strong>看到文献里写"希尔伯特变换器"，脑子里要浮现的是"一个有延时的近似器"，不是那个理想积分式。</strong></p>
+
+<h2>3.8 本章要点</h2>
+
+<table>
+<tr><th>要点</th><th>内容</th></tr>
+<tr><td>定义</td><td>$\hat{x}(t)=\frac{1}{\pi}\mathrm{P}\!\int\frac{x(\tau)}{t-\tau}\mathrm{d}\tau=\frac{1}{\pi t}*x(t)$</td></tr>
+<tr><td>核函数三性</td><td>奇函数、非因果、$1/t$ 慢衰减</td></tr>
+<tr><td>核心例题</td><td>$\mathcal{H}\{\cos\omega_0t\}=\sin\omega_0t$（$\omega_0&gt;0$）</td></tr>
+<tr><td>关键技巧</td><td>奇函数主值为零 + 狄利克雷积分 $\int\frac{\sin\omega_0u}{u}\mathrm{d}u=\pi\,\mathrm{sgn}(\omega_0)$</td></tr>
+<tr><td>直观含义</td><td>测量信号在当前时刻的左右不对称性</td></tr>
+<tr><td>工程现实</td><td>非因果 ⟹ 只能离线算或加延时近似</td></tr>
+</table>
+
+<div class="q">
+  <span class="tag">本章练习</span>
+  <ol style="margin:6px 0 0">
+    <li>照例 3.2 的方法，直接用积分证明 $\mathcal{H}\{\sin\omega_0t\}=-\cos\omega_0t$（$\omega_0&gt;0$）。</li>
+    <li>求 $\mathcal{H}\{\cos(\omega_0t)+3\}$。由此说明为什么希尔伯特变换<strong>不可逆</strong>。</li>
+    <li>求 $\mathcal{H}\{2\cos(3t)-\sin(5t)\}$。（用线性性 + 变换对表）</li>
+    <li>设 $x(t)$ 是偶函数，证明 $\hat{x}(t)$ 是奇函数。（提示：用第 2 章练习 4 的结论）</li>
+    <li>用例 3.3 的结果验证：当 $T\to\infty$ 时 $\hat{x}(t)\to0$。这与"常数的希尔伯特变换为零"一致吗？</li>
+    <li>由例 3.4 的结果与 $\mathcal{H}^2=-I$，写出 $\mathcal{H}\left\{\frac{t}{1+t^2}\right\}$，并用频域方法独立验证。</li>
+    <li><strong>*</strong> 用对称差式 $\hat{x}(t)=\frac{1}{\pi}\int_0^\infty\frac{x(t-u)-x(t+u)}{u}\mathrm{d}u$ 重新计算 $\mathcal{H}\{\cos\omega_0t\}$，核对结果。</li>
+  </ol>
+  <p style="margin:10px 0 0;font-size:14.5px;color:#6c717c">完整解答见<a href="09-exercises.html">第 9 章习题册</a>。</p>
+</div>
+
+<nav class="pager">
+  <a href="02-prep.html">← 第 2 章　数学预备</a>
+  <a href="04-frequency.html">第 4 章　频域：一台 90° 相移器 →</a>
+</nav>
+
+</div>
+
+<script>
+function fft(re,im){const n=re.length;
+  for(let i=1,j=0;i<n;i++){let bit=n>>1;for(;j&bit;bit>>=1)j^=bit;j^=bit;
+    if(i<j){let t=re[i];re[i]=re[j];re[j]=t;t=im[i];im[i]=im[j];im[j]=t;}}
+  for(let len=2;len<=n;len<<=1){const ang=-2*Math.PI/len,half=len>>1;
+    for(let i=0;i<n;i+=len)for(let k=0;k<half;k++){
+      const wr=Math.cos(ang*k),wi=Math.sin(ang*k),ur=re[i+k],ui=im[i+k],
+            ar=re[i+k+half],ai=im[i+k+half],vr=ar*wr-ai*wi,vi=ar*wi+ai*wr;
+      re[i+k]=ur+vr;im[i+k]=ui+vi;re[i+k+half]=ur-vr;im[i+k+half]=ui-vi;}}}
+function ifft(re,im){const n=re.length;for(let i=0;i<n;i++)im[i]=-im[i];fft(re,im);
+  for(let i=0;i<n;i++){re[i]/=n;im[i]=-im[i]/n;}}
+function analytic(x){const n=x.length,re=Float64Array.from(x),im=new Float64Array(n);
+  fft(re,im); const h=new Float64Array(n); h[0]=1;
+  if(n%2===0){h[n/2]=1;for(let i=1;i<n/2;i++)h[i]=2;}else{for(let i=1;i<=(n-1)/2;i++)h[i]=2;}
+  for(let i=0;i<n;i++){re[i]*=h[i];im[i]*=h[i];} ifft(re,im); return {re:re,im:im};}
+function setupHiDPI(cv){
+  const dpr=window.devicePixelRatio||1;
+  if(!cv.dataset.baseH){cv.dataset.baseH=cv.getAttribute('height')||cv.clientHeight||300;}
+  const h=parseInt(cv.dataset.baseH,10);
+  const w=cv.clientWidth||cv.parentElement.clientWidth;
+  cv.style.height=h+'px';
+  const bw=Math.round(w*dpr),bh=Math.round(h*dpr);
+  if(cv.width!==bw||cv.height!==bh){cv.width=bw;cv.height=bh;}
+  const g=cv.getContext('2d');g.setTransform(dpr,0,0,dpr,0,0);
+  return {g:g,W:w,H:h};
+}
+function poly(g,pts,color,width,dash){if(!pts.length)return;g.save();g.beginPath();
+  if(dash)g.setLineDash(dash);
+  for(let i=0;i<pts.length;i++){i?g.lineTo(pts[i][0],pts[i][1]):g.moveTo(pts[i][0],pts[i][1]);}
+  g.strokeStyle=color;g.lineWidth=width||1.6;g.lineJoin='round';g.stroke();g.restore();}
+function axis(g,x0,y0,x1,y1){poly(g,[[x0,y0],[x1,y1]],'#c9c4b6',1);}
+
+(function(){
+  const cv=document.getElementById('c1'),sel=document.getElementById('sel1'),
+        s=document.getElementById('s1'),v=document.getElementById('v1');
+  const N=1024;
+  function gen(){
+    const k=+s.value, x=new Float64Array(N), m=sel.value;
+    for(let i=0;i<N;i++){
+      const t=i/N, tc=(i-N/2)/N*12;   // 居中坐标，范围 ±6
+      let y=0;
+      if(m==='sin') y=Math.sin(2*Math.PI*k*t);
+      else if(m==='square') y=Math.sin(2*Math.PI*k*t)>=0?0.8:-0.8;
+      else if(m==='tri'){const p=(k*t)%1; y=(p<0.5?4*p-1:3-4*p)*0.85;}
+      else if(m==='pulse') y=Math.abs(tc)<(6/k*1.2)?0.85:0;
+      else if(m==='two') y=0.7*Math.sin(2*Math.PI*k*t)+0.45*Math.sin(2*Math.PI*7*k*t+0.6);
+      else if(m==='gauss'){const w0=6/k*0.5; y=Math.exp(-tc*tc/(2*w0*w0));}
+      else if(m==='lorentz'){const a=6/k*0.9; y=1/(1+(tc/a)*(tc/a));}
+      x[i]=y;
+    }
+    return x;
+  }
+  function draw(){
+    const {g,W,H}=setupHiDPI(cv);
+    v.textContent=s.value;
+    const x=gen(), z=analytic(x);
+    let mx=1e-6;
+    for(let i=0;i<N;i++){mx=Math.max(mx,Math.abs(x[i]),Math.abs(z.im[i]));}
+    g.clearRect(0,0,W,H);
+    const padL=12,padR=12,w=W-padL-padR, X=i=>padL+w*i/(N-1);
+    const rows=[H*0.17,H*0.48,H*0.82], amp=H*0.115;
+    const lbl=['x(t)','x̂(t) = H{x}(t)','两者叠加 + 包络'];
+    const col=['#20242c','#1f6f8b',''];
+    for(let r=0;r<3;r++){
+      axis(g,padL,rows[r],W-padR,rows[r]);
+      g.font='12px ui-sans-serif,system-ui,sans-serif';
+      g.fillStyle=r===2?'#5d6472':col[r];
+      g.fillText(lbl[r],padL+2,rows[r]-amp-8);
+    }
+    const p0=[],p1=[],p2=[],p3=[],pe=[];
+    for(let i=0;i<N;i++){
+      p0.push([X(i),rows[0]-amp*x[i]/mx]);
+      p1.push([X(i),rows[1]-amp*z.im[i]/mx]);
+      p2.push([X(i),rows[2]-amp*x[i]/mx]);
+      p3.push([X(i),rows[2]-amp*z.im[i]/mx]);
+      const e=Math.hypot(x[i],z.im[i]);
+      pe.push([X(i),rows[2]-amp*e/mx]);
+    }
+    poly(g,p0,'#20242c',1.5);
+    poly(g,p1,'#1f6f8b',1.5);
+    poly(g,p3,'#9cc9dc',1.2);
+    poly(g,p2,'#6b6f79',1.2);
+    poly(g,pe,'#c0392b',1.6,[5,3]);
+  }
+  sel.addEventListener('change',draw); s.addEventListener('input',draw);
+  window.addEventListener('resize',draw); draw();
+})();
+</script>
+</body>
+</html>

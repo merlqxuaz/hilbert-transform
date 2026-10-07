@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>第5章 性质与定理</title>
+<script>
+window.MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']],displayMath:[['$$','$$'],['\\[','\\]']]},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<style>
+:root{--paper:#fbfaf6;--ink:#20242c;--muted:#5d6472;--line:#e3dfd3;--accent:#1f6f8b;--accent2:#b4531f;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:Georgia,"Songti SC","Noto Serif SC","Source Han Serif SC","SimSun",serif;line-height:1.85;font-size:17px;-webkit-text-size-adjust:100%}
+.wrap{max-width:880px;margin:0 auto;padding:0 22px 90px}
+header.ch{border-bottom:3px double var(--line);padding:44px 0 24px;margin-bottom:34px}
+.kicker{font-family:ui-sans-serif,system-ui,sans-serif;letter-spacing:.2em;font-size:11.5px;color:var(--accent);text-transform:uppercase}
+h1{font-size:29px;margin:12px 0 8px;line-height:1.3}
+.sub{color:var(--muted);font-size:15.5px;margin:0}
+h2{font-size:22px;margin:46px 0 14px;padding-left:12px;border-left:5px solid var(--accent)}
+h3{font-size:18px;margin:30px 0 10px;color:var(--accent2)}
+p{margin:14px 0}
+.box{background:#fff;border:1px solid var(--line);border-radius:8px;padding:14px 18px;margin:22px 0}
+.tag{font-family:ui-sans-serif,system-ui,sans-serif;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;display:block;margin-bottom:6px}
+.def{border-left:5px solid #1f6f8b}.def .tag{color:#1f6f8b}
+.thm{border-left:5px solid #7a4fb5}.thm .tag{color:#6b3fa8}
+.ex{border-left:5px solid #2e8b57}.ex .tag{color:#24704a}
+.warn{border-left:5px solid #c0392b;background:#fff8f7}.warn .tag{color:#a5321f}
+.tip{border-left:5px solid #d99b16;background:#fffdf5}.tip .tag{color:#a8760a}
+.pf{background:#f7f5ee;border-left:3px solid #c9c4b6;padding:2px 16px;margin:12px 0 18px;font-size:16px}
+.pf::after{content:"∎";display:block;text-align:right;color:#8a8f9a;margin-top:-8px}
+a{color:var(--accent);text-underline-offset:3px}
+table{width:100%;border-collapse:collapse;margin:20px 0;font-size:15px;background:#fff}
+th,td{border:1px solid var(--line);padding:8px 11px;text-align:left;vertical-align:top}
+th{background:#f2efe6;font-family:ui-sans-serif,system-ui,sans-serif;font-size:13.5px}
+ol,ul{padding-left:1.5em}li{margin:7px 0}
+figure.demo{margin:26px 0;border:1px solid var(--line);background:#fff;border-radius:10px;padding:14px}
+canvas{width:100%;display:block;border-radius:4px}
+.ctrl{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;font-family:ui-sans-serif,system-ui,sans-serif;font-size:13px;margin-top:12px}
+.ctrl label{display:flex;align-items:center;gap:8px;flex:1 1 210px}
+input[type=range]{flex:1;min-width:90px;accent-color:var(--accent)}
+figcaption{font-family:ui-sans-serif,system-ui,sans-serif;font-size:13px;color:var(--muted);margin-top:10px;line-height:1.65}
+nav.pager{display:flex;justify-content:space-between;gap:12px;margin-top:64px;border-top:1px solid var(--line);padding-top:18px;font-family:ui-sans-serif,system-ui,sans-serif;font-size:14px}
+nav.pager a{text-decoration:none}
+.q{background:#fff;border:1px dashed var(--line);border-left:5px solid #8a8f9a;border-radius:8px;padding:14px 18px;margin:22px 0}
+.q .tag{color:#6c717c}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="ch">
+  <div class="kicker">第 5 章</div>
+  <h1>性质与定理</h1>
+  <p class="sub">十条性质，每条都给证明。有了第 4 章的 $H(\omega)=-j\,\mathrm{sgn}(\omega)$，绝大多数证明只要两三行 —— 这就是为什么我们先去了频域。</p>
+</header>
+
+<p>本章统一约定：$x,y$ 是实的、能量有限（$L^2$）的信号，$\hat{x}=\mathcal{H}\{x\}$，$X(\omega)=\mathcal{F}\{x\}$。凡涉及 $\mathcal{H}^2=-I$ 的结论，都默认信号<strong>零均值</strong>（$X(0)=0$），理由见第 4.3.4 节。</p>
+
+<h2>5.1 线性</h2>
+
+<div class="box thm">
+  <span class="tag">性质 1</span>
+  <p style="margin:6px 0 0">$$\mathcal{H}\{a x+b y\}=a\,\hat{x}+b\,\hat{y},\qquad a,b\in\mathbb{R}$$</p>
+</div>
+
+<div class="pf">
+<p><strong>证</strong>　$\mathcal{H}$ 是与固定核的卷积，而卷积对输入线性（第 2.4.2 节）。或在频域：$-j\,\mathrm{sgn}(\omega)\big[aX+bY\big]=a\big[-j\,\mathrm{sgn}(\omega)X\big]+b\big[-j\,\mathrm{sgn}(\omega)Y\big]$。</p>
+</div>
+
+<p>这条最基础也最好用：任何能拆成已知项之和的信号，都可以逐项变换。第 3.6 节的变换对表之所以有用，全靠这一条。</p>
+
+<h2>5.2 时移与尺度变换</h2>
+
+<div class="box thm">
+  <span class="tag">性质 2 · 时移不变</span>
+  <p style="margin:6px 0 0">$$\mathcal{H}\{x(t-t_0)\}=\hat{x}(t-t_0)$$</p>
+</div>
+
+<div class="pf">
+<p><strong>证</strong>　频域两边同乘 $e^{-j\omega t_0}$，与 $-j\,\mathrm{sgn}(\omega)$ 可交换（都是 $\omega$ 的函数，乘法可交换）：$-j\,\mathrm{sgn}(\omega)\cdot e^{-j\omega t_0}X(\omega)=e^{-j\omega t_0}\cdot\hat{X}(\omega)$。</p>
+</div>
+
+<div class="box thm">
+  <span class="tag">性质 3 · 尺度变换</span>
+  <p style="margin:6px 0 0">对实数 $a\neq0$，</p>
+  <p>$$\mathcal{H}\{x(at)\}=\mathrm{sgn}(a)\cdot\hat{x}(at)$$</p>
+</div>
+
+<div class="pf">
+<p><strong>证</strong>　令 $y(t)=x(at)$，则 $Y(\omega)=\frac{1}{|a|}X\!\left(\frac{\omega}{a}\right)$。于是</p>
+<p>$$\hat{Y}(\omega)=-j\,\mathrm{sgn}(\omega)\cdot\frac{1}{|a|}X\!\left(\frac{\omega}{a}\right)$$</p>
+<p>另一方面，设 $g(t)=\hat{x}(at)$，则</p>
+<p>$$G(\omega)=\frac{1}{|a|}\hat{X}\!\left(\frac{\omega}{a}\right)=\frac{1}{|a|}\left(-j\,\mathrm{sgn}\!\left(\frac{\omega}{a}\right)\right)X\!\left(\frac{\omega}{a}\right)=\frac{-j\,\mathrm{sgn}(\omega)\,\mathrm{sgn}(a)}{|a|}X\!\left(\frac{\omega}{a}\right)$$</p>
+<p>比较得 $\hat{Y}(\omega)=\mathrm{sgn}(a)\,G(\omega)$。</p>
+</div>
+
+<div class="box tip">
+  <span class="tag">注意那个 $\mathrm{sgn}(a)$</span>
+  <p style="margin:6px 0 0">取 $a=-1$：$\mathcal{H}\{x(-t)\}=-\hat{x}(-t)$。所以<strong>时间反转会让希尔伯特变换反号</strong>。物理上很好理解：希尔伯特变换测的是"左右不对称性"（第 3.2 节），把时间轴倒过来，左右互换，自然差个负号。这也立刻给出性质 6 的奇偶规律。</p>
+</div>
+
+<h2>5.3 二次迭代与求逆</h2>
+
+<div class="box thm">
+  <span class="tag">性质 4 · $\mathcal{H}^2=-I$</span>
+  <p style="margin:6px 0 0">若 $x$ 零均值，则</p>
+  <p>$$\mathcal{H}\{\mathcal{H}\{x\}\}=-x,\qquad \mathcal{H}^4=I,\qquad \mathcal{H}^{-1}=-\mathcal{H}$$</p>
+</div>
+
+<div class="pf">
+<p><strong>证</strong>　$\big[-j\,\mathrm{sgn}(\omega)\big]^2=(-j)^2\mathrm{sgn}^2(\omega)=-1$（$\omega\neq0$）。四次方即 $(-1)^2=1$。由 $\mathcal{H}\cdot(-\mathcal{H})=-\mathcal{H}^2=I$ 得逆算子。</p>
+</div>
+
+<p>写成显式的<strong>逆变换公式</strong>：</p>
+
+<p>$$x(t)=-\frac{1}{\pi}\,\mathrm{P}\!\!\int_{-\infty}^{\infty}\frac{\hat{x}(\tau)}{t-\tau}\,\mathrm{d}\tau\;+\;\bar{x}$$</p>
+
+<p>其中 $\bar{x}$ 是原信号的直流分量 —— 它<strong>无法</strong>从 $\hat{x}$ 恢复，必须另外知道。这个"差一个常数"的不确定性，和不定积分差一个常数是同一类事情。</p>
+
+<div class="box tip">
+  <span class="tag">代数视角</span>
+  <p style="margin:6px 0 0">$\mathcal{H}^2=-I$ 说明 $\mathcal{H}$ 在零均值信号空间上扮演着"虚数单位"的角色：它像 $j$ 一样，平方等于 $-1$。这不是巧合 —— 第 6 章构造解析信号 $x+j\hat{x}$ 时，正是把 $\mathcal{H}$ 和 $j$ 的这种同构关系用到了极致。四次循环 $x\to\hat{x}\to-x\to-\hat{x}\to x$ 对应复平面上转四个 $90°$。</p>
+</div>
+
+<h2>5.4 能量守恒（等距性）</h2>
+
+<div class="box thm">
+  <span class="tag">性质 5 · 保能量</span>
+  <p style="margin:6px 0 0">$$\int_{-\infty}^{\infty}\hat{x}^2(t)\,\mathrm{d}t=\int_{-\infty}^{\infty}x^2(t)\,\mathrm{d}t$$</p>
+  <p style="margin:6px 0 0">即 $\|\hat{x}\|=\|x\|$，$\mathcal{H}$ 是零均值 $L^2$ 空间上的<strong>等距算子</strong>。</p>
+</div>
+
+<div class="pf">
+<p><strong>证</strong>　由 Parseval 定理（定理 2.3）与 $|H(\omega)|=1$：</p>
+<p>$$\int\hat{x}^2\mathrm{d}t=\frac{1}{2\pi}\int|\hat{X}(\omega)|^2\mathrm{d}\omega=\frac{1}{2\pi}\int\underbrace{|-j\,\mathrm{sgn}\omega|^2}_{=1}|X(\omega)|^2\mathrm{d}\omega=\int x^2\mathrm{d}t$$</p>
+</div>
+
+<p>工程含义：希尔伯特变换器<strong>不放大也不衰减信号</strong>。这是"全通滤波器"的能量表述，也是它在测量仪器里受欢迎的原因 —— 它不会改变你关心的功率、有效值等指标。</p>
+
+<h2>5.5 正交性</h2>
+
+<div class="box thm">
+  <span class="tag">性质 6 · 信号与其变换正交</span>
+  <p style="margin:6px 0 0">$$\int_{-\infty}^{\infty}x(t)\,\hat{x}(t)\,\mathrm{d}t=0$$</p>
+</div>
+
+<div class="pf">
+<p><strong>证</strong>　用广义 Parseval：$\int x\hat{x}\,\mathrm{d}t=\frac{1}{2\pi}\int X(\omega)\overline{\hat{X}(\omega)}\,\mathrm{d}\omega$。而</p>
+<p>$$\overline{\hat{X}(\omega)}=\overline{-j\,\mathrm{sgn}(\omega)X(\omega)}=+j\,\mathrm{sgn}(\omega)\overline{X(\omega)}$$</p>
+<p>所以</p>
+<p>$$\int x\hat{x}\,\mathrm{d}t=\frac{j}{2\pi}\int \mathrm{sgn}(\omega)\,X(\omega)\overline{X(\omega)}\,\mathrm{d}\omega=\frac{j}{2\pi}\int \underbrace{\mathrm{sgn}(\omega)}_{\text{奇}}\underbrace{|X(\omega)|^2}_{\text{偶}}\,\mathrm{d}\omega$$</p>
+<p>被积函数是奇函数（奇×偶），在对称区间上积分为零。（$|X|^2$ 为偶用到了 $x$ 是实的，见第 2.5.3 节。）</p>
+</div>
+
+<p>这条把第 1.3 节关于 $\cos\perp\sin$ 的观察推广到了<strong>任意</strong>信号。它的意义在于：$\hat{x}$ 提供的信息和 $x$ 完全"不重叠"，所以把它们拼成复信号 $x+j\hat{x}$ 时不会有冗余、不会互相干扰。这是解析信号能正确给出包络的<strong>根本原因</strong>。</p>
+
+<div class="box tip">
+  <span class="tag">进阶：反自伴性</span>
+  <p style="margin:6px 0 0">更一般地，对任意两个实信号，</p>
+  <p>$$\langle \mathcal{H}x,\,y\rangle=-\langle x,\,\mathcal{H}y\rangle$$</p>
+  <p style="margin:6px 0 0">即 $\mathcal{H}^{*}=-\mathcal{H}$，$\mathcal{H}$ 是<strong>反自伴（skew-adjoint）</strong>算子。取 $y=x$ 立刻得到 $\langle\mathcal{H}x,x\rangle=-\langle x,\mathcal{H}x\rangle$，而两边是同一个实数，故必为零 —— 这是性质 6 的一行证明。等距 + 反自伴 ⟹ $\mathcal{H}$ 是一个"正交复结构"，这正是它在泛函分析中的地位。</p>
+</div>
+
+<h2>5.6 奇偶性</h2>
+
+<div class="box thm">
+  <span class="tag">性质 7</span>
+  <p style="margin:6px 0 0">$x$ 为偶函数 $\Longrightarrow$ $\hat{x}$ 为奇函数；<br>$x$ 为奇函数 $\Longrightarrow$ $\hat{x}$ 为偶函数。</p>
+</div>
+
+<div class="pf">
+<p><strong>证</strong>　由性质 3 取 $a=-1$：$\mathcal{H}\{x(-t)\}=-\hat{x}(-t)$。若 $x$ 偶，左边 $=\mathcal{H}\{x(t)\}=\hat{x}(t)$，故 $\hat{x}(t)=-\hat{x}(-t)$，即 $\hat{x}$ 奇。若 $x$ 奇，左边 $=\mathcal{H}\{-x(t)\}=-\hat{x}(t)$，故 $-\hat{x}(t)=-\hat{x}(-t)$，即 $\hat{x}$ 偶。</p>
+</div>
+
+<p>核对一下已知例子：$\cos$ 偶 → $\sin$ 奇 ✓；$\sin$ 奇 → $-\cos$ 偶 ✓；$\frac{1}{1+t^2}$ 偶 → $\frac{t}{1+t^2}$ 奇 ✓；矩形脉冲偶 → $\frac{1}{\pi}\ln\left|\frac{t+T}{t-T}\right|$ 奇 ✓。全部符合。</p>
+
+<h2>5.7 与微分、积分交换</h2>
+
+<div class="box thm">
+  <span class="tag">性质 8</span>
+  <p style="margin:6px 0 0">$$\mathcal{H}\!\left\{\frac{\mathrm{d}x}{\mathrm{d}t}\right\}=\frac{\mathrm{d}}{\mathrm{d}t}\mathcal{H}\{x\}=\frac{\mathrm{d}\hat{x}}{\mathrm{d}t}$$</p>
+</div>
+
+<div class="pf">
+<p><strong>证</strong>　两边在频域分别是 $-j\,\mathrm{sgn}(\omega)\cdot j\omega X(\omega)$ 和 $j\omega\cdot\big(-j\,\mathrm{sgn}(\omega)X(\omega)\big)$。都是数的乘法，可交换，故相等。</p>
+</div>
+
+<p>这条很实用：需要 $\hat{x}$ 的导数时，可以先求导再变换，哪个方便用哪个。同样的道理，$\mathcal{H}$ 与积分也交换（差一个积分常数），与任何 LTI 算子都交换。</p>
+
+<div class="box ex">
+  <span class="tag">例 5.1 · 用交换性省力</span>
+  <p style="margin:6px 0 0">已知 $\mathcal{H}\left\{\frac{1}{1+t^2}\right\}=\frac{t}{1+t^2}$，求 $\mathcal{H}\left\{\frac{-2t}{(1+t^2)^2}\right\}$。</p>
+  <p><strong>解</strong>　注意 $\frac{-2t}{(1+t^2)^2}=\frac{\mathrm{d}}{\mathrm{d}t}\frac{1}{1+t^2}$。由性质 8：</p>
+  <p>$$\mathcal{H}\left\{\frac{\mathrm{d}}{\mathrm{d}t}\frac{1}{1+t^2}\right\}=\frac{\mathrm{d}}{\mathrm{d}t}\frac{t}{1+t^2}=\frac{(1+t^2)-t\cdot2t}{(1+t^2)^2}=\frac{1-t^2}{(1+t^2)^2}$$</p>
+  <p style="margin:6px 0 0">硬算这个主值积分会很痛苦，借交换性只用了一次求导。</p>
+</div>
+
+<h2>5.8 与卷积的关系</h2>
+
+<div class="box thm">
+  <span class="tag">性质 9</span>
+  <p style="margin:6px 0 0">$$\mathcal{H}\{x*y\}=\hat{x}*y=x*\hat{y}$$</p>
+  <p style="margin:6px 0 0">$$\hat{x}*\hat{y}=-\,x*y\qquad(\text{零均值})$$</p>
+</div>
+
+<div class="pf">
+<p><strong>证</strong>　第一式频域是 $-j\,\mathrm{sgn}(\omega)X Y$，三种分组方式给出的都是这个乘积。第二式频域是 $\big[-j\,\mathrm{sgn}\omega\big]^2XY=-XY$。</p>
+</div>
+
+<p>读法：<strong>"$\mathcal{H}$ 只需作用在卷积的任意一个因子上"</strong>。这在推导调制、滤波级联的公式时非常省事。</p>
+
+<div class="box warn">
+  <span class="tag">重要警告：对乘法不成立！</span>
+  <p style="margin:6px 0 0">卷积可以"只作用一边"，<strong>普通乘法不行</strong>：</p>
+  <p>$$\mathcal{H}\{x(t)\,y(t)\}\;\neq\;x(t)\,\hat{y}(t)\qquad\text{（一般情况下）}$$</p>
+  <p style="margin:6px 0 0">下面用两个具体例子说明。两次都取 $y=\cos\omega_0t$（于是 $\hat y=\sin\omega_0t$），只换 $x$。</p>
+
+  <p style="margin:12px 0 0"><strong>尝试一：$x=\cos\omega_0t$（会"碰巧"成立，看清陷阱在哪）。</strong></p>
+  <p>左边先用倍角公式降次 $\cos^2\theta=\frac{1+\cos2\theta}{2}$，再逐项变换（线性性 + 常数的变换为零）：</p>
+  <p>$$\mathcal{H}\{x y\}=\mathcal{H}\{\cos^2\omega_0t\}=\mathcal{H}\!\left\{\frac{1}{2}+\frac{\cos2\omega_0t}{2}\right\}=\underbrace{\mathcal{H}\!\left\{\tfrac12\right\}}_{=\,0}+\frac{1}{2}\underbrace{\mathcal{H}\{\cos2\omega_0t\}}_{=\,\sin2\omega_0t}=\frac{1}{2}\sin2\omega_0t$$</p>
+  <p>右边用积化和差 $\cos\theta\sin\theta=\frac12\sin2\theta$：</p>
+  <p>$$x\,\hat y=\cos\omega_0t\,\sin\omega_0t=\frac{1}{2}\sin2\omega_0t$$</p>
+  <p><em>两边相等 —— 但这是碰巧。</em>碰巧的原因是：$\cos^2$ 展开后那个直流项 $\frac12$ 恰好被 $\mathcal{H}$ 消灭了（第 4.3.4 节），而右边压根没有直流项，两边就对上了。换一个 $x$，这个巧合立刻消失。</p>
+
+  <p style="margin:12px 0 0"><strong>尝试二：$x=\sin\omega_0t$（这次真的不等）。</strong></p>
+  <p>左边用 $\sin\theta\cos\theta=\frac12\sin2\theta$，再查表 $\mathcal{H}\{\sin\}=-\cos$：</p>
+  <p>$$\mathcal{H}\{x y\}=\mathcal{H}\{\sin\omega_0t\cos\omega_0t\}=\frac{1}{2}\mathcal{H}\{\sin2\omega_0t\}=-\frac{1}{2}\cos2\omega_0t$$</p>
+  <p>右边用降次公式 $\sin^2\theta=\frac{1-\cos2\theta}{2}$：</p>
+  <p>$$x\,\hat y=\sin\omega_0t\cdot\sin\omega_0t=\sin^2\omega_0t=\frac{1}{2}-\frac{1}{2}\cos2\omega_0t$$</p>
+  <p>两边相减：</p>
+  <p>$$x\,\hat y-\mathcal{H}\{xy\}=\left(\frac{1}{2}-\frac{1}{2}\cos2\omega_0t\right)-\left(-\frac{1}{2}\cos2\omega_0t\right)=\frac{1}{2}\ \neq\ 0$$</p>
+  <p>差了一个常数 $\frac12$，确实不相等。<strong>差别正是那个直流项</strong>：$\mathcal{H}$ 的输出永远零均值（第 4.3.4 节），而 $x\hat y$ 没有这个约束，可以带直流。所以"$\mathcal{H}$ 只作用一边"这种写法，一般来说连零均值这一条都保证不了。</p>
+
+  <p style="margin:12px 0 0">对照两次尝试可以看出<strong>失败的机理</strong>：$x$ 和 $y$ 的频谱都集中在 $\pm\omega_0$，两者<em>频带完全重叠</em>，乘积把它们搅在一起（产生 $0$ 和 $\pm2\omega_0$ 两处分量），$\mathcal{H}$ 无法再分辨哪部分该由谁负责。</p>
+  <p style="margin:6px 0 0">那么什么时候能"只作用一边"？这就是下一节的 Bedrosian 定理。</p>
+</div>
+
+<h2>5.9 Bedrosian 定理（工程上最有用的一条）</h2>
+
+<div class="box thm">
+  <span class="tag">定理 5.1 · Bedrosian（1963）</span>
+  <p style="margin:6px 0 0">设 $f,g$ 的频谱<strong>互不重叠且分居低高</strong>，即存在 $\omega_c&gt;0$ 使</p>
+  <p>$$F(\omega)=0\ \ \text{当}\ |\omega|&gt;\omega_c,\qquad G(\omega)=0\ \ \text{当}\ |\omega|&lt;\omega_c$$</p>
+  <p>则</p>
+  <p>$$\mathcal{H}\{f(t)\,g(t)\}=f(t)\cdot\mathcal{H}\{g\}(t)$$</p>
+  <p style="margin:6px 0 0">即：<strong>低频因子可以直接"穿过"希尔伯特变换算子</strong>。</p>
+</div>
+
+<div class="pf">
+<p><strong>证明</strong>　整个证明只有一个技术点：说明符号函数 $\mathrm{sgn}(\omega)$ 可以"挪进卷积里、只乘到 $G$ 头上"。下面分四步。</p>
+
+<p><strong>第一步 · 搬到频域。</strong>时域乘法对应频域卷积（这是卷积定理的对偶形式）：</p>
+<p>$$\mathcal{F}\{fg\}(\omega)=\frac{1}{2\pi}(F*G)(\omega)=\frac{1}{2\pi}\int_{-\infty}^{\infty}F(\nu)\,G(\omega-\nu)\,\mathrm{d}\nu$$</p>
+<p>于是要证的等式在频域变成</p>
+<p>$$\underbrace{-j\,\mathrm{sgn}(\omega)\cdot\frac{1}{2\pi}(F*G)(\omega)}_{\mathcal{F}\{\mathcal{H}\{fg\}\}}
+\;\overset{?}{=}\;
+\underbrace{\frac{1}{2\pi}\big(F*[-j\,\mathrm{sgn}\cdot G]\big)(\omega)}_{\mathcal{F}\{f\cdot\hat g\}}$$</p>
+<p>两边的公因子 $\frac{-j}{2\pi}$ 可以约掉，所以只需证明</p>
+<p>$$\mathrm{sgn}(\omega)\int F(\nu)G(\omega-\nu)\,\mathrm{d}\nu=\int F(\nu)\,\mathrm{sgn}(\omega-\nu)\,G(\omega-\nu)\,\mathrm{d}\nu$$</p>
+
+<p><strong>第二步 · 看清楚要证的到底是什么。</strong>把 $\mathrm{sgn}(\omega)$ 挪到积分号里面（它与积分变量 $\nu$ 无关，可以随便进出），上式等价于</p>
+<p>$$\int F(\nu)\,\Big[\mathrm{sgn}(\omega)-\mathrm{sgn}(\omega-\nu)\Big]G(\omega-\nu)\,\mathrm{d}\nu=0$$</p>
+<p>所以<strong>只要能证明：凡是使被积函数不为零的 $\nu$（即 $F(\nu)\neq0$ 且 $G(\omega-\nu)\neq0$ 的那些点），都满足 $\mathrm{sgn}(\omega)=\mathrm{sgn}(\omega-\nu)$</strong>，方括号就恒为零，积分自然为零。</p>
+
+<p><strong>第三步 · 用频带分离的假设验证这一点。</strong>设 $\nu$ 使被积函数不为零，那么：</p>
+<ul>
+  <li>由 $F(\nu)\neq0$ 和假设"$F$ 在 $|\omega|&gt;\omega_c$ 处为零"，得 $|\nu|\le\omega_c$，即 $-\omega_c\le\nu\le\omega_c$。</li>
+  <li>由 $G(\omega-\nu)\neq0$ 和假设"$G$ 在 $|\omega|&lt;\omega_c$ 处为零"，得 $|\omega-\nu|\ge\omega_c$，即 $\omega-\nu\ge\omega_c$ <em>或</em> $\omega-\nu\le-\omega_c$。</li>
+</ul>
+<p>分两种情形。注意恒等式 $\omega=(\omega-\nu)+\nu$ —— 把 $\omega$ 拆成"$G$ 贡献的那部分"加"$F$ 贡献的那部分"，这是全证明的关键一招。</p>
+<ul>
+  <li><strong>情形 A：$\omega-\nu\ge\omega_c$</strong>（此时 $\mathrm{sgn}(\omega-\nu)=+1$）。用 $\nu\ge-\omega_c$：
+  $$\omega=(\omega-\nu)+\nu\ \ge\ \omega_c+(-\omega_c)=0$$
+  所以 $\omega\ge0$，$\mathrm{sgn}(\omega)=+1$，与 $\mathrm{sgn}(\omega-\nu)$ 相同。✓</li>
+  <li><strong>情形 B：$\omega-\nu\le-\omega_c$</strong>（此时 $\mathrm{sgn}(\omega-\nu)=-1$）。用 $\nu\le\omega_c$：
+  $$\omega=(\omega-\nu)+\nu\ \le\ -\omega_c+\omega_c=0$$
+  所以 $\omega\le0$，$\mathrm{sgn}(\omega)=-1$，同样相符。✓</li>
+</ul>
+<p>（$\omega=0$ 这一个孤立点对积分没有贡献，可以忽略。）两种情形都成立，第二步的方括号恒为零。</p>
+
+<p><strong>第四步 · 收尾。</strong>于是 $\mathrm{sgn}(\omega)\,(F*G)=\big(F*[\mathrm{sgn}\cdot G]\big)$，两边乘 $\frac{-j}{2\pi}$ 并做逆傅里叶变换，即得</p>
+<p>$$\mathcal{H}\{f(t)g(t)\}=f(t)\cdot\mathcal{H}\{g\}(t)\qquad\blacksquare$$</p>
+
+<p><strong>这一步的关键直觉</strong>：$\mathcal{H}$ 唯一关心的是"这个频率成分是正的还是负的"。$f$ 的频谱挤在 $\pm\omega_c$ 之内，它在卷积里只能把 $G$ 的频谱<em>小幅左右推一推</em>（推动量不超过 $\omega_c$）；而 $G$ 的频谱本来就离原点至少 $\omega_c$ 远，被推一推之后<strong>跨不过 $\omega=0$ 这条分界线</strong>，正的还是正的，负的还是负的。既然正负号没被搅乱，$\mathcal{H}$ 就等于只对 $g$ 动手。反过来看 5.8 节那个反例：$x$ 与 $y$ 频带完全重叠，推动量足以跨过原点，正负混淆，公式当然就垮了。</p>
+</div>
+
+<div class="box ex">
+  <span class="tag">例 5.2 · 调幅信号（第 1.5 节的严格化）</span>
+  <p style="margin:6px 0 0">设 $A(t)$ 的频谱限于 $|\omega|&lt;\omega_m$，载波频率 $\omega_c&gt;\omega_m$。则</p>
+  <p>$$\mathcal{H}\{A(t)\cos\omega_ct\}=A(t)\,\mathcal{H}\{\cos\omega_ct\}=A(t)\sin(\omega_ct)$$</p>
+  <p style="margin:6px 0 0">条件严格满足（$A$ 的谱在 $\omega_m$ 以下，$\cos\omega_ct$ 的谱是 $\pm\omega_c$ 两根线，在 $\omega_m$ 以上）。于是解析信号是 $A(t)e^{j\omega_ct}$，包络<strong>精确</strong>等于 $|A(t)|$。第 1 章那个"$\approx$"现在可以换成"$=$"了。</p>
+</div>
+
+<figure class="demo">
+  <canvas id="c1" height="360"></canvas>
+  <div class="ctrl">
+    <label>包络带宽 $f_m$ <input id="s1" type="range" min="1" max="26" value="3"><span id="v1" style="min-width:30px;text-align:right">3</span></label>
+    <label>载波频率 $f_c$ <input id="s2" type="range" min="4" max="40" value="28"><span id="v2" style="min-width:30px;text-align:right">28</span></label>
+  </div>
+  <figcaption><strong>图 5.1</strong>　Bedrosian 条件成立与失效的对比。上：$\hat{x}$ 的真值（FFT 精确计算，黑）与 Bedrosian 近似 $A(t)\sin\omega_ct$（红虚线）。中：两者之差。下：频谱示意，灰色为 $A(t)$ 的频带，蓝线为载波。当 $f_c&gt;f_m$（频带分离）时误差约为 0；把 $f_m$ 拖大或 $f_c$ 拖小，让两个频带重叠，误差立刻爆炸 —— 这时"包络"这个概念本身就不再可靠了。</figcaption>
+</figure>
+
+<div class="box warn">
+  <span class="tag">这条定理为什么重要</span>
+  <p style="margin:6px 0 0">几乎所有关于"包络"和"瞬时频率"的工程应用，都<strong>隐含假设</strong>信号可以写成"慢变包络 × 快变载波"且两者频带分离。振动分析、通信解调、地震属性、EMD 分解，全都建立在 Bedrosian 条件之上。当信号是宽带的、或含多个频率相近的分量时，这个假设破产，算出来的"瞬时频率"可能出现负值、剧烈跳变等物理上讲不通的结果（见第 6.6 节）。</p>
+  <p style="margin:6px 0 0"><strong>所以：拿到任何"瞬时属性"的结果，第一件事是问"频带分离吗？"</strong></p>
+</div>
+
+<h2>5.10 Titchmarsh 定理与解析性</h2>
+
+<p>这一节给出希尔伯特变换的"第三副面孔"的严格表述。它把三件看起来毫无关系的事情等同起来。</p>
+
+<div class="box thm">
+  <span class="tag">定理 5.2 · Titchmarsh</span>
+  <p style="margin:6px 0 0">设 $z(t)=x(t)+j\hat{x}(t)$（平方可积）。下列三条<strong>互相等价</strong>：</p>
+  <ol style="margin:6px 0 0">
+    <li><strong>（希尔伯特关系）</strong>$x$ 与 $\hat{x}$ 互为希尔伯特变换：$\hat x=\mathcal H\{x\}$ 且 $x=-\mathcal H\{\hat x\}$。</li>
+    <li><strong>（频域单边）</strong>$Z(\omega)=0$ 对一切 $\omega&lt;0$。</li>
+    <li><strong>（解析延拓）</strong>$z(t)$ 可延拓为上半复平面 $\operatorname{Im}\zeta&gt;0$ 上的解析函数，且在该半平面内平方可积一致有界。</li>
+  </ol>
+</div>
+
+<p>不要求你现在能证明它（需要复变函数的知识），但要求你<strong>读懂它在说什么</strong>：</p>
+
+<table>
+<tr><th>条件</th><th>通俗说法</th><th>对应章节</th></tr>
+<tr><td>1</td><td>实部和虚部通过那个积分式绑在一起</td><td>第 3–5 章</td></tr>
+<tr><td>2</td><td>信号"只含正频率"，没有负频率成分</td><td>第 6 章</td></tr>
+<tr><td>3</td><td>信号是某个上半平面解析函数的边界值</td><td>第 8.8 节</td></tr>
+</table>
+
+<p>三者等价，意味着<strong>"因果/单边/解析/希尔伯特"其实是一件事的四种说法</strong>。物理学中最著名的应用是把"时间上的因果性"（响应不能先于激励）翻译成"频率响应的实部与虚部互为希尔伯特变换"，也就是 Kramers–Kronig 关系。</p>
+
+<div class="box tip">
+  <span class="tag">Titchmarsh 定理的一个漂亮推论</span>
+  <p style="margin:6px 0 0"><strong>除了零函数，一个信号和它的希尔伯特变换不可能同时是有限支撑的。</strong></p>
+  <p style="margin:6px 0 0">理由：若 $x$ 和 $\hat{x}$ 都在有限区间外为零，则 $z=x+j\hat x$ 有限支撑；但由条件 2 它的频谱单边，而"时域有限支撑"与"频谱半边为零"是一对不能同时满足的约束（类似不确定性原理）。这解释了例 3.3 里那条"矩形脉冲的变换拖到无穷远"的长尾 —— 它不是计算误差，是<strong>定理保证必然发生</strong>的。</p>
+</div>
+
+<h2>5.11 性质总表</h2>
+
+<table>
+<tr><th>#</th><th>性质</th><th>表达式</th><th>前提</th></tr>
+<tr><td>1</td><td>线性</td><td>$\mathcal{H}\{ax+by\}=a\hat{x}+b\hat{y}$</td><td>—</td></tr>
+<tr><td>2</td><td>时移不变</td><td>$\mathcal{H}\{x(t-t_0)\}=\hat{x}(t-t_0)$</td><td>—</td></tr>
+<tr><td>3</td><td>尺度</td><td>$\mathcal{H}\{x(at)\}=\mathrm{sgn}(a)\hat{x}(at)$</td><td>$a\neq0$</td></tr>
+<tr><td>4</td><td>二次迭代</td><td>$\mathcal{H}^2=-I$，$\mathcal{H}^{-1}=-\mathcal{H}$</td><td>零均值</td></tr>
+<tr><td>5</td><td>保能量</td><td>$\|\hat{x}\|_2=\|x\|_2$</td><td>零均值</td></tr>
+<tr><td>6</td><td>正交</td><td>$\int x\hat{x}\,\mathrm{d}t=0$；$\mathcal{H}^*=-\mathcal{H}$</td><td>$x$ 实</td></tr>
+<tr><td>7</td><td>奇偶反转</td><td>偶→奇，奇→偶</td><td>—</td></tr>
+<tr><td>8</td><td>与微分交换</td><td>$\mathcal{H}\{x'\}=(\hat{x})'$</td><td>—</td></tr>
+<tr><td>9</td><td>卷积</td><td>$\mathcal{H}\{x*y\}=\hat{x}*y=x*\hat{y}$；$\hat{x}*\hat{y}=-x*y$</td><td>—</td></tr>
+<tr><td>10</td><td>Bedrosian</td><td>$\mathcal{H}\{fg\}=f\,\hat{g}$</td><td><strong>频带分离</strong></td></tr>
+<tr><td>11</td><td>直流消失</td><td>$\int\hat{x}\,\mathrm{d}t=0$，$\hat X(0)=0$</td><td>—</td></tr>
+<tr><td>12</td><td>Titchmarsh</td><td>希尔伯特关系 ⟺ 单边谱 ⟺ 上半平面解析</td><td>$L^2$</td></tr>
+<tr><td>—</td><td><strong>不成立</strong></td><td>$\mathcal{H}\{xy\}\neq x\hat{y}$（除非满足 Bedrosian）</td><td>—</td></tr>
+</table>
+
+<h2>5.12 本章要点</h2>
+
+<p>如果只能记三条，记这三条：</p>
+
+<ol>
+  <li><strong>$\mathcal{H}^2=-I$。</strong>它让 $\mathcal{H}$ 像虚数单位一样，是构造解析信号的代数基础。</li>
+  <li><strong>$\int x\hat{x}\,\mathrm{d}t=0$ 且 $\|\hat{x}\|=\|x\|$。</strong>$\hat{x}$ 是 $x$ 的"完美搭档"：一样大，完全独立。</li>
+  <li><strong>Bedrosian 定理。</strong>所有工程应用的合法性都挂在这条定理上，用之前必须检查频带分离。</li>
+</ol>
+
+<div class="q">
+  <span class="tag">本章练习</span>
+  <ol style="margin:6px 0 0">
+    <li>用性质 1 和第 3.6 节的表求 $\mathcal{H}\{3\cos 2t-2\sin 5t+7\}$。</li>
+    <li>用性质 3 求 $\mathcal{H}\left\{\frac{1}{1+4t^2}\right\}$。（提示：$\frac{1}{1+4t^2}=\frac{1}{1+(2t)^2}$，$a=2$）</li>
+    <li>验证性质 6：直接计算 $\int_0^T\cos(\omega_0t)\sin(\omega_0t)\mathrm{d}t$，其中 $T=2\pi/\omega_0$。</li>
+    <li>设 $x(t)=e^{-t^2}$（偶函数）。不做计算，判断 $\hat{x}(0)$ 等于多少。</li>
+    <li>用性质 8 求 $\mathcal{H}\{\cos^2 t\}$ 的导数，两种途径核对。</li>
+    <li>下列哪些满足 Bedrosian 条件？(a) $f=\cos t$, $g=\cos 100t$；(b) $f=\cos 50t$, $g=\cos 60t$；(c) $f=e^{-t^2}$, $g=\cos 100t$；(d) $f=\mathrm{rect}(t)$, $g=\cos 100t$。</li>
+    <li>举一个具体例子说明 $\mathcal{H}\{xy\}\neq x\hat{y}$，并计算两边之差。</li>
+    <li><strong>*</strong> 由反自伴性 $\langle\mathcal{H}x,y\rangle=-\langle x,\mathcal{H}y\rangle$ 出发，证明 $\langle\mathcal{H}x,\mathcal{H}y\rangle=\langle x,y\rangle$（$\mathcal{H}$ 保内积，比性质 5 更强）。</li>
+    <li><strong>*</strong> 用 Titchmarsh 定理解释：为什么不存在一个既在时域有限支撑、又只含正频率的非零信号？</li>
+  </ol>
+  <p style="margin:10px 0 0;font-size:14.5px;color:#6c717c">完整解答见<a href="09-exercises.html">第 9 章习题册</a>。</p>
+</div>
+
+<nav class="pager">
+  <a href="04-frequency.html">← 第 4 章　频域：一台 90° 相移器</a>
+  <a href="06-analytic.html">第 6 章　解析信号与瞬时频率 →</a>
+</nav>
+
+</div>
+
+<script>
+function fft(re,im){const n=re.length;
+  for(let i=1,j=0;i<n;i++){let bit=n>>1;for(;j&bit;bit>>=1)j^=bit;j^=bit;
+    if(i<j){let t=re[i];re[i]=re[j];re[j]=t;t=im[i];im[i]=im[j];im[j]=t;}}
+  for(let len=2;len<=n;len<<=1){const ang=-2*Math.PI/len,half=len>>1;
+    for(let i=0;i<n;i+=len)for(let k=0;k<half;k++){
+      const wr=Math.cos(ang*k),wi=Math.sin(ang*k),ur=re[i+k],ui=im[i+k],
+            ar=re[i+k+half],ai=im[i+k+half],vr=ar*wr-ai*wi,vi=ar*wi+ai*wr;
+      re[i+k]=ur+vr;im[i+k]=ui+vi;re[i+k+half]=ur-vr;im[i+k+half]=ui-vi;}}}
+function ifft(re,im){const n=re.length;for(let i=0;i<n;i++)im[i]=-im[i];fft(re,im);
+  for(let i=0;i<n;i++){re[i]/=n;im[i]=-im[i]/n;}}
+function analytic(x){const n=x.length,re=Float64Array.from(x),im=new Float64Array(n);
+  fft(re,im);const h=new Float64Array(n);h[0]=1;
+  if(n%2===0){h[n/2]=1;for(let i=1;i<n/2;i++)h[i]=2;}else{for(let i=1;i<=(n-1)/2;i++)h[i]=2;}
+  for(let i=0;i<n;i++){re[i]*=h[i];im[i]*=h[i];}ifft(re,im);return{re:re,im:im};}
+function setupHiDPI(cv){
+  const dpr=window.devicePixelRatio||1;
+  if(!cv.dataset.baseH){cv.dataset.baseH=cv.getAttribute('height')||cv.clientHeight||300;}
+  const h=parseInt(cv.dataset.baseH,10);
+  const w=cv.clientWidth||cv.parentElement.clientWidth;
+  cv.style.height=h+'px';
+  const bw=Math.round(w*dpr),bh=Math.round(h*dpr);
+  if(cv.width!==bw||cv.height!==bh){cv.width=bw;cv.height=bh;}
+  const g=cv.getContext('2d');g.setTransform(dpr,0,0,dpr,0,0);
+  return {g:g,W:w,H:h};
+}
+function poly(g,pts,color,width,dash){if(!pts.length)return;g.save();g.beginPath();
+  if(dash)g.setLineDash(dash);
+  for(let i=0;i<pts.length;i++){i?g.lineTo(pts[i][0],pts[i][1]):g.moveTo(pts[i][0],pts[i][1]);}
+  g.strokeStyle=color;g.lineWidth=width||1.6;g.lineJoin='round';g.stroke();g.restore();}
+function axis(g,x0,y0,x1,y1){poly(g,[[x0,y0],[x1,y1]],'#c9c4b6',1);}
+
+(function(){
+  const cv=document.getElementById('c1');
+  const s1=document.getElementById('s1'),v1=document.getElementById('v1');
+  const s2=document.getElementById('s2'),v2=document.getElementById('v2');
+  const N=1024;
+  function draw(){
+    const {g,W,H}=setupHiDPI(cv);
+    const fm=+s1.value, fc=+s2.value;
+    const fm2=Math.max(1,Math.round(fm/2));
+    v1.textContent=fm; v2.textContent=fc;
+    const x=new Float64Array(N), A=new Float64Array(N), approx=new Float64Array(N);
+    for(let i=0;i<N;i++){
+      const t=i/N;
+      const a=1+0.6*Math.sin(2*Math.PI*fm*t)+0.3*Math.cos(2*Math.PI*fm2*t+0.9);
+      A[i]=a; x[i]=a*Math.cos(2*Math.PI*fc*t); approx[i]=a*Math.sin(2*Math.PI*fc*t);
+    }
+    const z=analytic(x);
+    let mx=1e-6, me=1e-9;
+    for(let i=0;i<N;i++){mx=Math.max(mx,Math.abs(z.im[i]),Math.abs(approx[i]));
+      me=Math.max(me,Math.abs(z.im[i]-approx[i]));}
+    g.clearRect(0,0,W,H);
+    const padL=12,padR=12,w=W-padL-padR, X=i=>padL+w*i/(N-1);
+    const r1=H*0.19, a1=H*0.13, r2=H*0.50, a2=H*0.10, r3=H*0.87;
+    g.font='12px ui-sans-serif,system-ui,sans-serif';
+    // 上：真值 vs 近似
+    axis(g,padL,r1,W-padR,r1);
+    const pT=[],pA=[];
+    for(let i=0;i<N;i++){pT.push([X(i),r1-a1*z.im[i]/mx]);pA.push([X(i),r1-a1*approx[i]/mx]);}
+    poly(g,pT,'#20242c',1.5); poly(g,pA,'#c0392b',1.4,[5,3]);
+    g.fillStyle='#20242c';g.fillText('H{x} 精确值',padL+2,r1-a1-8);
+    g.fillStyle='#c0392b';g.fillText('Bedrosian 近似 A(t)·sin(ωc t)',padL+86,r1-a1-8);
+    // 中：误差
+    axis(g,padL,r2,W-padR,r2);
+    const pE=[]; const scale=Math.max(me,mx*0.02);
+    for(let i=0;i<N;i++)pE.push([X(i),r2-a2*(z.im[i]-approx[i])/scale]);
+    poly(g,pE,'#b4531f',1.4);
+    g.fillStyle='#b4531f';
+    g.fillText('误差（放大显示）　最大 |误差| = '+me.toFixed(4)+'　相对 = '+(100*me/mx).toFixed(2)+'%',padL+2,r2-a2-8);
+    // 下：频谱示意
+    const base=r3, ax0=padL+8, ax1=W-padR-8;
+    axis(g,ax0,base,ax1,base);
+    const FX=f=>ax0+(ax1-ax0)*f/48;
+    // 包络频带
+    g.fillStyle='rgba(120,125,135,.28)';
+    g.beginPath();g.moveTo(FX(0),base);g.lineTo(FX(0),base-H*0.075);
+    g.lineTo(FX(fm),base-H*0.075);g.lineTo(FX(fm),base);g.closePath();g.fill();
+    g.strokeStyle='#787d87';g.lineWidth=1.2;g.stroke();
+    // 载波
+    poly(g,[[FX(fc),base],[FX(fc),base-H*0.105]],'#1f6f8b',2.4);
+    g.fillStyle='#1f6f8b';g.beginPath();g.arc(FX(fc),base-H*0.105,3.4,0,6.3);g.fill();
+    g.fillStyle='#5d6472';
+    g.fillText('0',FX(0)-3,base+15);
+    g.fillText('f_m='+fm,FX(fm)-14,base+15);
+    g.fillText('f_c='+fc,FX(fc)-14,base+15);
+    g.fillStyle=(fc>fm*1.001)?'#24704a':'#a5321f';
+    g.font='bold 13px ui-sans-serif,system-ui,sans-serif';
+    g.fillText(fc>fm*1.001?'✓ 频带分离，Bedrosian 条件成立':'✗ 频带重叠，Bedrosian 条件失效',ax0,base-H*0.135);
+  }
+  s1.addEventListener('input',draw);s2.addEventListener('input',draw);
+  window.addEventListener('resize',draw);draw();
+})();
+</script>
+</body>
+</html>

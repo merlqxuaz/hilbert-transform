@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>第1章 为什么需要希尔伯特变换</title>
+<script>
+window.MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']],displayMath:[['$$','$$'],['\\[','\\]']]},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<style>
+:root{--paper:#fbfaf6;--ink:#20242c;--muted:#5d6472;--line:#e3dfd3;--accent:#1f6f8b;--accent2:#b4531f;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:Georgia,"Songti SC","Noto Serif SC","Source Han Serif SC","SimSun",serif;line-height:1.85;font-size:17px;-webkit-text-size-adjust:100%}
+.wrap{max-width:880px;margin:0 auto;padding:0 22px 90px}
+header.ch{border-bottom:3px double var(--line);padding:44px 0 24px;margin-bottom:34px}
+.kicker{font-family:ui-sans-serif,system-ui,sans-serif;letter-spacing:.2em;font-size:11.5px;color:var(--accent);text-transform:uppercase}
+h1{font-size:29px;margin:12px 0 8px;line-height:1.3}
+.sub{color:var(--muted);font-size:15.5px;margin:0}
+h2{font-size:22px;margin:46px 0 14px;padding-left:12px;border-left:5px solid var(--accent)}
+h3{font-size:18px;margin:30px 0 10px;color:var(--accent2)}
+p{margin:14px 0}
+.box{background:#fff;border:1px solid var(--line);border-radius:8px;padding:14px 18px;margin:22px 0}
+.tag{font-family:ui-sans-serif,system-ui,sans-serif;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;display:block;margin-bottom:6px}
+.def{border-left:5px solid #1f6f8b}.def .tag{color:#1f6f8b}
+.thm{border-left:5px solid #7a4fb5}.thm .tag{color:#6b3fa8}
+.ex{border-left:5px solid #2e8b57}.ex .tag{color:#24704a}
+.warn{border-left:5px solid #c0392b;background:#fff8f7}.warn .tag{color:#a5321f}
+.tip{border-left:5px solid #d99b16;background:#fffdf5}.tip .tag{color:#a8760a}
+a{color:var(--accent);text-underline-offset:3px}
+table{width:100%;border-collapse:collapse;margin:20px 0;font-size:15px;background:#fff}
+th,td{border:1px solid var(--line);padding:8px 11px;text-align:left}
+th{background:#f2efe6;font-family:ui-sans-serif,system-ui,sans-serif;font-size:13.5px}
+ol,ul{padding-left:1.5em}li{margin:7px 0}
+figure.demo{margin:26px 0;border:1px solid var(--line);background:#fff;border-radius:10px;padding:14px}
+canvas{width:100%;display:block;border-radius:4px}
+.ctrl{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;font-family:ui-sans-serif,system-ui,sans-serif;font-size:13px;margin-top:12px}
+.ctrl label{display:flex;align-items:center;gap:8px;flex:1 1 210px}
+input[type=range]{flex:1;min-width:90px;accent-color:var(--accent)}
+button{font-family:inherit;font-size:13px;padding:5px 12px;border:1px solid var(--line);background:#f2efe6;border-radius:6px;cursor:pointer}
+button:hover{border-color:var(--accent)}
+figcaption{font-family:ui-sans-serif,system-ui,sans-serif;font-size:13px;color:var(--muted);margin-top:10px;line-height:1.65}
+nav.pager{display:flex;justify-content:space-between;gap:12px;margin-top:64px;border-top:1px solid var(--line);padding-top:18px;font-family:ui-sans-serif,system-ui,sans-serif;font-size:14px}
+nav.pager a{text-decoration:none}
+.q{background:#fff;border:1px dashed var(--line);border-left:5px solid #8a8f9a;border-radius:8px;padding:14px 18px;margin:22px 0}
+.q .tag{color:#6c717c}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="ch">
+  <div class="kicker">第 1 章</div>
+  <h1>为什么需要希尔伯特变换</h1>
+  <p class="sub">本章不出现任何新公式的推导，只做一件事：让你真切地感到"缺了点什么"。</p>
+</header>
+
+<h2>1.1 从一台收音机开始</h2>
+
+<p>调幅广播（AM, Amplitude Modulation）的原理说起来很朴素。播音员的声音是一个低频信号，比如 $300\ \text{Hz}$ 到 $3\ \text{kHz}$，我们叫它 $m(t)$。这么低的频率没法用天线高效地发射出去，于是电台把它"驮"在一个高频载波上：</p>
+
+<p>$$s(t)=\underbrace{\big[1+m(t)\big]}_{\text{慢变的包络}}\cdot\underbrace{\cos(\omega_c t)}_{\text{快变的载波}}$$</p>
+
+<p>这里 $\omega_c$ 对应的频率可能是 $900\ \text{kHz}$。载波飞快地振荡，而它振荡的<strong>幅度</strong>在按照声音的节奏起伏。你的收音机收到 $s(t)$，任务是把 $m(t)$ 找回来。</p>
+
+<p>问题来了：<strong>怎么把"幅度的起伏"从一团飞快振荡的波形里提取出来？</strong></p>
+
+<p>你可能想说：取绝对值再滤波不就行了？老式收音机确实这么干（二极管包络检波器），但这是一种<strong>近似</strong>，它会引入非线性失真，而且要求 $1+m(t)&gt;0$ 恒成立，否则包络会"翻折"。我们想要一个精确、线性、普适的办法。</p>
+
+<p>再退一步想。如果载波不是 $\cos$ 而是复指数 $e^{j\omega_c t}$，那太容易了：</p>
+
+<p>$$z(t)=A(t)\,e^{j\omega_c t}\quad\Longrightarrow\quad A(t)=|z(t)|$$</p>
+
+<p>取模长就行，一步到位，没有任何近似。<strong>包络问题在复数世界里是免费的。</strong> 麻烦在于现实世界的电压、声压、位移全都是实数，我们手上只有 $A(t)\cos(\omega_c t)$，没有 $A(t)e^{j\omega_c t}$。</p>
+
+<div class="box def">
+  <span class="tag">本书的中心问题</span>
+  <p style="margin:6px 0 0">给定一个<strong>实</strong>信号 $x(t)$，如何系统地为它配上一个"虚部搭档" $\hat{x}(t)$，使得复信号 $z(t)=x(t)+j\hat{x}(t)$ 的模长恰好是我们想要的包络、相角恰好是我们想要的相位？</p>
+  <p style="margin:6px 0 0">这个"配搭档"的运算，就是希尔伯特变换。</p>
+</div>
+
+<h2>1.2 旋转矢量和它的影子</h2>
+
+<p>把复指数 $e^{j\omega_0 t}$ 想成一个在复平面上匀速转圈的矢量：长度恒为 $1$，角速度 $\omega_0$。欧拉公式告诉我们它的两个投影：</p>
+
+<p>$$e^{j\omega_0 t}=\underbrace{\cos(\omega_0 t)}_{\text{实轴投影}}+\,j\underbrace{\sin(\omega_0 t)}_{\text{虚轴投影}}$$</p>
+
+<p>现在做个思想实验。一个轮子在墙后面匀速转动，轮辐的顶端有一个小灯。你只能看到这个小灯在墙上留下的<strong>一维影子</strong>（比如只看它的左右位置）。</p>
+
+<ul>
+  <li>影子的位置随时间变化，就是 $\cos(\omega_0 t)$，这是你能测到的<strong>实信号</strong>。</li>
+  <li>轮子真实的角度 $\omega_0 t$，是<strong>相位</strong>。</li>
+  <li>轮辐的长度，是<strong>幅度</strong>。</li>
+</ul>
+
+<p>关键困境：<strong>光看影子，你分不清轮子转到了哪一边。</strong> 影子在中间时，轮子可能在最上面，也可能在最下面 —— 这两种情况影子完全一样。你丢失了"另一维"的信息。</p>
+
+<p>而如果你还能同时看到<strong>上下方向</strong>的影子（那就是 $\sin(\omega_0 t)$），两个影子一合成，轮子的位置就被完全锁定了。你立刻知道角度、知道长度、甚至知道它是顺时针还是逆时针在转。</p>
+
+<p>拖一拖下面这张图，体会一下"一个影子"和"两个影子"的区别。</p>
+
+<figure class="demo">
+  <canvas id="c1" height="330"></canvas>
+  <div class="ctrl">
+    <label>轮子角度 $\omega_0 t$ <input id="s1" type="range" min="0" max="628" value="80"><span id="v1" style="min-width:54px;text-align:right">0.80 rad</span></label>
+    <button id="b1">自动旋转</button>
+  </div>
+  <figcaption><strong>图 1.1</strong>　左：复平面上匀速旋转的矢量。右：它在两个坐标轴上的投影随时间的轨迹。红色是 $\cos$（实部，"你能测到的"），蓝色是 $\sin$（虚部，"缺失的那一半"）。注意红线走到零点时，蓝线告诉你轮子是在上还是在下 —— 这就是那条缺失的信息。</figcaption>
+</figure>
+
+<h2>1.3 余弦与正弦：为什么说它们是"一对"</h2>
+
+<p>$\cos$ 和 $\sin$ 长得一模一样，只是在时间轴上错开了一点。错开多少？</p>
+
+<p>$$\sin(\omega_0 t)=\cos\!\left(\omega_0 t-\frac{\pi}{2}\right)$$</p>
+
+<p>相位相差 $\pi/2$，也就是 <strong>90°</strong>。这对搭档有三个漂亮性质，请记住，后面第 5 章会把它们推广到任意信号：</p>
+
+<table>
+<tr><th>性质</th><th>数学表达</th><th>含义</th></tr>
+<tr><td>同幅度</td><td>$\max|\cos|=\max|\sin|=1$</td><td>换搭档不改变信号的"大小"</td></tr>
+<tr><td>相差 90°</td><td>$\sin(\omega_0t)=\cos(\omega_0t-\tfrac{\pi}{2})$</td><td>一个"落后"另一个四分之一周期</td></tr>
+<tr><td>正交（不相关）</td><td>$\int_0^{T}\cos(\omega_0t)\sin(\omega_0t)\,\mathrm{d}t=0$</td><td>两者携带的信息互不重叠</td></tr>
+</table>
+
+<p>第三条值得验算一下，因为它是"搭档"这个说法的数学根据。用积化和差：$\cos\theta\sin\theta=\frac{1}{2}\sin 2\theta$，而 $\sin 2\theta$ 在一个完整周期 $T=2\pi/\omega_0$ 上的积分为零。所以</p>
+
+<p>$$\int_0^{T}\cos(\omega_0 t)\sin(\omega_0 t)\,\mathrm{d}t=\frac{1}{2}\int_0^{T}\sin(2\omega_0 t)\,\mathrm{d}t=0$$</p>
+
+<p>"正交"在几何上的意思就是<strong>垂直</strong>。这两个信号在函数空间里像 $x$ 轴和 $y$ 轴一样互相垂直，所以其中一个绝对无法由另一个"推算"出来，它们提供的是真正独立的两份信息。</p>
+
+<div class="box tip">
+  <span class="tag">直觉</span>
+  <p style="margin:6px 0 0">为什么必须是 90° 而不是 30° 或 60°？因为 90° 是唯一能让两者<strong>正交</strong>的相移量。如果只移 30°，新信号和原信号有很强的相关性（$\int\cos\theta\cos(\theta-30°)\neq0$），等于信息重复，凑出来的复信号就会"歪掉"，模长不再是真正的包络。</p>
+</div>
+
+<h2>1.4 把要求写成一条规格书</h2>
+
+<p>我们现在可以给想要的那台机器写"技术规格书"了。设这台机器是一个算子 $\mathcal{H}$，输入 $x(t)$，输出 $\hat{x}(t)$，要求：</p>
+
+<ol>
+  <li><strong>线性。</strong>$\mathcal{H}\{a x_1+b x_2\}=a\mathcal{H}\{x_1\}+b\mathcal{H}\{x_2\}$。这样才能一个频率一个频率地分析（叠加原理）。</li>
+  <li><strong>时不变。</strong>输入延迟 $t_0$，输出也只是延迟 $t_0$。这样它才是一个"滤波器"，性能不随你何时开机而变。</li>
+  <li><strong>幅度全通。</strong>对任何频率，输出幅度等于输入幅度，一点不放大也不衰减。</li>
+  <li><strong>相移恒为 $-90°$。</strong>对任何正频率成分，相位一律推迟 $\pi/2$。</li>
+</ol>
+
+<p>第 1、2 条说明它是一个线性时不变（LTI）系统，于是根据信号与系统的基本结论，它必然可以写成<strong>某个函数的卷积</strong>：</p>
+
+<p>$$\hat{x}(t)=h(t)*x(t)=\int_{-\infty}^{+\infty}h(t-\tau)\,x(\tau)\,\mathrm{d}\tau$$</p>
+
+<p>第 3、4 条规定了它的频率响应必须是</p>
+
+<p>$$H(\omega)=1\cdot e^{-j\pi/2}=-j\qquad(\omega&gt;0)$$</p>
+
+<p>而因为 $x(t)$ 是实的，为了输出也是实的，负频率那边必须取共轭：$H(\omega)=+j$ 当 $\omega&lt;0$。两段合起来正是</p>
+
+<p>$$\boxed{H(\omega)=-j\,\mathrm{sgn}(\omega)}$$</p>
+
+<p>整本书的内容，其实就是这一个式子的展开：它的时域长什么样（第 3 章）、它为什么是这样（第 4 章）、它遵守哪些运算规则（第 5 章）、它能拿来干什么（第 6–8 章）。</p>
+
+<div class="box warn">
+  <span class="tag">一个坏消息，先打个预防针</span>
+  <p style="margin:6px 0 0">规格书里没写"因果"。事实上，满足上述四条的系统<strong>必然是非因果的</strong> —— 它需要用到未来的输入才能算出现在的输出。你可以粗略地感受一下原因：要在<strong>所有</strong>频率上都精确地移相 90°，就得"知道"波形接下来怎么走。这意味着希尔伯特变换器无法实时严格实现，实际工程里总是用"延时 + 近似"的办法，细节在第 7 章。</p>
+</div>
+
+<h2>1.5 预告：包络问题是怎么被解决的</h2>
+
+<p>不妨提前看一眼结局，这样后面几章你就知道自己在往哪走。回到 1.1 节的 AM 信号 $s(t)=A(t)\cos(\omega_c t)$，其中 $A(t)=1+m(t)$ 是慢变的。</p>
+
+<p>假设我们已经有了那台 90° 相移机器。因为 $A(t)$ 变化很慢（它的频谱集中在低频），而 $\cos(\omega_c t)$ 变化很快，机器基本上只对快变的载波起作用（这个"基本上"在第 5 章会被 <strong>Bedrosian 定理</strong>严格化）：</p>
+
+<p>$$\hat{s}(t)=\mathcal{H}\{A(t)\cos\omega_c t\}\approx A(t)\,\underbrace{\mathcal{H}\{\cos\omega_c t\}}_{=\ \sin\omega_c t}=A(t)\sin(\omega_c t)$$</p>
+
+<p>于是拼出复信号：</p>
+
+<p>$$z(t)=s(t)+j\hat{s}(t)=A(t)\big[\cos\omega_c t+j\sin\omega_c t\big]=A(t)\,e^{j\omega_c t}$$</p>
+
+<p>包络水到渠成：</p>
+
+<p>$$|z(t)|=\sqrt{s^2(t)+\hat{s}^2(t)}=A(t)$$</p>
+
+<p>没有取绝对值，没有非线性，没有低通滤波器的设计取舍 —— 一个平方和开根号就把包络<strong>精确</strong>取了出来。下面这张图把这个过程画了出来。</p>
+
+<figure class="demo">
+  <canvas id="c2" height="300"></canvas>
+  <div class="ctrl">
+    <label>载波频率 $f_c$ <input id="s2" type="range" min="6" max="40" value="18"><span id="v2" style="min-width:48px;text-align:right">18</span></label>
+    <label>调制深度 <input id="s3" type="range" min="0" max="90" value="60"><span id="v3" style="min-width:48px;text-align:right">0.60</span></label>
+  </div>
+  <figcaption><strong>图 1.2</strong>　上：AM 信号 $s(t)$（灰）与它的希尔伯特变换 $\hat{s}(t)$（浅蓝），由本页 JavaScript 用 FFT 实时算出。下：$\sqrt{s^2+\hat{s}^2}$（红实线）与真实包络 $A(t)$（黑虚线）几乎完全重合。把载波频率拖到最低，看重合关系开始变差 —— 那时"载波比包络快得多"的前提被破坏了，正是 Bedrosian 定理失效的情形。</figcaption>
+</figure>
+
+<h2>1.6 希尔伯特变换的三副面孔</h2>
+
+<p>同一个东西，从三个角度看是三样东西。整本书会反复在这三副面孔间切换，现在先认个脸：</p>
+
+<table>
+<tr><th>看的角度</th><th>它是什么</th><th>主要章节</th></tr>
+<tr><td><strong>时域</strong></td><td>与核函数 $\dfrac{1}{\pi t}$ 的卷积（需取柯西主值）</td><td>第 3 章</td></tr>
+<tr><td><strong>频域</strong></td><td>乘上 $-j\,\mathrm{sgn}(\omega)$，即全通 + 恒定 90° 相移</td><td>第 4 章</td></tr>
+<tr><td><strong>复分析</strong></td><td>上半平面解析函数在实轴上实部与虚部的关系</td><td>第 5 章、第 8.8 节</td></tr>
+</table>
+
+<p>第三副面孔最深刻，也最抽象。它说的是：如果一个复函数在上半复平面处处可导（解析），那么它在实轴上的实部和虚部<strong>不是独立的</strong>，其中一个由另一个通过希尔伯特变换唯一确定。物理上这条对应"因果性"—— 材料的折射率和吸收率必须满足这个关系，否则就会出现"结果先于原因"的荒谬。第 8 章会讲这个 Kramers–Kronig 关系。</p>
+
+<h2>1.7 历史小注</h2>
+
+<p>大卫·希尔伯特在 1905 年前后研究一类奇异积分方程时写下了这个变换的核。他关心的是纯数学问题，完全没有信号处理的意思。把它命名为"希尔伯特变换"的是英国数学家 G. H. Hardy，随后 E. C. Titchmarsh 在 1920 年代给出了它的严格分析理论（Titchmarsh 定理，见第 5.10 节）。</p>
+
+<p>真正把它带进工程的是二战前后的通信与雷达需求。1946 年，Dennis Gabor（后来因发明全息术获诺贝尔物理学奖）在论文《Theory of Communication》里提出用 $x+j\hat{x}$ 构造"解析信号"，来定义信号的瞬时频率和有效带宽。1948 年 Ville 独立做了类似工作。从此，希尔伯特变换从一个积分方程的技术细节，变成了通信工程师的日常工具。</p>
+
+<div class="q">
+  <span class="tag">本章练习</span>
+  <ol style="margin:6px 0 0">
+    <li>用"轮子和影子"的比喻解释：为什么只知道 $x(t)=\cos(\omega_0 t)$ 无法判断轮子的旋转方向，而知道 $e^{j\omega_0t}$ 就可以？（提示：$e^{-j\omega_0t}$ 的实部是什么？）</li>
+    <li>验证 $\int_0^{T}\cos(\omega_0t)\cos(\omega_0t-\varphi)\,\mathrm{d}t=\frac{T}{2}\cos\varphi$。由此说明为什么只有 $\varphi=\pm90°$ 才使两信号正交。</li>
+    <li>老式二极管包络检波器相当于计算 $|s(t)|$ 后低通滤波。若 $s(t)=A(t)\cos(\omega_ct)$ 且某段时间内 $A(t)&lt;0$，检波器输出会怎样？为什么 $\sqrt{s^2+\hat{s}^2}$ 也会出同样的问题？（这是"包络"定义本身的歧义，不是方法的缺陷。）</li>
+    <li>一个 LTI 系统对所有频率的幅度响应都是 $1$、相移都是恒定的 $-45°$。它是合法的<strong>实</strong>系统吗（即对实输入给出实输出）？想想 $\omega=0$ 处会发生什么。</li>
+  </ol>
+  <p style="margin:10px 0 0;font-size:14.5px;color:#6c717c">完整解答见<a href="09-exercises.html">第 9 章习题册</a>。</p>
+</div>
+
+<nav class="pager">
+  <a href="index.html">← 目录</a>
+  <a href="02-prep.html">第 2 章　数学预备：五件工具 →</a>
+</nav>
+
+</div>
+
+<script>
+/* ---------- 共用：简易 FFT 与解析信号 ---------- */
+function fft(re,im){
+  const n=re.length;
+  for(let i=1,j=0;i<n;i++){let bit=n>>1;for(;j&bit;bit>>=1)j^=bit;j^=bit;
+    if(i<j){let t=re[i];re[i]=re[j];re[j]=t;t=im[i];im[i]=im[j];im[j]=t;}}
+  for(let len=2;len<=n;len<<=1){const ang=-2*Math.PI/len,half=len>>1;
+    for(let i=0;i<n;i+=len)for(let k=0;k<half;k++){
+      const wr=Math.cos(ang*k),wi=Math.sin(ang*k);
+      const ur=re[i+k],ui=im[i+k];
+      const ar=re[i+k+half],ai=im[i+k+half];
+      const vr=ar*wr-ai*wi, vi=ar*wi+ai*wr;
+      re[i+k]=ur+vr; im[i+k]=ui+vi;
+      re[i+k+half]=ur-vr; im[i+k+half]=ui-vi;}}
+}
+function ifft(re,im){const n=re.length;
+  for(let i=0;i<n;i++)im[i]=-im[i];
+  fft(re,im);
+  for(let i=0;i<n;i++){re[i]/=n;im[i]=-im[i]/n;}}
+/* 返回解析信号 {re, im}；im 即希尔伯特变换 */
+function analytic(x){
+  const n=x.length, re=Float64Array.from(x), im=new Float64Array(n);
+  fft(re,im);
+  const h=new Float64Array(n); h[0]=1;
+  if(n%2===0){h[n/2]=1;for(let i=1;i<n/2;i++)h[i]=2;}
+  else{for(let i=1;i<=(n-1)/2;i++)h[i]=2;}
+  for(let i=0;i<n;i++){re[i]*=h[i];im[i]*=h[i];}
+  ifft(re,im);
+  return {re:re,im:im};
+}
+/* ---------- 画图辅助 ---------- */
+function setupHiDPI(cv){
+  const dpr=window.devicePixelRatio||1;
+  if(!cv.dataset.baseH){cv.dataset.baseH=cv.getAttribute('height')||cv.clientHeight||300;}
+  const h=parseInt(cv.dataset.baseH,10);
+  const w=cv.clientWidth||cv.parentElement.clientWidth;
+  cv.style.height=h+'px';
+  const bw=Math.round(w*dpr),bh=Math.round(h*dpr);
+  if(cv.width!==bw||cv.height!==bh){cv.width=bw;cv.height=bh;}
+  const g=cv.getContext('2d');g.setTransform(dpr,0,0,dpr,0,0);
+  return {g:g,W:w,H:h};
+}
+function poly(g,pts,color,width,dash){
+  g.save(); g.beginPath();
+  if(dash)g.setLineDash(dash);
+  for(let i=0;i<pts.length;i++){ if(i===0)g.moveTo(pts[i][0],pts[i][1]); else g.lineTo(pts[i][0],pts[i][1]); }
+  g.strokeStyle=color; g.lineWidth=width||1.6; g.lineJoin='round'; g.stroke(); g.restore();
+}
+function axis(g,x0,y0,x1,y1){ poly(g,[[x0,y0],[x1,y1]],'#c9c4b6',1); }
+
+/* ================= 图 1.1 旋转矢量 ================= */
+(function(){
+  const cv=document.getElementById('c1'), s=document.getElementById('s1'),
+        v=document.getElementById('v1'), btn=document.getElementById('b1');
+  let anim=null;
+  function draw(){
+    const {g,W,H}=setupHiDPI(cv);
+    const th=(+s.value)/100;
+    v.textContent=th.toFixed(2)+' rad';
+    g.clearRect(0,0,W,H);
+    // 左侧圆盘
+    const R=Math.min(H*0.36,W*0.19), cx=R+34, cy=H/2;
+    g.strokeStyle='#e3dfd3'; g.lineWidth=1;
+    g.beginPath(); g.arc(cx,cy,R,0,6.2832); g.stroke();
+    axis(g,cx-R-14,cy,cx+R+14,cy); axis(g,cx,cy-R-14,cx,cy+R+14);
+    const px=cx+R*Math.cos(th), py=cy-R*Math.sin(th);
+    // 投影虚线
+    poly(g,[[px,py],[px,cy]],'#c0392b',1,[3,3]);
+    poly(g,[[px,py],[cx,py]],'#1f6f8b',1,[3,3]);
+    // 矢量
+    poly(g,[[cx,cy],[px,py]],'#20242c',2.2);
+    g.fillStyle='#20242c'; g.beginPath(); g.arc(px,py,4.5,0,6.3); g.fill();
+    // 投影点
+    g.fillStyle='#c0392b'; g.beginPath(); g.arc(px,cy,4,0,6.3); g.fill();
+    g.fillStyle='#1f6f8b'; g.beginPath(); g.arc(cx,py,4,0,6.3); g.fill();
+    g.font='12px ui-sans-serif,system-ui,sans-serif'; g.fillStyle='#5d6472';
+    g.fillText('cos', px-10, cy+18); g.fillText('sin', cx-30, py+4);
+    // 右侧波形
+    const x0=cx+R+52, x1=W-12, mid=H/2, amp=R*0.82;
+    axis(g,x0,mid,x1,mid);
+    const N=260, span=4*Math.PI;
+    const pc=[],ps=[];
+    for(let i=0;i<N;i++){
+      const u=th-span+ i*span/(N-1)*1.0;   // 过去 4π 到当前
+      const X=x0+(x1-x0)*i/(N-1);
+      pc.push([X, mid-amp*Math.cos(u)]);
+      ps.push([X, mid-amp*Math.sin(u)]);
+    }
+    poly(g,ps,'#1f6f8b',1.8); poly(g,pc,'#c0392b',1.8);
+    g.fillStyle='#c0392b'; g.beginPath(); g.arc(x1,mid-amp*Math.cos(th),4,0,6.3); g.fill();
+    g.fillStyle='#1f6f8b'; g.beginPath(); g.arc(x1,mid-amp*Math.sin(th),4,0,6.3); g.fill();
+    g.fillStyle='#5d6472'; g.font='12px ui-sans-serif,system-ui,sans-serif';
+    g.fillText('时间 →', x1-52, mid+amp+22);
+  }
+  s.addEventListener('input',draw);
+  btn.addEventListener('click',function(){
+    if(anim){clearInterval(anim);anim=null;btn.textContent='自动旋转';return;}
+    btn.textContent='暂停';
+    anim=setInterval(function(){ s.value=(+s.value+4)%628; draw(); },40);
+  });
+  window.addEventListener('resize',draw); draw();
+})();
+
+/* ================= 图 1.2 AM 包络 ================= */
+(function(){
+  const cv=document.getElementById('c2');
+  const s2=document.getElementById('s2'),v2=document.getElementById('v2');
+  const s3=document.getElementById('s3'),v3=document.getElementById('v3');
+  const N=1024;
+  function draw(){
+    const {g,W,H}=setupHiDPI(cv);
+    const fc=+s2.value, dep=(+s3.value)/100;
+    v2.textContent=fc; v3.textContent=dep.toFixed(2);
+    const x=new Float64Array(N), env=new Float64Array(N);
+    for(let i=0;i<N;i++){
+      const t=i/N;
+      const A=1+dep*Math.sin(2*Math.PI*2*t)*Math.cos(2*Math.PI*1*t+0.7);
+      env[i]=A; x[i]=A*Math.cos(2*Math.PI*fc*t);
+    }
+    const z=analytic(x);
+    g.clearRect(0,0,W,H);
+    const padL=10,padR=10, w=W-padL-padR;
+    const topM=H*0.27, botM=H*0.76, amp=H*0.20;
+    // 上图
+    axis(g,padL,topM,W-padR,topM);
+    const pX=[],pH=[];
+    for(let i=0;i<N;i++){const X=padL+w*i/(N-1);
+      pX.push([X,topM-amp*x[i]/2]); pH.push([X,topM-amp*z.im[i]/2]);}
+    poly(g,pH,'#8fc4d8',1.2); poly(g,pX,'#6b6f79',1.2);
+    g.font='12px ui-sans-serif,system-ui,sans-serif';
+    g.fillStyle='#6b6f79'; g.fillText('s(t)',padL+2,topM-amp*0.75-6);
+    g.fillStyle='#4a9ab8'; g.fillText('ŝ(t) = H{s}(t)',padL+42,topM-amp*0.75-6);
+    // 下图
+    axis(g,padL,botM,W-padR,botM);
+    const pE=[],pT=[];
+    for(let i=0;i<N;i++){const X=padL+w*i/(N-1);
+      const e=Math.hypot(x[i],z.im[i]);
+      pE.push([X,botM-amp*e/2]); pT.push([X,botM-amp*Math.abs(env[i])/2]);}
+    poly(g,pT,'#20242c',2.4,[6,4]); poly(g,pE,'#c0392b',1.8);
+    g.fillStyle='#c0392b'; g.fillText('√(s²+ŝ²)',padL+2,botM-amp*0.95);
+    g.fillStyle='#20242c'; g.fillText('真实包络 |A(t)|',padL+78,botM-amp*0.95);
+  }
+  s2.addEventListener('input',draw); s3.addEventListener('input',draw);
+  window.addEventListener('resize',draw); draw();
+})();
+</script>
+</body>
+</html>

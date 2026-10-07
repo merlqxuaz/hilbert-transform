@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>第2章 数学预备：五件工具</title>
+<script>
+window.MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']],displayMath:[['$$','$$'],['\\[','\\]']]},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<style>
+:root{--paper:#fbfaf6;--ink:#20242c;--muted:#5d6472;--line:#e3dfd3;--accent:#1f6f8b;--accent2:#b4531f;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:Georgia,"Songti SC","Noto Serif SC","Source Han Serif SC","SimSun",serif;line-height:1.85;font-size:17px;-webkit-text-size-adjust:100%}
+.wrap{max-width:880px;margin:0 auto;padding:0 22px 90px}
+header.ch{border-bottom:3px double var(--line);padding:44px 0 24px;margin-bottom:34px}
+.kicker{font-family:ui-sans-serif,system-ui,sans-serif;letter-spacing:.2em;font-size:11.5px;color:var(--accent);text-transform:uppercase}
+h1{font-size:29px;margin:12px 0 8px;line-height:1.3}
+.sub{color:var(--muted);font-size:15.5px;margin:0}
+h2{font-size:22px;margin:46px 0 14px;padding-left:12px;border-left:5px solid var(--accent)}
+h3{font-size:18px;margin:30px 0 10px;color:var(--accent2)}
+p{margin:14px 0}
+.box{background:#fff;border:1px solid var(--line);border-radius:8px;padding:14px 18px;margin:22px 0}
+.tag{font-family:ui-sans-serif,system-ui,sans-serif;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;display:block;margin-bottom:6px}
+.def{border-left:5px solid #1f6f8b}.def .tag{color:#1f6f8b}
+.thm{border-left:5px solid #7a4fb5}.thm .tag{color:#6b3fa8}
+.ex{border-left:5px solid #2e8b57}.ex .tag{color:#24704a}
+.warn{border-left:5px solid #c0392b;background:#fff8f7}.warn .tag{color:#a5321f}
+.tip{border-left:5px solid #d99b16;background:#fffdf5}.tip .tag{color:#a8760a}
+a{color:var(--accent);text-underline-offset:3px}
+table{width:100%;border-collapse:collapse;margin:20px 0;font-size:15px;background:#fff}
+th,td{border:1px solid var(--line);padding:8px 11px;text-align:left}
+th{background:#f2efe6;font-family:ui-sans-serif,system-ui,sans-serif;font-size:13.5px}
+ol,ul{padding-left:1.5em}li{margin:7px 0}
+figure.demo{margin:26px 0;border:1px solid var(--line);background:#fff;border-radius:10px;padding:14px}
+canvas{width:100%;display:block;border-radius:4px}
+.ctrl{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;font-family:ui-sans-serif,system-ui,sans-serif;font-size:13px;margin-top:12px}
+.ctrl label{display:flex;align-items:center;gap:8px;flex:1 1 210px}
+input[type=range]{flex:1;min-width:90px;accent-color:var(--accent)}
+select{font-family:inherit;font-size:13px;padding:4px 8px;border:1px solid var(--line);border-radius:6px;background:#f8f6f0}
+figcaption{font-family:ui-sans-serif,system-ui,sans-serif;font-size:13px;color:var(--muted);margin-top:10px;line-height:1.65}
+nav.pager{display:flex;justify-content:space-between;gap:12px;margin-top:64px;border-top:1px solid var(--line);padding-top:18px;font-family:ui-sans-serif,system-ui,sans-serif;font-size:14px}
+nav.pager a{text-decoration:none}
+.q{background:#fff;border:1px dashed var(--line);border-left:5px solid #8a8f9a;border-radius:8px;padding:14px 18px;margin:22px 0}
+.q .tag{color:#6c717c}
+.toc-mini{background:#f5f2e9;border:1px solid var(--line);border-radius:8px;padding:12px 18px;font-size:15px;margin:0 0 30px}
+.toc-mini ol{margin:6px 0;padding-left:1.4em}
+.toc-mini li{margin:3px 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="ch">
+  <div class="kicker">第 2 章</div>
+  <h1>数学预备：五件工具</h1>
+  <p class="sub">这一章是工具箱。全部内容只用到高等数学里的积分和一点复数，但请务必把 2.3 节的柯西主值弄懂 —— 后面每一个积分式都靠它才有意义。</p>
+</header>
+
+<div class="toc-mini">
+<strong>本章五件工具</strong>
+<ol>
+<li>复数与欧拉公式（相量）</li>
+<li>正弦信号的三要素与相移</li>
+<li><strong>柯西主值积分</strong>（本章最重要）</li>
+<li>卷积</li>
+<li>傅里叶变换速成，外加 $\mathrm{sgn}$、$u$、$\delta$ 三个特殊函数</li>
+</ol>
+</div>
+
+<h2>2.1 工具一：复数与欧拉公式</h2>
+
+<h3>2.1.1 复数的两种写法</h3>
+
+<p>一个复数 $z$ 可以写成代数形式和极坐标形式：</p>
+
+<p>$$z=a+jb=r\,e^{j\theta},\qquad r=|z|=\sqrt{a^2+b^2},\quad \theta=\arg z=\operatorname{atan2}(b,a)$$</p>
+
+<p>工程上用 $j$ 而不是 $i$ 表示虚数单位（因为 $i$ 被电流占用了）。$r$ 叫<strong>模</strong>，$\theta$ 叫<strong>相角</strong>或<strong>相位</strong>。</p>
+
+<div class="box tip">
+  <span class="tag">编程提醒</span>
+  <p style="margin:6px 0 0">求相角一定要用 <code>atan2(b, a)</code> 而不是 <code>atan(b/a)</code>。后者只能给出 $(-\pi/2,\pi/2)$ 的结果，会把第二、三象限的角度算错，这在第 6 章计算瞬时相位时是致命的。</p>
+</div>
+
+<h3>2.1.2 欧拉公式</h3>
+
+<p>$$e^{j\theta}=\cos\theta+j\sin\theta$$</p>
+
+<p>这是全书用得最多的一个式子。由它可以反解出两个"倒过来写"的表达式（以后叫<strong>欧拉反公式</strong>）。它们不用背，两行就能推出来。</p>
+
+<p><strong>第一步 · 把 $\theta$ 换成 $-\theta$，得到一个配对的式子。</strong>利用 $\cos$ 是偶函数（$\cos(-\theta)=\cos\theta$）、$\sin$ 是奇函数（$\sin(-\theta)=-\sin\theta$）：</p>
+
+<p>$$e^{j\theta}=\cos\theta+j\sin\theta,\qquad e^{-j\theta}=\cos\theta-j\sin\theta$$</p>
+
+<p><strong>第二步 · 两式相加，$j\sin\theta$ 抵消。</strong></p>
+
+<p>$$e^{j\theta}+e^{-j\theta}=2\cos\theta\qquad\Longrightarrow\qquad \cos\theta=\frac{e^{j\theta}+e^{-j\theta}}{2}$$</p>
+
+<p><strong>第三步 · 两式相减，$\cos\theta$ 抵消。</strong></p>
+
+<p>$$e^{j\theta}-e^{-j\theta}=2j\sin\theta\qquad\Longrightarrow\qquad \sin\theta=\frac{e^{j\theta}-e^{-j\theta}}{2j}$$</p>
+
+<p>（注意 $\sin$ 那个式子的分母是 $2j$ 而不是 $2$，这是最容易写错的地方。检验办法：取 $\theta=\pi/2$，右边 $=\frac{j-(-j)}{2j}=\frac{2j}{2j}=1=\sin\frac{\pi}{2}$ ✓。）</p>
+
+<p>这两式的用处是：<strong>把实的三角函数拆成两个复指数</strong>，而复指数在做傅里叶变换、微分、积分时都极其听话（求导只是乘一个常数，相乘只是指数相加）。本书里凡是看到"把 $\cos$ 拆开"，用的都是这一对公式。</p>
+
+<h3>2.1.3 乘 $j$ 就是转 90°</h3>
+
+<p>这条几何事实是整本书的灵魂。因为 $j=e^{j\pi/2}$，所以</p>
+
+<p>$$j\cdot r e^{j\theta}=r\,e^{j(\theta+\pi/2)}$$</p>
+
+<p>模不变，相角加 $90°$。同理，乘 $-j=e^{-j\pi/2}$ 就是<strong>顺时针转 90°</strong>，也就是相位<strong>推迟</strong> 90°。</p>
+
+<p>回头看第 1 章末尾的那个频率响应 $H(\omega)=-j\,\mathrm{sgn}(\omega)$ —— 现在你已经能读懂它了：<em>对正频率成分乘 $-j$（转 $-90°$），对负频率成分乘 $+j$（转 $+90°$），模长一律不变</em>。</p>
+
+<h3>2.1.4 相量：把时间藏起来</h3>
+
+<p>一个正弦信号 $x(t)=A\cos(\omega_0t+\varphi)$ 可以写成</p>
+
+<p>$$x(t)=\operatorname{Re}\!\left\{A e^{j\varphi}\cdot e^{j\omega_0 t}\right\}=\operatorname{Re}\{\underbrace{\dot{X}}_{\text{相量}}e^{j\omega_0t}\}$$</p>
+
+<p>$\dot{X}=Ae^{j\varphi}$ 叫<strong>相量</strong>（phasor），它把幅度和初相打包成一个复数，把随时间的旋转 $e^{j\omega_0t}$ 分离出去。这样一来，"对信号做 90° 相移"就变成了"把相量乘 $-j$"，一个超越函数的操作被降格成了一次复数乘法。这正是我们想对<strong>任意</strong>信号（不只是单频正弦）做的事。</p>
+
+<h2>2.2 工具二：正弦信号与相移</h2>
+
+<p>$$x(t)=A\cos(\omega_0 t+\varphi)$$</p>
+
+<table>
+<tr><th>量</th><th>符号</th><th>单位</th><th>关系</th></tr>
+<tr><td>幅度</td><td>$A$</td><td>与信号同单位</td><td>峰值</td></tr>
+<tr><td>角频率</td><td>$\omega_0$</td><td>rad/s</td><td>$\omega_0=2\pi f_0$</td></tr>
+<tr><td>频率</td><td>$f_0$</td><td>Hz</td><td>$f_0=1/T$</td></tr>
+<tr><td>周期</td><td>$T$</td><td>s</td><td>$T=2\pi/\omega_0$</td></tr>
+<tr><td>初相</td><td>$\varphi$</td><td>rad</td><td>$t=0$ 时的相位</td></tr>
+</table>
+
+<p>把相位减去 $\pi/2$：</p>
+
+<p>$$\cos\!\left(\omega_0t-\frac{\pi}{2}\right)=\sin(\omega_0 t)$$</p>
+
+<p>再减一次：$\cos(\omega_0t-\pi)=-\cos(\omega_0t)$。这解释了一个将来会反复出现的结论：<strong>连续做两次 90° 相移，等于给信号加个负号</strong>，也就是 $\mathcal{H}\{\mathcal{H}\{x\}\}=-x$。</p>
+
+<div class="box warn">
+  <span class="tag">别把"相移"和"延时"搞混</span>
+  <p style="margin:6px 0 0">把信号延时 $t_0$ 秒，各频率成分的相位变化是 $-\omega t_0$ —— 频率越高，相位转得越多。而希尔伯特变换要求<strong>所有</strong>频率都恰好转 $90°$，跟频率无关。所以它<strong>不是</strong>一个延时器。对单一频率的正弦来说，"转 90°"和"延时四分之一周期"效果相同，但对含多个频率的信号，两者完全不同。这是本章最容易出错的概念。</p>
+</div>
+
+<h2>2.3 工具三：柯西主值积分（本章重点）</h2>
+
+<h3>2.3.1 麻烦在哪</h3>
+
+<p>希尔伯特变换的核是 $\frac{1}{\pi t}$，它在 $t=0$ 处发散。当我们写</p>
+
+<p>$$\int_{-\infty}^{+\infty}\frac{x(\tau)}{t-\tau}\,\mathrm{d}\tau$$</p>
+
+<p>时，被积函数在 $\tau=t$ 处有一个非可积的奇点。按普通反常积分的定义，这个积分<strong>不存在</strong>。</p>
+
+<p>先看最简单的例子：</p>
+
+<p>$$\int_{-1}^{1}\frac{\mathrm{d}t}{t}\ \overset{?}{=}\ ?$$</p>
+
+<p>老实按定义拆成两段：$\int_{-1}^{-\epsilon}+\int_{\delta}^{1}$，其中 $\epsilon,\delta\to0^+$ 独立地取极限：</p>
+
+<p>$$\int_{-1}^{-\epsilon}\frac{\mathrm{d}t}{t}=\ln\epsilon,\qquad \int_{\delta}^{1}\frac{\mathrm{d}t}{t}=-\ln\delta$$</p>
+
+<p>两者之和是 $\ln(\epsilon/\delta)$。如果 $\epsilon$ 和 $\delta$ 各自独立地趋于零，这个比值可以是任何正数，所以和可以是任何实数 —— <strong>极限不存在</strong>。积分发散。</p>
+
+<h3>2.3.2 补救：让两边"同步"靠近</h3>
+
+<p>但请注意上面的式子：如果我们强制 $\epsilon=\delta$，即左右两边以<strong>相同速度</strong>靠近奇点，那么 $\ln(\epsilon/\epsilon)=\ln 1=0$，答案唯一且干净。这就是柯西主值的想法。</p>
+
+<div class="box def">
+  <span class="tag">定义 2.1 · 柯西主值</span>
+  <p style="margin:6px 0 0">设 $f$ 在 $[a,b]$ 上除 $c\in(a,b)$ 外可积，定义<strong>柯西主值</strong></p>
+  <p>$$\mathrm{P}\!\!\int_a^b f(t)\,\mathrm{d}t \;=\; \lim_{\epsilon\to0^+}\left[\int_a^{c-\epsilon}f(t)\,\mathrm{d}t+\int_{c+\epsilon}^{b}f(t)\,\mathrm{d}t\right]$$</p>
+  <p style="margin:6px 0 0">记号也常写作 $\text{p.v.}\!\int$ 或积分号上加一横。若积分区间无穷，则同时要求 $\lim_{R\to\infty}\int_{-R}^{R}$。</p>
+</div>
+
+<p>于是</p>
+
+<p>$$\mathrm{P}\!\!\int_{-1}^{1}\frac{\mathrm{d}t}{t}=0$$</p>
+
+<p>为什么答案是 $0$ 就很好理解了：$1/t$ 是<strong>奇函数</strong>，左边那块"负无穷大"的面积和右边那块"正无穷大"的面积在对称截断下精确相消。主值的本质就是<strong>让对称的无穷大互相抵消</strong>。</p>
+
+<figure class="demo">
+  <canvas id="c1" height="290"></canvas>
+  <div class="ctrl">
+    <label>截断宽度 $\epsilon$ <input id="s1" type="range" min="2" max="60" value="26"><span id="v1" style="min-width:76px;text-align:right">0.26</span></label>
+    <label>被积函数 <select id="sel1">
+      <option value="odd">1/t（奇函数）</option>
+      <option value="even">1/|t|（偶函数）</option>
+      <option value="shift">1/t + 1/2</option>
+    </select></label>
+  </div>
+  <figcaption><strong>图 2.1</strong>　主值积分的几何含义。红色和蓝色区域分别是奇点两侧的面积。拖动 $\epsilon$ 让它变小：对 $1/t$（奇函数），两块面积始终大小相等符号相反，和恒为 $0$，所以主值存在。切换到 $1/|t|$（偶函数），两块面积同号，和随 $\epsilon\to0$ 无界增长 —— <strong>主值也不存在</strong>。这说明主值不是万能的，它只救得了"奇性是奇函数型"的那一类。</figcaption>
+</figure>
+
+<h3>2.3.3 为什么希尔伯特变换的积分能救回来</h3>
+
+<p>考察 $\int\frac{x(\tau)}{t-\tau}\mathrm{d}\tau$ 在 $\tau=t$ 附近的行为。令 $\tau=t-u$，积分变成 $\int\frac{x(t-u)}{u}\mathrm{d}u$，奇点在 $u=0$。把 $x(t-u)$ 在 $u=0$ 附近作泰勒展开：</p>
+
+<p>$$\frac{x(t-u)}{u}=\frac{x(t)-x'(t)u+O(u^2)}{u}=\underbrace{\frac{x(t)}{u}}_{\text{奇函数型奇性}}\;\underbrace{-\,x'(t)+O(u)}_{\text{有界，可积}}$$</p>
+
+<p>看到了吗？奇性的主项恰好是 $\frac{x(t)}{u}$ 这种<strong>奇函数型</strong>，正是主值能对付的那一类，而它的系数 $x(t)$ 在小邻域内近似为常数。剩下的部分是有界的。</p>
+
+<div class="box thm">
+  <span class="tag">结论</span>
+  <p style="margin:6px 0 0">只要 $x$ 在 $t$ 点附近满足<strong>赫尔德条件</strong>（比连续稍强，例如可导就够了），主值 $\mathrm{P}\!\int\frac{x(\tau)}{t-\tau}\mathrm{d}\tau$ 就存在。工程上遇到的信号（分段光滑、能量有限）基本都满足。</p>
+</div>
+
+<h3>2.3.4 一个等价的对称写法</h3>
+
+<p>利用主值的相消性质，可以把希尔伯特变换写成一个<strong>不含奇点</strong>的形式。因为 $\mathrm{P}\!\int_{-\infty}^{\infty}\frac{x(t)}{u}\mathrm{d}u=0$（$x(t)$ 是与 $u$ 无关的常数，$1/u$ 是奇函数），我们可以免费减掉它：</p>
+
+<p>$$\hat{x}(t)=\frac{1}{\pi}\,\mathrm{P}\!\!\int_{-\infty}^{\infty}\frac{x(t-u)}{u}\mathrm{d}u=\frac{1}{\pi}\int_{0}^{\infty}\frac{x(t-u)-x(t+u)}{u}\,\mathrm{d}u$$</p>
+
+<p>右边的被积函数在 $u\to0$ 时趋于 $-2x'(t)$，完全有界！这个形式在数值计算和理论证明里都很好用，也再一次说明"主值"不是什么人为的规定，而是反映了<strong>希尔伯特变换本质上在测量信号的左右不对称性</strong>。</p>
+
+<div class="box ex">
+  <span class="tag">例 2.1</span>
+  <p style="margin:6px 0 0">计算 $\mathrm{P}\!\int_{-2}^{3}\dfrac{\mathrm{d}t}{t}$。</p>
+  <p><strong>解</strong>　按定义分两段：</p>
+  <p>$$\lim_{\epsilon\to0^+}\left[\int_{-2}^{-\epsilon}\frac{\mathrm{d}t}{t}+\int_{\epsilon}^{3}\frac{\mathrm{d}t}{t}\right]=\lim_{\epsilon\to0^+}\Big[(\ln\epsilon-\ln 2)+(\ln 3-\ln\epsilon)\Big]=\ln\frac{3}{2}$$</p>
+  <p style="margin:6px 0 0">$\ln\epsilon$ 精确抵消。注意结果非零，因为区间对奇点不对称 —— 主值只抵消"对称的那部分"。</p>
+</div>
+
+<h2>2.4 工具四：卷积</h2>
+
+<h3>2.4.1 定义与直观</h3>
+
+<div class="box def">
+  <span class="tag">定义 2.2 · 卷积</span>
+  <p style="margin:6px 0 0">$$(h*x)(t)=\int_{-\infty}^{+\infty}h(t-\tau)\,x(\tau)\,\mathrm{d}\tau$$</p>
+</div>
+
+<p>怎么读这个式子？把它想成<strong>滑动加权平均</strong>：</p>
+
+<ol>
+  <li>要算 $t$ 时刻的输出，先把权函数 $h$ <strong>翻转</strong>（$h(-\tau)$），再<strong>平移</strong>到 $t$（$h(t-\tau)$）。</li>
+  <li>把这个翻转平移后的权函数和输入 $x(\tau)$ 逐点相乘。</li>
+  <li>把乘积全部加起来（积分）。这就是 $t$ 时刻的输出。</li>
+</ol>
+
+<p>$t$ 变，权函数就滑动，输出就一点一点被"扫"出来。信号与系统里的核心定理是：<strong>任何线性时不变系统都是一次卷积</strong>，$h$ 叫这个系统的<strong>冲激响应</strong>。</p>
+
+<figure class="demo">
+  <canvas id="c2" height="330"></canvas>
+  <div class="ctrl">
+    <label>滑动位置 $t$ <input id="s2" type="range" min="0" max="100" value="42"><span id="v2" style="min-width:56px;text-align:right">0.42</span></label>
+    <label>权函数 $h$ <select id="sel2">
+      <option value="box">矩形（滑动平均）</option>
+      <option value="hilb">1/(πτ)（希尔伯特核）</option>
+      <option value="gauss">高斯（平滑）</option>
+    </select></label>
+  </div>
+  <figcaption><strong>图 2.2</strong>　卷积的滑动过程。上：输入 $x(\tau)$（灰）与翻转平移后的权函数 $h(t-\tau)$（蓝）；绿色阴影是两者的乘积，它的<strong>净面积</strong>（正减负）就是输出值。下：逐点算出的输出 $(h*x)(t)$，红点标出当前 $t$。把权函数换成希尔伯特核，注意它是<strong>奇</strong>的 —— 于是这个"加权平均"其实在做<strong>左右差分</strong>，输出在输入的跳变处最大，在平坦处为零。</figcaption>
+</figure>
+
+<h3>2.4.2 要记住的卷积性质</h3>
+
+<table>
+<tr><th>性质</th><th>表达式</th></tr>
+<tr><td>交换律</td><td>$h*x=x*h$</td></tr>
+<tr><td>结合律</td><td>$(h_1*h_2)*x=h_1*(h_2*x)$</td></tr>
+<tr><td>分配律</td><td>$h*(x_1+x_2)=h*x_1+h*x_2$</td></tr>
+<tr><td>冲激是单位元</td><td>$\delta*x=x$</td></tr>
+<tr><td>对冲激的响应</td><td>$h*\delta=h$</td></tr>
+<tr><td>微分</td><td>$\dfrac{\mathrm{d}}{\mathrm{d}t}(h*x)=h'*x=h*x'$</td></tr>
+</table>
+
+<p>最后一条以后会用来证明"希尔伯特变换与微分可交换"。</p>
+
+<h2>2.5 工具五：傅里叶变换速成</h2>
+
+<h3>2.5.1 定义与约定</h3>
+
+<div class="box def">
+  <span class="tag">定义 2.3 · 傅里叶变换</span>
+  <p style="margin:6px 0 0">$$X(\omega)=\mathcal{F}\{x\}(\omega)=\int_{-\infty}^{+\infty}x(t)\,e^{-j\omega t}\,\mathrm{d}t$$</p>
+  <p>$$x(t)=\mathcal{F}^{-1}\{X\}(t)=\frac{1}{2\pi}\int_{-\infty}^{+\infty}X(\omega)\,e^{+j\omega t}\,\mathrm{d}\omega$$</p>
+  <p style="margin:6px 0 0"><strong>全书统一采用这一约定</strong>（角频率 $\omega$，$2\pi$ 全部放在逆变换里）。不同教材的约定不同，会差一个 $\sqrt{2\pi}$ 或正负号，对照公式时务必先确认约定。</p>
+</div>
+
+<p>怎么理解？$X(\omega)$ 回答的问题是："信号 $x(t)$ 里，频率为 $\omega$ 的那个复指数成分，占了多少（幅度）、起始在哪（相位）？"它是一个复数：$|X(\omega)|$ 是幅度谱，$\arg X(\omega)$ 是相位谱。</p>
+
+<h3>2.5.2 三条必须记住的定理</h3>
+
+<div class="box thm">
+  <span class="tag">定理 2.1 · 卷积定理</span>
+  <p style="margin:6px 0 0">$$\mathcal{F}\{h*x\}=H(\omega)\,X(\omega)$$</p>
+  <p style="margin:6px 0 0"><strong>时域卷积 ⟺ 频域相乘。</strong>这是全书最关键的一条 —— 正因为它，我们才能把"时域里那个讨厌的主值积分"换成"频域里干净的一次乘法"。</p>
+
+  <p style="margin:14px 0 0"><strong>证明</strong>（只有三步，值得看一遍，因为它解释了"为什么卷积会变成乘法"）：</p>
+  <p><strong>第一步 · 按定义写出来，把两个积分并在一起。</strong></p>
+  <p>$$\mathcal{F}\{h*x\}(\omega)=\int_{-\infty}^{\infty}\left[\int_{-\infty}^{\infty}h(t-\tau)x(\tau)\,\mathrm{d}\tau\right]e^{-j\omega t}\,\mathrm{d}t
+  =\iint h(t-\tau)\,x(\tau)\,e^{-j\omega t}\,\mathrm{d}\tau\,\mathrm{d}t$$</p>
+  <p><strong>第二步 · 把指数因子拆开。</strong>这是全证明的关键一招：写 $t=(t-\tau)+\tau$，于是</p>
+  <p>$$e^{-j\omega t}=e^{-j\omega(t-\tau)}\cdot e^{-j\omega\tau}$$</p>
+  <p>代回去，被积函数就<strong>分离变量</strong>了 —— 含 $(t-\tau)$ 的归一堆，含 $\tau$ 的归另一堆：</p>
+  <p>$$=\iint \underbrace{h(t-\tau)e^{-j\omega(t-\tau)}}_{\text{只和}\,t-\tau\,\text{有关}}\cdot\underbrace{x(\tau)e^{-j\omega\tau}}_{\text{只和}\,\tau\,\text{有关}}\,\mathrm{d}\tau\,\mathrm{d}t$$</p>
+  <p><strong>第三步 · 换元、拆成两个独立积分。</strong>固定 $\tau$，对 $t$ 作换元 $s=t-\tau$（$\mathrm{d}s=\mathrm{d}t$，上下限仍是 $\pm\infty$）：</p>
+  <p>$$=\int x(\tau)e^{-j\omega\tau}\left[\int h(s)e^{-j\omega s}\,\mathrm{d}s\right]\mathrm{d}\tau
+  =\underbrace{\left[\int h(s)e^{-j\omega s}\mathrm{d}s\right]}_{=\,H(\omega)}\cdot\underbrace{\left[\int x(\tau)e^{-j\omega\tau}\mathrm{d}\tau\right]}_{=\,X(\omega)}=H(\omega)X(\omega)\quad\blacksquare$$</p>
+  <p style="margin:14px 0 0"><strong>关键直觉</strong>：卷积里出现的永远是<em>差</em> $t-\tau$，而指数函数把"差"变成"商"（$e^{-j\omega(t-\tau)}=e^{-j\omega t}/e^{-j\omega\tau}$），于是纠缠在一起的两个变量就被拆开了。这正是复指数作为傅里叶基函数的特权 —— 换成别的基函数，卷积不会变成乘法。</p>
+</div>
+
+<div class="box thm">
+  <span class="tag">定理 2.2 · 时移与频移</span>
+  <p style="margin:6px 0 0">$$\mathcal{F}\{x(t-t_0)\}=e^{-j\omega t_0}X(\omega),\qquad \mathcal{F}\{x(t)e^{j\omega_0t}\}=X(\omega-\omega_0)$$</p>
+  <p style="margin:6px 0 0">时移只改变相位；乘复指数则把整个频谱<strong>平移</strong>。第 8 章讲单边带调制时全靠后者。</p>
+
+  <p style="margin:14px 0 0"><strong>证明</strong>　两条都是一次换元的事。</p>
+  <p><em>时移</em>：换元 $s=t-t_0$（即 $t=s+t_0$，$\mathrm{d}t=\mathrm{d}s$），指数上 $-j\omega t=-j\omega s-j\omega t_0$，把与 $s$ 无关的因子提到积分号外：</p>
+  <p>$$\mathcal{F}\{x(t-t_0)\}=\int x(t-t_0)e^{-j\omega t}\mathrm{d}t=\int x(s)\,e^{-j\omega s}e^{-j\omega t_0}\mathrm{d}s=e^{-j\omega t_0}X(\omega)$$</p>
+  <p><em>频移</em>：不用换元，直接把两个指数合并，$e^{j\omega_0t}e^{-j\omega t}=e^{-j(\omega-\omega_0)t}$：</p>
+  <p>$$\mathcal{F}\{x(t)e^{j\omega_0t}\}=\int x(t)\,e^{-j(\omega-\omega_0)t}\,\mathrm{d}t=X(\omega-\omega_0)$$</p>
+  <p style="margin:6px 0 0">最后一步只是认出"这正是傅里叶变换的定义式，只不过频率变量写成了 $\omega-\omega_0$"。</p>
+</div>
+
+<div class="box thm">
+  <span class="tag">定理 2.3 · Parseval 能量定理</span>
+  <p style="margin:6px 0 0">$$\int_{-\infty}^{\infty}|x(t)|^2\,\mathrm{d}t=\frac{1}{2\pi}\int_{-\infty}^{\infty}|X(\omega)|^2\,\mathrm{d}\omega$$</p>
+  <p style="margin:6px 0 0">时域算能量和频域算能量结果相同。第 5 章用它一行证明"希尔伯特变换保持能量"。</p>
+
+  <p style="margin:14px 0 0"><strong>证明</strong>（顺便把第 5 章要用的<strong>广义</strong>形式一起证了）。要证的广义版本是</p>
+  <p>$$\int x(t)\,\overline{y(t)}\,\mathrm{d}t=\frac{1}{2\pi}\int X(\omega)\,\overline{Y(\omega)}\,\mathrm{d}\omega$$</p>
+  <p><strong>第一步 · 把其中一个函数换成它的逆变换式。</strong>只替换 $\overline{y(t)}$，注意取共轭会把 $e^{j\omega t}$ 变成 $e^{-j\omega t}$：</p>
+  <p>$$\overline{y(t)}=\overline{\frac{1}{2\pi}\int Y(\omega)e^{j\omega t}\mathrm{d}\omega}=\frac{1}{2\pi}\int \overline{Y(\omega)}\,e^{-j\omega t}\,\mathrm{d}\omega$$</p>
+  <p><strong>第二步 · 代入并交换积分次序。</strong></p>
+  <p>$$\int x(t)\overline{y(t)}\,\mathrm{d}t=\int x(t)\left[\frac{1}{2\pi}\int \overline{Y(\omega)}e^{-j\omega t}\mathrm{d}\omega\right]\mathrm{d}t
+  =\frac{1}{2\pi}\int \overline{Y(\omega)}\left[\int x(t)e^{-j\omega t}\mathrm{d}t\right]\mathrm{d}\omega$$</p>
+  <p><strong>第三步 · 认出里层就是 $X(\omega)$。</strong></p>
+  <p>$$=\frac{1}{2\pi}\int X(\omega)\,\overline{Y(\omega)}\,\mathrm{d}\omega$$</p>
+  <p>取 $y=x$，$x\bar x=|x|^2$、$X\bar X=|X|^2$，就得到上面的能量形式。$\blacksquare$</p>
+  <p style="margin:6px 0 0">式中那个 $\frac{1}{2\pi}$ 不是凑出来的，它直接来自本书的约定（把 $2\pi$ 全放在逆变换里，见定义 2.3）。换一种约定，这个系数就会变 —— 这也是查公式前必须先确认约定的原因。</p>
+</div>
+
+<h3>2.5.3 实信号的共轭对称性</h3>
+
+<p>这一小节表面上只是一条对称公式，实际上是全书用得最频繁的"合法性检查工具"：第 4.3.3 节判断希尔伯特变换器为什么必须给负频率反号、第 6 章判断解析信号为什么是复的、习题 1.4 和 4.6 判断一个滤波器是不是合法的实系统，靠的全是它。所以这里把<strong>两个方向都证一遍</strong>。</p>
+
+<div class="box thm">
+  <span class="tag">定理 · 实信号 ⟺ 共轭对称谱</span>
+  <p style="margin:6px 0 0">$$x(t)\ \text{是实函数}\qquad\Longleftrightarrow\qquad X(-\omega)=\overline{X(\omega)}\ \ \text{对一切}\ \omega$$</p>
+</div>
+
+<p><strong>方向一（⟹）：实信号的谱必定共轭对称。</strong></p>
+
+<p>直接从定义出发。先写出 $X(-\omega)$ —— 就是把定义式里的 $\omega$ 换成 $-\omega$，指数上的负号被抵消：</p>
+
+<p>$$X(-\omega)=\int_{-\infty}^{\infty} x(t)\,e^{-j(-\omega)t}\,\mathrm{d}t=\int_{-\infty}^{\infty} x(t)\,e^{j\omega t}\,\mathrm{d}t$$</p>
+
+<p>另一边，写出 $\overline{X(\omega)}$。取共轭可以"钻进积分里面"（积分是求和的极限，而和的共轭等于共轭的和），并且 $\overline{e^{-j\omega t}}=e^{+j\omega t}$：</p>
+
+<p>$$\overline{X(\omega)}=\overline{\int x(t)e^{-j\omega t}\mathrm{d}t}=\int \overline{x(t)}\;\overline{e^{-j\omega t}}\,\mathrm{d}t=\int \overline{x(t)}\,e^{j\omega t}\,\mathrm{d}t$$</p>
+
+<p>现在用上"$x$ 是实的"这唯一的条件，即 $\overline{x(t)}=x(t)$：</p>
+
+<p>$$\overline{X(\omega)}=\int x(t)\,e^{j\omega t}\,\mathrm{d}t=X(-\omega)\qquad\checkmark$$</p>
+
+<p><strong>方向二（⟸）：谱共轭对称，信号就一定是实的。</strong>这一半才是后面章节真正要用的（我们通常是先设计好 $X(\omega)$，再追问"输出还是不是实信号"）。</p>
+
+<p>从逆变换出发，两边取共轭（同样把共轭钻进积分，$\overline{e^{j\omega t}}=e^{-j\omega t}$）：</p>
+
+<p>$$\overline{x(t)}=\overline{\frac{1}{2\pi}\int X(\omega)e^{j\omega t}\mathrm{d}\omega}=\frac{1}{2\pi}\int \overline{X(\omega)}\,e^{-j\omega t}\,\mathrm{d}\omega$$</p>
+
+<p>作换元 $\omega\to-\omega$（积分限 $\pm\infty$ 对调后再翻回来，符号抵消，形式不变）：</p>
+
+<p>$$=\frac{1}{2\pi}\int \overline{X(-\omega)}\,e^{j\omega t}\,\mathrm{d}\omega$$</p>
+
+<p>现在代入假设 $X(-\omega)=\overline{X(\omega)}$，于是 $\overline{X(-\omega)}=\overline{\overline{X(\omega)}}=X(\omega)$（共轭两次回到自身）：</p>
+
+<p>$$\overline{x(t)}=\frac{1}{2\pi}\int X(\omega)\,e^{j\omega t}\,\mathrm{d}\omega=x(t)$$</p>
+
+<p>一个数等于自己的共轭，就说明它是实数。所以 $x(t)$ 处处为实。$\blacksquare$</p>
+
+<div class="box tip">
+  <span class="tag">关键直觉 · 为什么"实"会变成"对称"</span>
+  <p style="margin:6px 0 0">把逆变换里 $+\omega$ 和 $-\omega$ 这<strong>一对</strong>频率的贡献单独拎出来看：</p>
+  <p>$$X(\omega)e^{j\omega t}\quad\text{和}\quad X(-\omega)e^{-j\omega t}$$</p>
+  <p>共轭对称条件 $X(-\omega)=\overline{X(\omega)}$ 说的正是：<strong>这两项互为共轭复数</strong>（因为 $\overline{X(\omega)e^{j\omega t}}=\overline{X(\omega)}e^{-j\omega t}=X(-\omega)e^{-j\omega t}$）。而一个复数加上它自己的共轭，虚部精确抵消，结果是实数：</p>
+  <p>$$X(\omega)e^{j\omega t}+X(-\omega)e^{-j\omega t}=2\operatorname{Re}\big\{X(\omega)e^{j\omega t}\big\}$$</p>
+  <p>所以"实信号"在频域的真正含义是：<strong>它的频谱是由一对对共轭复数搭起来的</strong>，每一对合起来给出一个实的余弦分量。谁破坏了配对，谁就让输出跑出实数轴。这就是后面每次判断"这个滤波器合法吗"的唯一依据 —— 只要检查它有没有把某一对拆散。</p>
+</div>
+
+<p><strong>两条常用推论。</strong>把 $X$ 写成极坐标 $X(\omega)=|X(\omega)|e^{j\arg X(\omega)}$，代入 $X(-\omega)=\overline{X(\omega)}=|X(\omega)|e^{-j\arg X(\omega)}$，比较模与辐角：</p>
+
+<ul>
+  <li><strong>幅度谱是偶函数</strong>：$|X(-\omega)|=|X(\omega)|$。</li>
+  <li><strong>相位谱是奇函数</strong>：$\arg X(-\omega)=-\arg X(\omega)$。特别地取 $\omega=0$ 得 $\arg X(0)=-\arg X(0)$，故 $\arg X(0)=0$ 或 $\pi$ —— <strong>直流分量必定是实数</strong>。这个看似琐碎的观察，正是习题 1.4 的突破口。</li>
+</ul>
+
+<p>所以实信号的负频率部分不携带任何新信息，它只是正频率的镜像 —— <strong>这正是解析信号能把负频率整个丢掉的理论依据</strong>（第 6 章）。</p>
+
+<h3>2.5.4 常用变换对</h3>
+
+<table>
+<tr><th>$x(t)$</th><th>$X(\omega)$</th></tr>
+<tr><td>$\delta(t)$</td><td>$1$</td></tr>
+<tr><td>$1$</td><td>$2\pi\delta(\omega)$</td></tr>
+<tr><td>$e^{j\omega_0t}$</td><td>$2\pi\delta(\omega-\omega_0)$</td></tr>
+<tr><td>$\cos(\omega_0t)$</td><td>$\pi[\delta(\omega-\omega_0)+\delta(\omega+\omega_0)]$</td></tr>
+<tr><td>$\sin(\omega_0t)$</td><td>$-j\pi[\delta(\omega-\omega_0)-\delta(\omega+\omega_0)]$</td></tr>
+<tr><td>$\mathrm{rect}_T(t)$（在 $[-T,T]$ 上为 1）</td><td>$2T\,\mathrm{sinc}(\omega T)=\dfrac{2\sin\omega T}{\omega}$</td></tr>
+<tr><td>$e^{-a|t|},\ a&gt;0$</td><td>$\dfrac{2a}{a^2+\omega^2}$</td></tr>
+<tr><td>$\dfrac{1}{1+t^2}$</td><td>$\pi e^{-|\omega|}$</td></tr>
+<tr><td>$\mathrm{sgn}(t)$</td><td>$\dfrac{2}{j\omega}$</td></tr>
+<tr><td>$\dfrac{1}{\pi t}$</td><td>$-j\,\mathrm{sgn}(\omega)$　<em>（第 4 章的主角，那里会完整推导）</em></td></tr>
+</table>
+
+<h2>2.6 三个特殊函数</h2>
+
+<h3>2.6.1 符号函数 $\mathrm{sgn}$</h3>
+
+<p>$$\mathrm{sgn}(t)=\begin{cases}+1,&t&gt;0\\0,&t=0\\-1,&t&lt;0\end{cases}$$</p>
+
+<p>它是奇函数，$|\mathrm{sgn}(t)|=1$（除原点），且 $\mathrm{sgn}^2(t)=1$（除原点）。最后这条以后用来证明 $\mathcal{H}^2=-I$。</p>
+
+<h3>2.6.2 单位阶跃 $u(t)$</h3>
+
+<p>$$u(t)=\begin{cases}1,&t&gt;0\\0,&t&lt;0\end{cases}\qquad\Longrightarrow\qquad u(t)=\frac{1+\mathrm{sgn}(t)}{2}$$</p>
+
+<p>第 6 章证明解析信号的单边谱时，会用到这个换算关系。</p>
+
+<h3>2.6.3 狄拉克冲激 $\delta(t)$</h3>
+
+<p>$\delta$ 不是普通函数，而是一个<strong>广义函数</strong>（分布）。它由下面这条"取样性质"定义：</p>
+
+<p>$$\int_{-\infty}^{\infty}f(t)\,\delta(t-t_0)\,\mathrm{d}t=f(t_0)$$</p>
+
+<p>直觉上它是"在 $t=0$ 处无限高、无限窄、面积为 1 的尖峰"。你可以把它想成宽为 $\varepsilon$、高为 $1/\varepsilon$ 的矩形在 $\varepsilon\to0$ 时的极限。</p>
+
+<div class="box tip">
+  <span class="tag">为什么要引入广义函数</span>
+  <p style="margin:6px 0 0">因为 $\cos(\omega_0t)$、$\mathrm{sgn}(t)$、常数 $1$ 这些信号的能量是无穷的，严格说没有傅里叶变换。引入 $\delta$ 以后，它们的"频谱"就可以写成冲激的组合，运算规则依然成立。这是工程上的标准做法，代价是有些极限步骤不能随便交换 —— 遇到奇怪结果时要回头检查。</p>
+</div>
+
+<h2>2.7 自检清单</h2>
+
+<p>进入第 3 章前，请确认下面每一条你都能不看书回答：</p>
+
+<table>
+<tr><th>#</th><th>自检问题</th><th>本章位置</th></tr>
+<tr><td>1</td><td>$e^{j\theta}$ 展开成三角函数是什么？乘 $-j$ 在几何上做了什么？</td><td>2.1.2、2.1.3</td></tr>
+<tr><td>2</td><td>"相移 90°"和"延时四分之一周期"有什么区别？</td><td>2.2</td></tr>
+<tr><td>3</td><td>$\mathrm{P}\!\int_{-1}^{1}\frac{\mathrm{d}t}{t}$ 等于多少？为什么不是发散？</td><td>2.3.1</td></tr>
+<tr><td>4</td><td>为什么 $1/|t|$ 的主值积分<strong>不</strong>存在？</td><td>图 2.1</td></tr>
+<tr><td>5</td><td>卷积的三个步骤是什么？（翻转、平移、相乘求和）</td><td>2.4.1</td></tr>
+<tr><td>6</td><td>卷积定理怎么说？</td><td>定理 2.1</td></tr>
+<tr><td>7</td><td>实信号的频谱有什么对称性？</td><td>2.5.3</td></tr>
+<tr><td>8</td><td>$\mathrm{sgn}^2(t)=?$</td><td>2.6.1</td></tr>
+</table>
+
+<div class="q">
+  <span class="tag">本章练习</span>
+  <ol style="margin:6px 0 0">
+    <li>计算下列主值积分：(a) $\mathrm{P}\!\int_{-3}^{3}\frac{\mathrm{d}t}{t}$；(b) $\mathrm{P}\!\int_{-1}^{4}\frac{\mathrm{d}t}{t-1}$；(c) $\mathrm{P}\!\int_{-1}^{1}\frac{t\,\mathrm{d}t}{t}$。</li>
+    <li>判断下列积分的主值是否存在：(a) $\int_{-1}^1\frac{\mathrm{d}t}{t^2}$；(b) $\int_{-1}^1\frac{\mathrm{d}t}{t^3}$；(c) $\int_{-1}^1\frac{\sin t}{t}\mathrm{d}t$。给出理由。</li>
+    <li>用定义验证 $\delta * x = x$。</li>
+    <li>设 $h(t)$ 是奇函数，$x(t)$ 是偶函数，证明 $(h*x)(t)$ 是奇函数。（这条将解释为什么偶信号的希尔伯特变换必是奇的。）</li>
+    <li>用欧拉反公式和"常用变换对"表推出 $\mathcal{F}\{\cos\omega_0 t\}$。</li>
+    <li>已知 $\mathcal{F}\{e^{-a|t|}\}=\frac{2a}{a^2+\omega^2}$，用对偶性求 $\mathcal{F}\{\frac{1}{1+t^2}\}$。</li>
+  </ol>
+  <p style="margin:10px 0 0;font-size:14.5px;color:#6c717c">完整解答见<a href="09-exercises.html">第 9 章习题册</a>。</p>
+</div>
+
+<nav class="pager">
+  <a href="01-motivation.html">← 第 1 章　为什么需要希尔伯特变换</a>
+  <a href="03-definition.html">第 3 章　定义：时域的样子 →</a>
+</nav>
+
+</div>
+
+<script>
+function setupHiDPI(cv){
+  const dpr=window.devicePixelRatio||1;
+  if(!cv.dataset.baseH){cv.dataset.baseH=cv.getAttribute('height')||cv.clientHeight||300;}
+  const h=parseInt(cv.dataset.baseH,10);
+  const w=cv.clientWidth||cv.parentElement.clientWidth;
+  cv.style.height=h+'px';
+  const bw=Math.round(w*dpr),bh=Math.round(h*dpr);
+  if(cv.width!==bw||cv.height!==bh){cv.width=bw;cv.height=bh;}
+  const g=cv.getContext('2d');g.setTransform(dpr,0,0,dpr,0,0);
+  return {g:g,W:w,H:h};
+}
+function poly(g,pts,color,width,dash){
+  if(!pts.length)return;
+  g.save(); g.beginPath(); if(dash)g.setLineDash(dash);
+  for(let i=0;i<pts.length;i++){i?g.lineTo(pts[i][0],pts[i][1]):g.moveTo(pts[i][0],pts[i][1]);}
+  g.strokeStyle=color; g.lineWidth=width||1.6; g.lineJoin='round'; g.stroke(); g.restore();
+}
+function axis(g,x0,y0,x1,y1){poly(g,[[x0,y0],[x1,y1]],'#c9c4b6',1);}
+
+/* ============ 图 2.1 主值积分 ============ */
+(function(){
+  const cv=document.getElementById('c1'),s=document.getElementById('s1'),
+        v=document.getElementById('v1'),sel=document.getElementById('sel1');
+  function f(t){
+    const m=sel.value;
+    if(m==='odd')return 1/t;
+    if(m==='even')return 1/Math.abs(t);
+    return 1/t+0.5;
+  }
+  function draw(){
+    const {g,W,H}=setupHiDPI(cv);
+    const eps=(+s.value)/100; v.textContent=eps.toFixed(2);
+    g.clearRect(0,0,W,H);
+    const padL=14,padR=14, w=W-padL-padR, mid=H/2;
+    const X=t=>padL+w*(t+1.15)/2.3;
+    const sy=H*0.155;
+    const Y=y=>Math.max(6,Math.min(H-6, mid-sy*Math.max(-2.6,Math.min(2.6,y))));
+    // 网格
+    g.strokeStyle='#f0ece1'; g.lineWidth=1;
+    for(let k=-2;k<=2;k++){g.beginPath();g.moveTo(padL,mid-sy*k);g.lineTo(W-padR,mid-sy*k);g.stroke();}
+    axis(g,padL,mid,W-padR,mid); axis(g,X(0),12,X(0),H-12);
+    // 面积
+    function fillSeg(a,b,color){
+      g.save(); g.beginPath(); g.moveTo(X(a),mid);
+      const n=160;
+      for(let i=0;i<=n;i++){const t=a+(b-a)*i/n; g.lineTo(X(t),Y(f(t)));}
+      g.lineTo(X(b),mid); g.closePath(); g.fillStyle=color; g.fill(); g.restore();
+    }
+    fillSeg(-1,-eps,'rgba(31,111,139,.30)');
+    fillSeg(eps,1,'rgba(192,57,43,.28)');
+    // 曲线（奇点两侧分别绘制）
+    (function(){
+      const p=[]; for(let i=0;i<=240;i++){const t=-1.12+((-eps)-(-1.12))*i/240; p.push([X(t),Y(f(t))]);} poly(g,p,'#1f6f8b',2);
+      const q=[]; for(let i=0;i<=240;i++){const t=eps+(1.12-eps)*i/240; q.push([X(t),Y(f(t))]);} poly(g,q,'#c0392b',2);
+    })();
+    // 截断带
+    g.fillStyle='rgba(0,0,0,.055)'; g.fillRect(X(-eps),10,X(eps)-X(-eps),H-20);
+    g.strokeStyle='#8a8f9a'; g.setLineDash([4,3]); g.lineWidth=1;
+    g.beginPath();g.moveTo(X(-eps),10);g.lineTo(X(-eps),H-10);g.moveTo(X(eps),10);g.lineTo(X(eps),H-10);g.stroke();
+    g.setLineDash([]);
+    // 数值
+    function area(a,b){let s=0;const n=4000;for(let i=0;i<n;i++){const t=a+(b-a)*(i+0.5)/n;s+=f(t)*(b-a)/n;}return s;}
+    const A1=area(-1,-eps), A2=area(eps,1);
+    g.font='13px ui-sans-serif,system-ui,sans-serif';
+    g.fillStyle='#1f6f8b'; g.fillText('左侧面积 = '+A1.toFixed(3), padL+4, 22);
+    g.fillStyle='#c0392b'; g.fillText('右侧面积 = '+A2.toFixed(3), padL+4, 40);
+    g.fillStyle='#20242c'; g.font='bold 14px ui-sans-serif,system-ui,sans-serif';
+    g.fillText('两者之和 = '+(A1+A2).toFixed(3), padL+4, 62);
+    g.font='12px ui-sans-serif,system-ui,sans-serif'; g.fillStyle='#5d6472';
+    g.fillText('−1', X(-1)-8, mid+16); g.fillText('1', X(1)-3, mid+16);
+    g.fillText('t', W-padR-8, mid+16);
+  }
+  s.addEventListener('input',draw); sel.addEventListener('change',draw);
+  window.addEventListener('resize',draw); draw();
+})();
+
+/* ============ 图 2.2 卷积滑动 ============ */
+(function(){
+  const cv=document.getElementById('c2'),s=document.getElementById('s2'),
+        v=document.getElementById('v2'),sel=document.getElementById('sel2');
+  // 输入信号：两个台阶 + 一段斜坡
+  function xin(t){
+    if(t<0.12||t>0.9)return 0;
+    if(t<0.34)return 1;
+    if(t<0.46)return 0;
+    if(t<0.62)return -0.75;
+    if(t<0.70)return 0;
+    return 0.55*Math.sin(2*Math.PI*5*(t-0.70))+0.15;
+  }
+  function hker(u){ // u = t - tau
+    const m=sel.value;
+    if(m==='box')return (Math.abs(u)<0.05)?10:0;
+    if(m==='gauss'){const s0=0.028;return Math.exp(-u*u/(2*s0*s0))/(s0*Math.sqrt(2*Math.PI));}
+    // 希尔伯特核 1/(pi u)，near-field 截断
+    if(Math.abs(u)<0.004)return 0;
+    return 1/(Math.PI*u);
+  }
+  const NP=520;
+  function conv(t){
+    let s0=0; const a=-0.35,b=0.35,n=1400;
+    for(let i=0;i<n;i++){const u=a+(b-a)*(i+0.5)/n; s0+=hker(u)*xin(t-u)*(b-a)/n;}
+    return s0;
+  }
+  let cache=null,cacheKey='';
+  function draw(){
+    const {g,W,H}=setupHiDPI(cv);
+    const t=(+s.value)/100; v.textContent=t.toFixed(2);
+    const key=sel.value;
+    if(cacheKey!==key){ cache=new Float64Array(NP);
+      for(let i=0;i<NP;i++)cache[i]=conv(i/(NP-1)); cacheKey=key; }
+    let mx=0.001; for(let i=0;i<NP;i++)mx=Math.max(mx,Math.abs(cache[i]));
+    g.clearRect(0,0,W,H);
+    const padL=12,padR=12,w=W-padL-padR;
+    const X=tt=>padL+w*tt;
+    const topM=H*0.30, botM=H*0.82, a1=H*0.19, a2=H*0.15;
+    // 上：x 与 h(t-tau)
+    axis(g,padL,topM,W-padR,topM);
+    const px=[],ph=[];
+    let hmx=0.001;
+    for(let i=0;i<NP;i++){const tau=i/(NP-1); hmx=Math.max(hmx,Math.abs(hker(t-tau)));}
+    for(let i=0;i<NP;i++){const tau=i/(NP-1);
+      px.push([X(tau),topM-a1*xin(tau)]);
+      ph.push([X(tau),topM-a1*Math.max(-1.4,Math.min(1.4,hker(t-tau)/hmx))]);}
+    // 乘积阴影
+    g.save(); g.beginPath(); g.moveTo(X(0),topM);
+    for(let i=0;i<NP;i++){const tau=i/(NP-1);
+      const pr=xin(tau)*hker(t-tau)/hmx;
+      g.lineTo(X(tau),topM-a1*Math.max(-1.4,Math.min(1.4,pr)));}
+    g.lineTo(X(1),topM); g.closePath(); g.fillStyle='rgba(46,139,87,.24)'; g.fill(); g.restore();
+    poly(g,px,'#6b6f79',1.6); poly(g,ph,'#1f6f8b',1.8);
+    g.strokeStyle='#c0392b'; g.setLineDash([4,3]); g.lineWidth=1;
+    g.beginPath(); g.moveTo(X(t),topM-a1*1.5); g.lineTo(X(t),topM+a1*1.5); g.stroke(); g.setLineDash([]);
+    g.font='12px ui-sans-serif,system-ui,sans-serif';
+    g.fillStyle='#6b6f79'; g.fillText('x(τ)',padL+2,topM-a1*1.35);
+    g.fillStyle='#1f6f8b'; g.fillText('h(t−τ)',padL+40,topM-a1*1.35);
+    g.fillStyle='#2e8b57'; g.fillText('乘积（绿色净面积 = 输出）',padL+94,topM-a1*1.35);
+    // 下：输出
+    axis(g,padL,botM,W-padR,botM);
+    const po=[]; for(let i=0;i<NP;i++)po.push([X(i/(NP-1)),botM-a2*cache[i]/mx]);
+    poly(g,po,'#c0392b',1.9);
+    const idx=Math.round(t*(NP-1));
+    g.fillStyle='#c0392b'; g.beginPath(); g.arc(X(t),botM-a2*cache[idx]/mx,4.5,0,6.3); g.fill();
+    g.fillStyle='#c0392b'; g.font='12px ui-sans-serif,system-ui,sans-serif';
+    g.fillText('(h∗x)(t)',padL+2,botM-a2*1.25);
+  }
+  s.addEventListener('input',draw); sel.addEventListener('change',draw);
+  window.addEventListener('resize',draw); draw();
+})();
+</script>
+</body>
+</html>

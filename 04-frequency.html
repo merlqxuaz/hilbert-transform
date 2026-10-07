@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>第4章 频域：一台90°相移器</title>
+<script>
+window.MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']],displayMath:[['$$','$$'],['\\[','\\]']]},options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" async></script>
+<style>
+:root{--paper:#fbfaf6;--ink:#20242c;--muted:#5d6472;--line:#e3dfd3;--accent:#1f6f8b;--accent2:#b4531f;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:Georgia,"Songti SC","Noto Serif SC","Source Han Serif SC","SimSun",serif;line-height:1.85;font-size:17px;-webkit-text-size-adjust:100%}
+.wrap{max-width:880px;margin:0 auto;padding:0 22px 90px}
+header.ch{border-bottom:3px double var(--line);padding:44px 0 24px;margin-bottom:34px}
+.kicker{font-family:ui-sans-serif,system-ui,sans-serif;letter-spacing:.2em;font-size:11.5px;color:var(--accent);text-transform:uppercase}
+h1{font-size:29px;margin:12px 0 8px;line-height:1.3}
+.sub{color:var(--muted);font-size:15.5px;margin:0}
+h2{font-size:22px;margin:46px 0 14px;padding-left:12px;border-left:5px solid var(--accent)}
+h3{font-size:18px;margin:30px 0 10px;color:var(--accent2)}
+h4{font-family:ui-sans-serif,system-ui,sans-serif;font-size:16.5px;font-weight:700;color:var(--accent2);margin:22px 0 6px}
+p{margin:14px 0}
+.box{background:#fff;border:1px solid var(--line);border-radius:8px;padding:14px 18px;margin:22px 0}
+.tag{font-family:ui-sans-serif,system-ui,sans-serif;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;display:block;margin-bottom:6px}
+.def{border-left:5px solid #1f6f8b}.def .tag{color:#1f6f8b}
+.thm{border-left:5px solid #7a4fb5}.thm .tag{color:#6b3fa8}
+.ex{border-left:5px solid #2e8b57}.ex .tag{color:#24704a}
+.warn{border-left:5px solid #c0392b;background:#fff8f7}.warn .tag{color:#a5321f}
+.tip{border-left:5px solid #d99b16;background:#fffdf5}.tip .tag{color:#a8760a}
+a{color:var(--accent);text-underline-offset:3px}
+table{width:100%;border-collapse:collapse;margin:20px 0;font-size:15px;background:#fff}
+th,td{border:1px solid var(--line);padding:8px 11px;text-align:left;vertical-align:top}
+th{background:#f2efe6;font-family:ui-sans-serif,system-ui,sans-serif;font-size:13.5px}
+ol,ul{padding-left:1.5em}li{margin:7px 0}
+figure.demo{margin:26px 0;border:1px solid var(--line);background:#fff;border-radius:10px;padding:14px}
+canvas{width:100%;display:block;border-radius:4px}
+.ctrl{display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center;font-family:ui-sans-serif,system-ui,sans-serif;font-size:13px;margin-top:12px}
+.ctrl label{display:flex;align-items:center;gap:8px;flex:1 1 200px}
+input[type=range]{flex:1;min-width:80px;accent-color:var(--accent)}
+select{font-family:inherit;font-size:13px;padding:4px 8px;border:1px solid var(--line);border-radius:6px;background:#f8f6f0}
+figcaption{font-family:ui-sans-serif,system-ui,sans-serif;font-size:13px;color:var(--muted);margin-top:10px;line-height:1.65}
+nav.pager{display:flex;justify-content:space-between;gap:12px;margin-top:64px;border-top:1px solid var(--line);padding-top:18px;font-family:ui-sans-serif,system-ui,sans-serif;font-size:14px}
+nav.pager a{text-decoration:none}
+.q{background:#fff;border:1px dashed var(--line);border-left:5px solid #8a8f9a;border-radius:8px;padding:14px 18px;margin:22px 0}
+.q .tag{color:#6c717c}
+.derive{background:#f7f5ee;border:1px solid var(--line);border-radius:8px;padding:6px 18px 12px;margin:22px 0}
+.derive .tag{font-family:ui-sans-serif,system-ui,sans-serif;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:#6b3fa8;display:block;margin:10px 0 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="ch">
+  <div class="kicker">第 4 章</div>
+  <h1>频域：一台 90° 相移器</h1>
+  <p class="sub">时域里那个别扭的主值积分，到了频域只是一次乘法。这一章把 $-j\,\mathrm{sgn}(\omega)$ 从头推一遍，然后你会发现前面所有例子都变得显然。</p>
+</header>
+
+<h2>4.1 换个战场</h2>
+
+<p>第 3 章的定义虽然正确，但用起来痛苦 —— 每算一个例子都要处理主值积分。卷积定理（定理 2.1）给了一条捷径：</p>
+
+<p>$$\hat{x}=h*x\quad\overset{\mathcal{F}}{\Longrightarrow}\quad\hat{X}(\omega)=H(\omega)X(\omega)$$</p>
+
+<p>所以只要知道核函数的傅里叶变换 $H(\omega)=\mathcal{F}\left\{\frac{1}{\pi t}\right\}$，希尔伯特变换就退化成一次<strong>逐点乘法</strong>。这个 $H(\omega)$ 叫做希尔伯特变换器的<strong>频率响应</strong>。</p>
+
+<h2>4.2 推导 $\mathcal{F}\left\{\frac{1}{\pi t}\right\}=-j\,\mathrm{sgn}(\omega)$</h2>
+
+<p>直接积分 $\int\frac{1}{\pi t}e^{-j\omega t}\mathrm{d}t$ 很难处理（主值 + 不收敛）。标准做法是<strong>绕一圈</strong>：先算一个容易的变换，再用对偶性翻过来。分三步。</p>
+
+<div class="derive">
+<span class="tag">第一步 · 先求 $\mathcal{F}\{\mathrm{sgn}(t)\}$</span>
+<p>$\mathrm{sgn}(t)$ 在 $t\to\pm\infty$ 时不衰减（一直是 $\pm1$），所以 $\int|\mathrm{sgn}(t)|\mathrm{d}t=\infty$，积分 $\int\mathrm{sgn}(t)e^{-j\omega t}\mathrm{d}t$ 根本不收敛，不能硬算。<strong>标准对策是先给它"人为加上衰减"，算完再把衰减撤掉。</strong>令 $a&gt;0$，考虑</p>
+<p>$$\mathrm{sgn}_a(t)=e^{-at}u(t)-e^{at}u(-t)=\begin{cases}+e^{-at},&t&gt;0\\[2pt]-e^{at},&t&lt;0\end{cases}$$</p>
+<p>先看清楚这个函数长什么样：在正半轴它从 $+1$ 按 $e^{-at}$ 衰减到 $0$；在负半轴（此时 $t&lt;0$，$e^{at}$ 随 $t\to-\infty$ 也趋于 $0$）它从 $-1$ 衰减到 $0$。所以它是"两端被压下去的 $\mathrm{sgn}$"，而且 $a$ 越小压得越靠外。取极限就还原成 $\mathrm{sgn}$：</p>
+<p>$$\mathrm{sgn}(t)=\lim_{a\to0^+}\Big[e^{-at}u(t)-e^{at}u(-t)\Big]$$</p>
+<p>这样每个 $a&gt;0$ 的版本都绝对可积，可以放心积分，最后再让 $a\to0^+$。</p>
+<p>两项的变换都是基本积分。<strong>第一项</strong>（积分区间 $[0,\infty)$，因为 $u(t)$ 在 $t&lt;0$ 时为零）：把两个指数合并，$e^{-at}e^{-j\omega t}=e^{-(a+j\omega)t}$，原函数是 $\frac{e^{-(a+j\omega)t}}{-(a+j\omega)}$：</p>
+<p>$$\mathcal{F}\{e^{-at}u(t)\}=\int_0^{\infty}e^{-(a+j\omega)t}\mathrm{d}t=\left[\frac{e^{-(a+j\omega)t}}{-(a+j\omega)}\right]_0^{\infty}=\frac{0-1}{-(a+j\omega)}=\frac{1}{a+j\omega}$$</p>
+<p>（上限处因子 $|e^{-(a+j\omega)t}|=e^{-at}\to0$，这里正是 $a&gt;0$ 在起作用 —— 没有它这一步就不成立。）</p>
+<p><strong>第二项</strong>（积分区间 $(-\infty,0]$）：合并指数得 $e^{at}e^{-j\omega t}=e^{(a-j\omega)t}$，原函数是 $\frac{e^{(a-j\omega)t}}{a-j\omega}$：</p>
+<p>$$\mathcal{F}\{e^{at}u(-t)\}=\int_{-\infty}^{0}e^{(a-j\omega)t}\mathrm{d}t=\left[\frac{e^{(a-j\omega)t}}{a-j\omega}\right]_{-\infty}^{0}=\frac{1-0}{a-j\omega}=\frac{1}{a-j\omega}$$</p>
+<p>（下限处 $|e^{(a-j\omega)t}|=e^{at}\to0$ 当 $t\to-\infty$，同样靠 $a&gt;0$。）</p>
+<p>相减：</p>
+<p>$$\frac{1}{a+j\omega}-\frac{1}{a-j\omega}=\frac{(a-j\omega)-(a+j\omega)}{a^2+\omega^2}=\frac{-2j\omega}{a^2+\omega^2}$$</p>
+<p>现在撤掉人为加的衰减，令 $a\to0^+$。分母里的 $a^2$ 相比 $\omega^2$ 消失（这里要求 $\omega\neq0$，$\omega=0$ 处这个极限不存在，正对应 $\mathrm{sgn}$ 的频谱在原点的奇性）：</p>
+<p>$$\boxed{\mathcal{F}\{\mathrm{sgn}(t)\}=\frac{-2j\omega}{\omega^2}=\frac{-2j}{\omega}=\frac{2}{j\omega}}$$</p>
+</div>
+
+<div class="derive">
+<span class="tag">第二步 · 对偶性</span>
+<p>由逆变换公式 $x(t)=\frac{1}{2\pi}\int X(\omega)e^{j\omega t}\mathrm{d}\omega$，把 $t$ 换成 $-t$：</p>
+<p>$$2\pi\,x(-t)=\int X(\omega)\,e^{-j\omega t}\,\mathrm{d}\omega$$</p>
+<p>右边正是"把 $X$ 当成时间函数"做的傅里叶变换。把哑变量改名（$\omega\to t$，$t\to\omega$）：</p>
+<p>$$\boxed{\mathcal{F}\{X(t)\}(\omega)=2\pi\,x(-\omega)}$$</p>
+<p>这就是<strong>对偶（对称）性</strong>：时域和频域的角色可以互换，代价是一个 $2\pi$ 和一次反转。</p>
+</div>
+
+<div class="derive">
+<span class="tag">第三步 · 合起来</span>
+<p>取 $x(t)=\mathrm{sgn}(t)$，则 $X(\omega)=\frac{-2j}{\omega}$，于是 $X(t)=\frac{-2j}{t}$。代入对偶公式：</p>
+<p>$$\mathcal{F}\left\{\frac{-2j}{t}\right\}(\omega)=2\pi\,\mathrm{sgn}(-\omega)=-2\pi\,\mathrm{sgn}(\omega)$$</p>
+<p>两边除以 $-2j$：</p>
+<p>$$\mathcal{F}\left\{\frac{1}{t}\right\}=\frac{-2\pi\,\mathrm{sgn}(\omega)}{-2j}=\frac{\pi\,\mathrm{sgn}(\omega)}{j}=-j\pi\,\mathrm{sgn}(\omega)$$</p>
+<p>最后除以 $\pi$：</p>
+<p>$$\boxed{H(\omega)=\mathcal{F}\left\{\frac{1}{\pi t}\right\}=-j\,\mathrm{sgn}(\omega)}$$</p>
+</div>
+
+<p>这个式子就是本书的心脏。请把它和第 1.4 节那张"规格书"对照一下 —— 我们当初凭直觉要求的东西，现在从定义严格地推出来了。</p>
+
+<div class="box def">
+  <span class="tag">定理 4.1 · 希尔伯特变换的频域形式</span>
+  <p style="margin:6px 0 0">$$\hat{X}(\omega)=-j\,\mathrm{sgn}(\omega)\,X(\omega)=\begin{cases}-j\,X(\omega),&\omega&gt;0\\[2pt]0,&\omega=0\\[2pt]+j\,X(\omega),&\omega&lt;0\end{cases}$$</p>
+</div>
+
+<h2>4.3 读懂这个式子</h2>
+
+<h3>4.3.1 幅度：全通</h3>
+
+<p>$$|H(\omega)|=|-j\,\mathrm{sgn}(\omega)|=1\qquad(\omega\neq0)$$</p>
+
+<p>每个频率的幅度<strong>一点不变</strong>。所以希尔伯特变换器是一个<strong>全通滤波器</strong>（all-pass filter）：它不滤掉任何东西，只重新安排相位。这和低通、高通、带通滤波器有本质区别 —— 那些是"挑频率"的，而这个是"扭相位"的。</p>
+
+<h3>4.3.2 相位：恒定 $\mp90°$</h3>
+
+<p>$$\arg H(\omega)=\begin{cases}-\dfrac{\pi}{2},&\omega&gt;0\\[4pt]+\dfrac{\pi}{2},&\omega&lt;0\end{cases}$$</p>
+
+<p>因为 $-j=e^{-j\pi/2}$ 和 $+j=e^{+j\pi/2}$。对正频率一律推迟 $90°$，对负频率一律提前 $90°$。相位曲线是一条<strong>阶跃</strong>，在 $\omega=0$ 处跳变 $180°$。</p>
+
+<figure class="demo">
+  <canvas id="c1" height="290"></canvas>
+  <figcaption><strong>图 4.1</strong>　希尔伯特变换器的频率响应。上：幅度响应恒为 $1$（全通，只在 $\omega=0$ 一点为零）。下：相位响应是一个 $\pm90°$ 的阶跃。这两张图就是希尔伯特变换的完整"身份证" —— 任何满足这两条曲线的系统都是希尔伯特变换器。</figcaption>
+</figure>
+
+<h3>4.3.3 为什么负频率要反号</h3>
+
+<p>这不是随意规定，而是<strong>为了让输出保持实数</strong>。而且这个要求可以精确地翻译成一条对 $H(\omega)$ 的硬约束，下面把它推出来 —— 推完你就有了一把尺子，可以判断任何给定的频率响应是否"合法"。</p>
+
+<h4>先推出这把尺子</h4>
+
+<p><strong>第一步 · 把要求写成频域语言。</strong>设系统 $y=h*x$，频域是 $Y(\omega)=H(\omega)X(\omega)$。我们要求：只要输入 $x$ 是实的，输出 $y$ 就必须是实的。由第 2.5.3 节的<em>双向</em>定理，这等价于</p>
+
+<p>$$X(-\omega)=\overline{X(\omega)}\quad\Longrightarrow\quad Y(-\omega)=\overline{Y(\omega)}$$</p>
+
+<p><strong>第二步 · 把两边都摊开。</strong>左边（把 $\omega$ 换成 $-\omega$，再用输入的共轭对称性）：</p>
+
+<p>$$Y(-\omega)=H(-\omega)\,X(-\omega)=H(-\omega)\,\overline{X(\omega)}$$</p>
+
+<p>右边（共轭乘积等于乘积的共轭，再用一次输入的共轭对称性）：</p>
+
+<p>$$\overline{Y(\omega)}=\overline{H(\omega)X(\omega)}=\overline{H(\omega)}\cdot\overline{X(\omega)}$$</p>
+
+<p><strong>第三步 · 比较，约掉 $\overline{X(\omega)}$。</strong>两式相等要求</p>
+
+<p>$$H(-\omega)\,\overline{X(\omega)}=\overline{H(\omega)}\cdot\overline{X(\omega)}$$</p>
+
+<p>这必须对<em>每一个</em>实输入都成立。只要存在某个实信号在频率 $\omega$ 处有非零分量（比如 $\cos\omega t$ 本身），就能把 $\overline{X(\omega)}$ 约掉，得到：</p>
+
+<div class="box def">
+  <span class="tag">实系统的合法性判据</span>
+  <p style="margin:6px 0 0">$$\boxed{\,H(-\omega)=\overline{H(\omega)}\,}$$</p>
+  <p style="margin:6px 0 0">等价的两句话：<strong>幅度响应 $|H(\omega)|$ 必须是偶函数，相位响应 $\arg H(\omega)$ 必须是奇函数。</strong>（把 $H$ 写成 $|H|e^{j\arg H}$ 代进去比较模与辐角即得。）</p>
+</div>
+
+<h4>用这把尺子量一量希尔伯特变换器</h4>
+
+<p>代入 $H(\omega)=-j\,\mathrm{sgn}(\omega)$。左边用 $\mathrm{sgn}$ 是奇函数（$\mathrm{sgn}(-\omega)=-\mathrm{sgn}(\omega)$）：</p>
+
+<p>$$H(-\omega)=-j\,\mathrm{sgn}(-\omega)=-j\cdot\big(-\mathrm{sgn}(\omega)\big)=+j\,\mathrm{sgn}(\omega)$$</p>
+
+<p>右边取共轭（$\mathrm{sgn}(\omega)$ 是实数，只有 $-j$ 变号）：</p>
+
+<p>$$\overline{H(\omega)}=\overline{-j\,\mathrm{sgn}(\omega)}=+j\,\mathrm{sgn}(\omega)$$</p>
+
+<p>两边相等 ✓。所以 $-j\,\mathrm{sgn}(\omega)$ 是合法的。对照判据的两句话也对得上：$|H|=1$ 是偶函数（常数当然偶），$\arg H=-\frac{\pi}{2}\mathrm{sgn}(\omega)$ 是奇函数 ✓。</p>
+
+<p>顺带把作用在具体信号上的结果也验一遍（这是原来那行验算，现在它成了判据的一个应用）：</p>
+
+<p>$$\hat{X}(-\omega)=-j\,\mathrm{sgn}(-\omega)X(-\omega)=+j\,\mathrm{sgn}(\omega)\overline{X(\omega)}=\overline{-j\,\mathrm{sgn}(\omega)X(\omega)}=\overline{\hat{X}(\omega)}\quad\checkmark$$</p>
+
+<h4>反过来：为什么"所有频率都乘 $-j$"不行</h4>
+
+<p>如果贪心地取 $H(\omega)\equiv-j$（不带 $\mathrm{sgn}$），判据立刻失败：</p>
+
+<p>$$H(-\omega)=-j\ \neq\ \overline{H(\omega)}=+j$$</p>
+
+<p>后果可以当场算出来。取 $x=\cos\omega_0t$，其谱为 $\pi[\delta(\omega-\omega_0)+\delta(\omega+\omega_0)]$，两根谱线都乘 $-j$，逆变换得</p>
+
+<p>$$y(t)=-j\cos(\omega_0t)$$</p>
+
+<p>一个纯虚数信号 —— 不是任何物理系统的输出。<strong>$\mathrm{sgn}(\omega)$ 这个因子不是可有可无的修饰，它正是把"复数输出"拉回实数轴的那个补偿。</strong>直觉上：第 2.5.3 节说实信号的谱是一对对共轭数搭起来的，$-j$ 把每一对的两个成员<em>朝同一方向</em>转，配对被拆散；而 $-j\,\mathrm{sgn}(\omega)$ 把它们<em>朝相反方向</em>转，配对关系原封不动地保住了。</p>
+
+<p>（顺便说：那个"所有频率都乘 $-j$"的非法系统其实很有用 —— 它正是解析信号的雏形，第 6 章会走这条路，代价就是明确接受"输出是复数"。）</p>
+
+<h3>4.3.4 直流被消灭</h3>
+
+<p>$\mathrm{sgn}(0)=0$，所以 $\hat{X}(0)=0$，也就是</p>
+
+<p>$$\int_{-\infty}^{\infty}\hat{x}(t)\,\mathrm{d}t=0$$</p>
+
+<p>希尔伯特变换的输出<strong>永远零均值</strong>。输入信号的直流分量被彻底抹掉，无法恢复。这解释了第 3 章的两个现象：$\mathcal{H}\{c\}=0$（常数变成零），以及 $\mathcal{H}$ <strong>不可逆</strong> —— 因为 $x$ 和 $x+c$ 的希尔伯特变换完全相同，无法区分。</p>
+
+<div class="box warn">
+  <span class="tag">工程后果</span>
+  <p style="margin:6px 0 0">实际处理数据时，<strong>先去直流</strong>（减掉均值）几乎总是对的。如果不去，你算出来的"包络"会被一个虚假的偏置污染，瞬时相位也会失真。第 7.7 节列了更多类似的坑。</p>
+</div>
+
+<h2>4.4 用频域重算前面的例子</h2>
+
+<p>现在所有例题都变得几乎不需要计算。</p>
+
+<div class="box ex">
+  <span class="tag">例 4.1 · 复指数（最本质的一例）</span>
+  <p style="margin:6px 0 0">求 $\mathcal{H}\{e^{j\omega_0t}\}$，$\omega_0&gt;0$。</p>
+  <p><strong>解</strong>　$\mathcal{F}\{e^{j\omega_0t}\}=2\pi\delta(\omega-\omega_0)$，频谱只有 $\omega=\omega_0&gt;0$ 一根谱线。乘上 $-j\,\mathrm{sgn}(\omega)$，在那一点 $\mathrm{sgn}=+1$：</p>
+  <p>$$\hat{X}(\omega)=-j\cdot2\pi\delta(\omega-\omega_0)\quad\Longrightarrow\quad \mathcal{H}\{e^{j\omega_0t}\}=-j\,e^{j\omega_0t}$$</p>
+  <p style="margin:6px 0 0"><strong>这是全书最该记住的一行。</strong>它说：复指数是希尔伯特变换算子的<strong>特征函数</strong>，特征值是 $-j$（当 $\omega_0&gt;0$）或 $+j$（当 $\omega_0&lt;0$）。所有其他性质都能从这一行加线性性推出来。</p>
+</div>
+
+<div class="box ex">
+  <span class="tag">例 4.2 · 余弦，第二次</span>
+  <p style="margin:6px 0 0">用例 4.1 重算 $\mathcal{H}\{\cos\omega_0t\}$（对比例 3.2 的硬算）。</p>
+  <p><strong>解</strong>　用欧拉反公式拆开，$\omega_0&gt;0$：</p>
+  <p>$$\cos\omega_0t=\frac{1}{2}\big(e^{j\omega_0t}+e^{-j\omega_0t}\big)$$</p>
+  <p>逐项套特征值（正频率乘 $-j$，负频率乘 $+j$）：</p>
+  <p>$$\mathcal{H}\{\cos\omega_0t\}=\frac{1}{2}\big(-j\,e^{j\omega_0t}+j\,e^{-j\omega_0t}\big)=\frac{-j}{2}\big(e^{j\omega_0t}-e^{-j\omega_0t}\big)$$</p>
+  <p>括号里正是 $2j\sin\omega_0t$，所以</p>
+  <p>$$=\frac{-j}{2}\cdot2j\sin\omega_0t=\sin(\omega_0t)\quad\checkmark$$</p>
+  <p style="margin:6px 0 0">三行搞定，不用主值积分，不用狄利克雷积分。<strong>这就是换战场的价值。</strong></p>
+</div>
+
+<div class="box ex">
+  <span class="tag">例 4.3 · 两次变换 = 取负号</span>
+  <p style="margin:6px 0 0">证明：若 $x$ 无直流分量，则 $\mathcal{H}\{\mathcal{H}\{x\}\}=-x$。</p>
+  <p><strong>解</strong>　频域里连乘两次：</p>
+  <p>$$\big[-j\,\mathrm{sgn}(\omega)\big]^2 X(\omega)=(-j)^2\,\mathrm{sgn}^2(\omega)\,X(\omega)=(-1)\cdot 1\cdot X(\omega)=-X(\omega)$$</p>
+  <p>这里用了 $\mathrm{sgn}^2(\omega)=1$（$\omega\neq0$，见 2.6.1 节）。做逆变换即得 $\mathcal{H}^2\{x\}=-x$。</p>
+  <p style="margin:6px 0 0"><strong>注意那个前提。</strong>在 $\omega=0$ 处 $\mathrm{sgn}^2(0)=0\neq1$，所以直流分量被丢掉了。严格的结论是 $\mathcal{H}^2\{x\}=-\big(x-\bar{x}\big)$，其中 $\bar{x}$ 是直流分量。也就是说 <strong>$\mathcal{H}$ 在"零均值信号"这个子空间上才满足 $\mathcal{H}^2=-I$</strong>。</p>
+  <p style="margin:6px 0 0"><strong>推论</strong>：逆变换公式是 $\mathcal{H}^{-1}=-\mathcal{H}$，即</p>
+  <p>$$x(t)=-\frac{1}{\pi}\,\mathrm{P}\!\!\int_{-\infty}^{\infty}\frac{\hat{x}(\tau)}{t-\tau}\,\mathrm{d}\tau\;+\;\bar x$$</p>
+</div>
+
+<h2>4.5 "相移 90°"到底改变了什么</h2>
+
+<p>这一节想纠正一个很常见的误解。既然幅度谱完全不变、只动相位，很多同学会以为"波形应该差不多，只是挪了一下"。<strong>错。</strong></p>
+
+<p>对<strong>单频</strong>信号，相移 90° 确实等于时移四分之一周期，波形形状不变。但对含<strong>多个频率</strong>的信号，每个成分要移的<strong>时间不一样</strong>：</p>
+
+<p>$$\text{相移}\ \frac{\pi}{2}\ \Longleftrightarrow\ \text{时移}\ \frac{\pi/2}{\omega}=\frac{T}{4}$$</p>
+
+<p>频率越高，对应的时移越短。所以各成分之间的<strong>相对位置</strong>被改变了，合成的波形形状会彻底变样 —— 幅度谱一样，但波形完全不同。下面这个演示可以清楚地看到这一点。</p>
+
+<figure class="demo">
+  <canvas id="c2" height="340"></canvas>
+  <div class="ctrl">
+    <label>$A_1$（$f$=3）<input id="a1" type="range" min="0" max="100" value="100"><span id="va1" style="min-width:34px;text-align:right">1.0</span></label>
+    <label>$A_2$（$f$=9）<input id="a2" type="range" min="0" max="100" value="45"><span id="va2" style="min-width:34px;text-align:right">.45</span></label>
+    <label>$A_3$（$f$=15）<input id="a3" type="range" min="0" max="100" value="30"><span id="va3" style="min-width:34px;text-align:right">.30</span></label>
+  </div>
+  <figcaption><strong>图 4.2</strong>　三个余弦分量叠加。上：$x(t)=\sum A_k\cos(2\pi f_k t)$（黑）与 $\hat{x}(t)=\sum A_k\sin(2\pi f_kt)$（蓝）。下：三个分量各自的移相情况（浅色为原，深色为变换后），注意<strong>每条曲线移动的水平距离都不同</strong>，高频移得少。把 $A_2$、$A_3$ 拖到 0 只剩单频时，上图的两条曲线就只是简单的水平平移；一旦加入其他频率，形状立刻分道扬镳。</figcaption>
+</figure>
+
+<div class="box tip">
+  <span class="tag">一个哲学式的观察</span>
+  <p style="margin:6px 0 0">希尔伯特变换保留了信号的全部"频率含量"（幅度谱），却可以把波形改得面目全非。这说明<strong>波形的形状信息主要藏在相位里</strong>，不在幅度谱里。语音处理、图像处理中"相位比幅度更重要"的经验之谈，根子就在这里。</p>
+</div>
+
+<h2>4.6 与其他滤波器的对照</h2>
+
+<table>
+<tr><th>滤波器</th><th>$|H(\omega)|$</th><th>$\arg H(\omega)$</th><th>做什么</th></tr>
+<tr><td>理想低通</td><td>矩形（通带 1，阻带 0）</td><td>$0$</td><td>挑掉高频</td></tr>
+<tr><td>理想微分器</td><td>$|\omega|$</td><td>$\pm90°$</td><td>放大高频 + 移相</td></tr>
+<tr><td>纯延时 $t_0$</td><td>$1$</td><td>$-\omega t_0$（线性）</td><td>整体平移</td></tr>
+<tr><td><strong>希尔伯特变换器</strong></td><td>$1$</td><td>$\mp90°$（<strong>常数</strong>）</td><td>只扭相位，不动幅度</td></tr>
+</table>
+
+<p>把微分器和希尔伯特变换器比一下很有意思。微分器 $\mathcal{F}\{\frac{\mathrm{d}}{\mathrm{d}t}\}=j\omega=|\omega|\cdot e^{j\frac{\pi}{2}\mathrm{sgn}(\omega)}$ 也有 $\pm90°$ 的相移，但它的幅度是 $|\omega|$ —— 高频被放大了。所以可以写出一个漂亮的分解：</p>
+
+<p>$$\frac{\mathrm{d}}{\mathrm{d}t}=-\,|\omega|\text{-放大}\;\circ\;\mathcal{H}\qquad\text{即}\qquad j\omega=|\omega|\cdot\big(-(-j\,\mathrm{sgn}\omega)\big)$$</p>
+
+<p>这个等式值得当场验一遍，因为它看着像在玩符号游戏。把右边化简：先去掉两层负号，$-(-j\,\mathrm{sgn}\omega)=+j\,\mathrm{sgn}(\omega)$，于是右边 $=|\omega|\cdot j\,\mathrm{sgn}(\omega)=j\cdot\big(|\omega|\,\mathrm{sgn}(\omega)\big)$。再用一个初等事实：</p>
+
+<p>$$|\omega|\cdot\mathrm{sgn}(\omega)=\omega\qquad\text{（}\omega&gt;0\ \text{时}\ \omega\cdot(+1)=\omega;\ \omega&lt;0\ \text{时}\ (-\omega)\cdot(-1)=\omega\text{）}$$</p>
+
+<p>所以右边 $=j\omega=$ 左边 ✓。</p>
+
+<p>换句话说，<strong>微分 = 希尔伯特变换（扭相位）+ 按 $|\omega|$ 加权（改幅度）再取负</strong>。这两个算子共享同一个"相位骨架"，这就是为什么它们能交换次序（第 5.7 节）—— 两者在频域都只是乘一个 $\omega$ 的函数，而数的乘法是可交换的。</p>
+
+<h2>4.7 频域视角下的核函数之谜</h2>
+
+<p>回头看一个第 3 章遗留的疑问：为什么核函数 $\frac{1}{\pi t}$ 衰减得这么慢，甚至不可积？</p>
+
+<p>频域给出了答案。粗略地说：<strong>频域越不光滑，时域衰减越慢。</strong>这句话经常被当成"经验"一带而过，其实它有一行式子就能说清的根据。</p>
+
+<div class="box thm">
+  <span class="tag">为什么"频域不光滑"会导致"时域拖尾"</span>
+
+  <p style="margin:6px 0 0"><strong>第一步 · 找出把"光滑度"和"衰减速度"联系起来的那条性质。</strong></p>
+  <p>回忆微分在频域是乘 $j\omega$（第 2.5 节）。把它<em>反过来</em>用在频域上 —— 即考察对 $\omega$ 求导 —— 会得到对偶的一条：</p>
+  <p>$$\mathcal{F}\{t\,h(t)\}=j\frac{\mathrm{d}H(\omega)}{\mathrm{d}\omega}$$</p>
+  <p>（证明：对定义式 $H(\omega)=\int h(t)e^{-j\omega t}\mathrm{d}t$ 两边关于 $\omega$ 求导，导数进积分号，$\frac{\partial}{\partial\omega}e^{-j\omega t}=-jt\,e^{-j\omega t}$，于是 $H'(\omega)=-j\int t\,h(t)e^{-j\omega t}\mathrm{d}t$，移项即得。）</p>
+
+  <p style="margin:14px 0 0"><strong>第二步 · 反复用它，看能"榨"出多少衰减。</strong></p>
+  <p>连用 $n$ 次得 $\mathcal{F}\{t^n h(t)\}=j^n H^{(n)}(\omega)$。现在关键的一句：<strong>只要右边的 $H^{(n)}$ 还是一个正常的可积函数，左边的 $t^n h(t)$ 就必须有界并趋于零</strong>（由黎曼–勒贝格引理：可积函数的傅里叶变换在无穷远处趋于 $0$）。也就是</p>
+  <p>$$t^n h(t)\to 0\quad\Longleftrightarrow\quad h(t)\ \text{衰减快于}\ \frac{1}{t^n}$$</p>
+  <p>所以：<strong>$H$ 在频域能被求导几次，$h$ 在时域就能衰减多快。</strong>这就是那句"经验"的真正内容。</p>
+
+  <p style="margin:14px 0 0"><strong>第三步 · 代入我们的 $H$。</strong></p>
+  <p>$H(\omega)=-j\,\mathrm{sgn}(\omega)$ 在 $\omega=0$ 处有一个跳变（从 $+j$ 突然跳到 $-j$，落差 $2j$）。<strong>跳变处连一次导数都不存在</strong>（导数是 $\delta$ 函数，不是普通可积函数），即上面的 $n$ 连 $1$ 都达不到。于是我们得不到任何"快于 $1/t$"的保证 —— 衰减只能恰好是 $1/t$ 这个最慢的档位。这和实际算出的 $h(t)=\frac{1}{\pi t}$ 完全吻合。</p>
+
+  <p style="margin:14px 0 0"><strong>对照着看就更清楚了</strong>（"频域光滑度"由差到好排列）：</p>
+  <table>
+    <tr><th>频域 $H(\omega)$ 的光滑程度</th><th>例子</th><th>时域衰减</th></tr>
+    <tr><td>有跳变（$0$ 阶可导都不到）</td><td>$\mathrm{sgn}(\omega)$、矩形窗</td><td>$\sim 1/t$（最慢，不可积）</td></tr>
+    <tr><td>连续但导数有跳变</td><td>三角窗</td><td>$\sim 1/t^2$</td></tr>
+    <tr><td>无穷阶可导</td><td>高斯 $e^{-\omega^2}$</td><td>$e^{-t^2}$（极快）</td></tr>
+  </table>
+  <p style="margin:6px 0 0">"频域矩形窗 ⟷ 时域 sinc 的 $1/t$ 长尾"是同一张表里的另一行。</p>
+</div>
+
+<p><strong>这件事的工程后果是实打实的</strong>：$1/t$ 的尾巴意味着遥远时刻的样本对当前输出仍有不可忽略的贡献，所以第 7 章的 FIR 希尔伯特变换器必须很长（截断误差按 $1/M$ 慢慢减小，而不是指数减小），FFT 法也必须认真处理端点效应。想让滤波器短一点？那就得把频域那个跳变<em>磨圆</em> —— 这正是加窗和"避开直流附近频段"在做的事，代价是低频不再精确。<strong>快衰减与陡跳变，只能二选一。</strong></p>
+
+<p>由此还能看出为什么它<strong>必然非因果</strong>。Paley–Wiener 型的结论说：一个因果系统的幅频特性和相频特性<strong>不能独立指定</strong>，它们本身要满足希尔伯特变换关系（这就是 Bode 增益-相位关系，第 8.9 节）。我们的规格书要求 $|H|\equiv1$（幅度完全平坦）却又要求相位是 $\mp90°$ 的阶跃，这两条对因果系统是矛盾的。<strong>非因果性不是设计缺陷，是数学必然。</strong></p>
+
+<h2>4.8 本章要点</h2>
+
+<table>
+<tr><th>要点</th><th>内容</th></tr>
+<tr><td>核心公式</td><td>$H(\omega)=-j\,\mathrm{sgn}(\omega)$，即 $\hat{X}(\omega)=-j\,\mathrm{sgn}(\omega)X(\omega)$</td></tr>
+<tr><td>推导路线</td><td>$\mathcal{F}\{\mathrm{sgn}\}=\frac{2}{j\omega}$ → 对偶性 → $\mathcal{F}\{\frac{1}{\pi t}\}=-j\,\mathrm{sgn}(\omega)$</td></tr>
+<tr><td>幅度</td><td>恒为 1（全通滤波器）</td></tr>
+<tr><td>相位</td><td>正频率 $-90°$，负频率 $+90°$（常数，与 $\omega$ 无关）</td></tr>
+<tr><td>特征函数</td><td>$\mathcal{H}\{e^{j\omega_0t}\}=-j\,\mathrm{sgn}(\omega_0)\,e^{j\omega_0t}$</td></tr>
+<tr><td>直流</td><td>被消灭，$\hat{X}(0)=0$，故 $\mathcal{H}$ 不可逆</td></tr>
+<tr><td>两次变换</td><td>$\mathcal{H}^2=-I$（限于零均值信号），$\mathcal{H}^{-1}=-\mathcal{H}$</td></tr>
+<tr><td>常见误解</td><td>相移 90° ≠ 时移 $T/4$，除非只有单一频率</td></tr>
+</table>
+
+<div class="q">
+  <span class="tag">本章练习</span>
+  <ol style="margin:6px 0 0">
+    <li>用频域方法求 $\mathcal{H}\{\sin\omega_0t\}$，$\omega_0&gt;0$。</li>
+    <li>设 $\omega_0&lt;0$，求 $\mathcal{H}\{\cos\omega_0t\}$ 和 $\mathcal{H}\{e^{j\omega_0t}\}$。（小心符号！）</li>
+    <li>求 $\mathcal{H}^3\{x\}$ 和 $\mathcal{H}^4\{x\}$（设 $x$ 零均值）。用 $(-j\,\mathrm{sgn}\omega)^n$ 一次算出所有 $n$。</li>
+    <li>证明 $\mathcal{F}\{u(t)\}=\pi\delta(\omega)+\frac{1}{j\omega}$。（提示：$u=\frac{1+\mathrm{sgn}}{2}$）</li>
+    <li>用频域方法求 $\mathcal{H}\{e^{-a|t|}\}$，$a&gt;0$。能得到闭式吗？</li>
+    <li><strong>系统 A</strong> 的频率响应是 $H_A(\omega)=e^{-j\frac{\pi}{2}\mathrm{sgn}(\omega)}$，<strong>系统 B</strong> 的是 $H_B(\omega)=-j$（对所有 $\omega$）。它们分别是什么？A 和希尔伯特变换器一样吗？B 对实输入会给出什么？</li>
+    <li><strong>*</strong> 由 $|H(\omega)|=1$ 和 Parseval 定理，一行证明 $\int|\hat{x}|^2\mathrm{d}t=\int|x|^2\mathrm{d}t$（对零均值 $x$）。</li>
+  </ol>
+  <p style="margin:10px 0 0;font-size:14.5px;color:#6c717c">完整解答见<a href="09-exercises.html">第 9 章习题册</a>。</p>
+</div>
+
+<nav class="pager">
+  <a href="03-definition.html">← 第 3 章　定义：时域的样子</a>
+  <a href="05-properties.html">第 5 章　性质与定理 →</a>
+</nav>
+
+</div>
+
+<script>
+function setupHiDPI(cv){
+  const dpr=window.devicePixelRatio||1;
+  if(!cv.dataset.baseH){cv.dataset.baseH=cv.getAttribute('height')||cv.clientHeight||300;}
+  const h=parseInt(cv.dataset.baseH,10);
+  const w=cv.clientWidth||cv.parentElement.clientWidth;
+  cv.style.height=h+'px';
+  const bw=Math.round(w*dpr),bh=Math.round(h*dpr);
+  if(cv.width!==bw||cv.height!==bh){cv.width=bw;cv.height=bh;}
+  const g=cv.getContext('2d');g.setTransform(dpr,0,0,dpr,0,0);
+  return {g:g,W:w,H:h};
+}
+function poly(g,pts,color,width,dash){if(!pts.length)return;g.save();g.beginPath();
+  if(dash)g.setLineDash(dash);
+  for(let i=0;i<pts.length;i++){i?g.lineTo(pts[i][0],pts[i][1]):g.moveTo(pts[i][0],pts[i][1]);}
+  g.strokeStyle=color;g.lineWidth=width||1.6;g.lineJoin='round';g.stroke();g.restore();}
+function axis(g,x0,y0,x1,y1){poly(g,[[x0,y0],[x1,y1]],'#c9c4b6',1);}
+
+/* ===== 图 4.1 频率响应 ===== */
+(function(){
+  const cv=document.getElementById('c1');
+  function draw(){
+    const {g,W,H}=setupHiDPI(cv);
+    g.clearRect(0,0,W,H);
+    const padL=42,padR=16,w=W-padL-padR;
+    const X=o=>padL+w*(o+1)/2;            // omega from -1..1
+    const r1=H*0.30, r2=H*0.80, a=H*0.17;
+    g.font='12px ui-sans-serif,system-ui,sans-serif';
+    // --- 幅度 ---
+    axis(g,padL,r1,W-padR,r1);
+    axis(g,X(0),r1-a-14,X(0),r1+16);
+    g.strokeStyle='#eee9dc';g.lineWidth=1;
+    g.beginPath();g.moveTo(padL,r1-a);g.lineTo(W-padR,r1-a);g.stroke();
+    poly(g,[[padL,r1-a],[X(0)-1,r1-a]],'#1f6f8b',2.4);
+    poly(g,[[X(0)+1,r1-a],[W-padR,r1-a]],'#1f6f8b',2.4);
+    g.fillStyle='#fff';g.strokeStyle='#1f6f8b';g.lineWidth=1.6;
+    g.beginPath();g.arc(X(0),r1-a,3.6,0,6.3);g.fill();g.stroke();
+    g.fillStyle='#1f6f8b';g.beginPath();g.arc(X(0),r1,3.6,0,6.3);g.fill();
+    g.fillStyle='#5d6472';
+    g.fillText('1',padL-16,r1-a+4); g.fillText('0',padL-16,r1+4);
+    g.fillStyle='#1f6f8b';g.fillText('|H(ω)| = 1',padL+6,r1-a-10);
+    g.fillStyle='#5d6472';g.fillText('ω',W-padR-10,r1+18);
+    // --- 相位 ---
+    axis(g,padL,r2,W-padR,r2);
+    axis(g,X(0),r2-a-10,X(0),r2+a+10);
+    g.strokeStyle='#eee9dc';g.lineWidth=1;
+    g.beginPath();g.moveTo(padL,r2-a*0.8);g.lineTo(W-padR,r2-a*0.8);g.stroke();
+    g.beginPath();g.moveTo(padL,r2+a*0.8);g.lineTo(W-padR,r2+a*0.8);g.stroke();
+    poly(g,[[padL,r2-a*0.8],[X(0)-1,r2-a*0.8]],'#b4531f',2.4);
+    poly(g,[[X(0)+1,r2+a*0.8],[W-padR,r2+a*0.8]],'#b4531f',2.4);
+    g.strokeStyle='#d8b9a4';g.setLineDash([4,3]);g.lineWidth=1.2;
+    g.beginPath();g.moveTo(X(0),r2-a*0.8);g.lineTo(X(0),r2+a*0.8);g.stroke();g.setLineDash([]);
+    g.fillStyle='#fff';g.strokeStyle='#b4531f';g.lineWidth=1.6;
+    g.beginPath();g.arc(X(0),r2-a*0.8,3.6,0,6.3);g.fill();g.stroke();
+    g.beginPath();g.arc(X(0),r2+a*0.8,3.6,0,6.3);g.fill();g.stroke();
+    g.fillStyle='#b4531f';g.beginPath();g.arc(X(0),r2,3.6,0,6.3);g.fill();
+    g.fillStyle='#5d6472';
+    g.fillText('+90°',padL-38,r2-a*0.8+4);
+    g.fillText('0',padL-16,r2+4);
+    g.fillText('−90°',padL-38,r2+a*0.8+4);
+    g.fillStyle='#b4531f';g.fillText('arg H(ω)',X(0)+14,r2-a*0.8-10);
+    g.fillStyle='#5d6472';g.fillText('ω',W-padR-10,r2-8);
+    g.fillText('ω < 0',padL+w*0.18,r2+a+6);
+    g.fillText('ω > 0',padL+w*0.72,r2+a+6);
+  }
+  window.addEventListener('resize',draw);draw();
+})();
+
+/* ===== 图 4.2 三分量叠加 ===== */
+(function(){
+  const cv=document.getElementById('c2');
+  const ids=['a1','a2','a3'],vs=['va1','va2','va3'],fs=[3,9,15];
+  const el=ids.map(i=>document.getElementById(i));
+  const ev=vs.map(i=>document.getElementById(i));
+  function draw(){
+    const {g,W,H}=setupHiDPI(cv);
+    const A=el.map(e=>(+e.value)/100);
+    ev.forEach((e,i)=>e.textContent=A[i].toFixed(2));
+    g.clearRect(0,0,W,H);
+    const padL=12,padR=12,w=W-padL-padR,N=600;
+    const X=i=>padL+w*i/(N-1);
+    const rTop=H*0.24, aTop=H*0.155;
+    const rows=[H*0.56,H*0.72,H*0.90], aSub=H*0.055;
+    let mx=0.001; for(let i=0;i<N;i++){const t=i/N;
+      let s=0,c=0; for(let k=0;k<3;k++){s+=A[k]*Math.cos(2*Math.PI*fs[k]*t);c+=A[k]*Math.sin(2*Math.PI*fs[k]*t);}
+      mx=Math.max(mx,Math.abs(s),Math.abs(c));}
+    // 上图
+    axis(g,padL,rTop,W-padR,rTop);
+    const p1=[],p2=[];
+    for(let i=0;i<N;i++){const t=i/N;
+      let s=0,c=0;for(let k=0;k<3;k++){s+=A[k]*Math.cos(2*Math.PI*fs[k]*t);c+=A[k]*Math.sin(2*Math.PI*fs[k]*t);}
+      p1.push([X(i),rTop-aTop*s/mx]); p2.push([X(i),rTop-aTop*c/mx]);}
+    poly(g,p2,'#1f6f8b',1.7); poly(g,p1,'#20242c',1.7);
+    g.font='12px ui-sans-serif,system-ui,sans-serif';
+    g.fillStyle='#20242c';g.fillText('x(t)',padL+2,rTop-aTop-8);
+    g.fillStyle='#1f6f8b';g.fillText('x̂(t)',padL+38,rTop-aTop-8);
+    // 分量
+    for(let k=0;k<3;k++){
+      axis(g,padL,rows[k],W-padR,rows[k]);
+      const q1=[],q2=[];
+      for(let i=0;i<N;i++){const t=i/N;
+        q1.push([X(i),rows[k]-aSub*Math.cos(2*Math.PI*fs[k]*t)]);
+        q2.push([X(i),rows[k]-aSub*Math.sin(2*Math.PI*fs[k]*t)]);}
+      poly(g,q1,'#c9c4b6',1.3); poly(g,q2,'#1f6f8b',1.6);
+      g.fillStyle='#5d6472';
+      g.fillText('f='+fs[k]+'　位移 T/4 = '+(1/(4*fs[k])).toFixed(4)+' s',padL+2,rows[k]-aSub-6);
+    }
+  }
+  el.forEach(e=>e.addEventListener('input',draw));
+  window.addEventListener('resize',draw);draw();
+})();
+</script>
+</body>
+</html>
